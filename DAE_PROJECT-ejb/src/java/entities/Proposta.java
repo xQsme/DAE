@@ -3,7 +3,9 @@ package entities;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -15,15 +17,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PROPOSTAS")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
+@Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
 @NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p ORDER BY p.titulo")//.name, s.courseYear DESC, s.scholarYear, s.name")
 public class Proposta implements Serializable {
     
  /* 
-    Uma proposta de trabalho de Mestrado deve inclui, entre outros:
-    um tipo de trabalho (dissertação, projeto ou estágio), 
-    um título, 
-    as áreas científicas em que o trabalho incide, 
+    faltam adicionar os seguintes parametros:
+    
     os seus proponentes, 
     um resumo do trabalho a desenvolver,
     os objetivos a cumprir, 
@@ -41,45 +41,46 @@ public class Proposta implements Serializable {
     @Column(nullable = false)
     private String titulo;
     
-    /*
-    @ManyToOne
-    @JoinColumn(name = "COURSE_CODE", nullable = false)
-    private Course course;
+    @Column(nullable = false)
+    private String tipoDeTrabalho;
     
-    @Column(name = "COURSE_YEAR")
-    private int courseYear;
+    @ElementCollection
+    @CollectionTable(
+          name="AREA_CIENTIFICA",
+          joinColumns=@JoinColumn(name="PROPOSTA_ID")
+    )
+    @Column(name="NOME")
+    private List<String> areasCientificas;
     
-    @Column(name = "SCHOLAR_YEAR", nullable = false)
-    private String scholarYear;
-    
-    @ManyToMany
-    @JoinTable(name = "SUBJECT_STUDENT",
-            joinColumns = @JoinColumn(name = "SUBJECT_CODE", referencedColumnName = "CODE"),
-            inverseJoinColumns = @JoinColumn(name = "STUDENT_USERNAME", referencedColumnName = "USERNAME"))
-    private List<Student> students;
-*/
+    @Column(nullable = false)
+    private String resumo;
     
     @ManyToMany
-    @JoinTable(name = "PROPOSTA_TEACHER",
+    @JoinTable(name = "PROPOSTA_PROPONENTE",
             joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"),
-            inverseJoinColumns = @JoinColumn(name = "TEACHER_USERNAME", referencedColumnName = "USERNAME"))
-    private List<Teacher> teachers;
+            inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
+    private List<Proponente> proponentes;
 
     public Proposta() {
         //students = new LinkedList<>();
-        teachers = new LinkedList<>();
+        proponentes = new LinkedList<>();
     }
 
-    public Proposta(int code, String titulo){//, Course course, int courseYear, String scholarYear) {
+    public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo){
         this.code = code;
         this.titulo = titulo;
-        /*
-        this.course = course;
-        this.courseYear = courseYear;
-        this.scholarYear = scholarYear;
-        students = new LinkedList<>();
-*/
-        teachers = new LinkedList<>();
+        this.tipoDeTrabalho = tipoDeTrabalho;
+        this.resumo = resumo;
+        proponentes = new LinkedList<>();
+        areasCientificas = new LinkedList<>();
+    }
+
+    public String getTipoDeTrabalho() {
+        return tipoDeTrabalho;
+    }
+
+    public void setTipoDeTrabalho(String tipoDeTrabalho) {
+        this.tipoDeTrabalho = tipoDeTrabalho;
     }
 
     public int getCode() {
@@ -97,60 +98,44 @@ public class Proposta implements Serializable {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-/*
-    public Course getCourse() {
-        return course;
+
+    public String getResumo() {
+        return resumo;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setResumo(String resumo) {
+        this.resumo = resumo;
     }
 
-    public int getCourseYear() {
-        return courseYear;
+    public List<Proponente> getProponentes() {
+        return proponentes;
     }
 
-    public void setCourseYear(int courseYear) {
-        this.courseYear = courseYear;
-    }
-
-    public String getScholarYear() {
-        return scholarYear;
-    }
-
-    public void setScholarYear(String scholarYear) {
-        this.scholarYear = scholarYear;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setProponentes(List<Proponente> proponentes) {
+        this.proponentes = proponentes;
     }
     
-    public void addStudent(Student student) {
-        students.add(student);
+    public void addProponente(Proponente proponente) {
+        proponentes.add(proponente);
     }
 
-    public void removeStudent(Student student) {
-        students.remove(student);
-    }
-    */
-    public List<Teacher> getTeachers() {
-        return teachers;
-    }
-
-    public void setTeachers(List<Teacher> teachers) {
-        this.teachers = teachers;
+    public void removeProponente(Proponente proponente) {
+        proponentes.remove(proponente);
     }
     
-    public void addTeacher(Teacher teacher) {
-        teachers.add(teacher);
+    public List<String> getAreasCientificas() {
+        return areasCientificas;
     }
 
-    public void removeTeacher(Teacher teacher) {
-        teachers.remove(teacher);
+    public void setAreasCientificas(List<String> areasCientificas) {
+        this.areasCientificas = areasCientificas;
+    }
+    
+    public void addAreaCientifica(String areaCientifica) {
+        areasCientificas.add(areaCientifica);
+    }
+
+    public void removeAreaCientifica(String areaCientifica) {
+        areasCientificas.remove(areaCientifica);
     }
 }

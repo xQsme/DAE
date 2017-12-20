@@ -68,7 +68,7 @@ public class TeacherBean extends Bean<Teacher> {
     protected Collection<Teacher> getAll() {
         return em.createNamedQuery("getAllTeachers").getResultList();
     }
-
+/*
     public Collection<TeacherDTO> getSujectTeachers(int subjectCode) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, subjectCode);
@@ -77,7 +77,7 @@ public class TeacherBean extends Bean<Teacher> {
                 throw new EntityDoesNotExistsException("There is no subject with that code.");
             }
             
-            return toDTOs(proposta.getTeachers(), TeacherDTO.class);
+            return toDTOs(proposta.getProponente(), TeacherDTO.class);
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class TeacherBean extends Bean<Teacher> {
             }
             
             List<Teacher> teachers = (List<Teacher>) em.createNamedQuery("getAllTeachers").getResultList();
-            List<Teacher> teacher = proposta.getTeachers();
+            List<Teacher> teacher = proposta.getProponente();
             teachers.removeAll(teacher);
             
             return toDTOs(teachers, TeacherDTO.class);
@@ -103,19 +103,19 @@ public class TeacherBean extends Bean<Teacher> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
-    }
+    }*/
 
-    public void addSubjectTeacher(int subjectCode, String username) throws EntityDoesNotExistsException {
+    public void addPropostaTeacher(int propostaCode, String username) throws EntityDoesNotExistsException {
         try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
+            Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
+                throw new EntityDoesNotExistsException("There is no proposta with that code.");
             }
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {
                 throw new EntityDoesNotExistsException("There is no teacher with that username.");
             }
-            proposta.addTeacher(teacher);
+            proposta.addProponente(teacher);
             teacher.addProposta(proposta);
         } catch (EntityDoesNotExistsException e) {
             throw e;
@@ -124,17 +124,17 @@ public class TeacherBean extends Bean<Teacher> {
         }
     }
 
-    public void removeSubjectTeacher(int subjectCode, String username) throws EntityDoesNotExistsException {
+    public void removePropostaTeacher(int propostaCode, String username) throws EntityDoesNotExistsException {
         try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
+            Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
+                throw new EntityDoesNotExistsException("There is no proposta with that code.");
             }
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {
                 throw new EntityDoesNotExistsException("There is no teacher with that username.");
             }
-            proposta.removeTeacher(teacher);
+            proposta.removeProponente(teacher);
             teacher.removeProposta(proposta);
         } catch (EntityDoesNotExistsException e) {
             throw e;

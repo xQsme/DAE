@@ -1,5 +1,6 @@
 package ejbs;
 
+import auxiliar.TipoDeTrabalho;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -15,8 +16,6 @@ public class ConfigBean {
     @EJB
     private AdministratorBean administratorBean;
     @EJB
-    private CourseBean courseBean;
-    @EJB
     private StudentBean studentBean;
 */
     @EJB
@@ -29,13 +28,6 @@ public class ConfigBean {
 
         try {
 /*
-            courseBean.create(1, "EI");
-            courseBean.create(2, "IS");
-            courseBean.create(3, "JDM");
-            courseBean.create(4, "SIS");
-            courseBean.create(5, "MEI-CM");
-            courseBean.create(6, "MGSIM");
-
             studentBean.create("1111111", "Manuel", "Manuel", "dae.ei.ipleiria@gmail.com", 1);
             studentBean.create("2222222", "Antonio", "António", "dae.ei.ipleiria@gmail.com", 1);
             studentBean.create("3333333", "Ana", "Ana", "dae.ei.ipleiria@gmail.com", 2);
@@ -47,14 +39,9 @@ public class ConfigBean {
             
             */
 
-            propostaBean.create(1, "P1");//, 1, 1, "2015/2016");
-            propostaBean.create(2, "PA");//, 1, 2, "2015/2016");
-            propostaBean.create(3, "IA");//, 1, 2, "2015/2016");
-            propostaBean.create(4, "DAE");//, 1, 3, "2015/2016");
- 
-            propostaBean.create(5, "ComputProg");//, 2, 1, "2015/2016");
-            propostaBean.create(6, "ComplProg");//, 2, 1, "2015/2016");
-            propostaBean.create(7, "PA");//, 2, 2, "2015/2016");
+            propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adquado a uma dissertação");//, 1, 1, "2015/2016");
+            propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adquado a um estágio");//, 1, 2, "2015/2016");
+            propostaBean.create(3, "Titulo adequado a um projeto", TipoDeTrabalho.Projeto.toString(), "Resumo adquado a um projeto");//, 1, 2, "2015/2016");
 
             /*
             
@@ -70,9 +57,9 @@ public class ConfigBean {
 
 */
 
-            teacherBean.create("t1", "t1", "t1", "t1@ipleiria.pt", "O1");
-            teacherBean.create("t2", "t2", "t2", "t2@ipleiria.pt", "O2");
-            teacherBean.create("t3", "t3", "t3", "t3@ipleiria.pt", "O3");
+            teacherBean.create("teacherNick1", "secret", "teacher1", "t1@ipleiria.pt", "G1");
+            teacherBean.create("teacherNick2", "secret", "teacher2", "t2@ipleiria.pt", "G2");
+            teacherBean.create("teacherNick3", "secret", "teacher3", "t3@ipleiria.pt", "G3");
             
             /*
 
@@ -84,9 +71,15 @@ public class ConfigBean {
 
 */
 
-            teacherBean.addSubjectTeacher(1, "t1");
-            teacherBean.addSubjectTeacher(2, "t2");
-            teacherBean.addSubjectTeacher(1, "t3");
+            teacherBean.addPropostaTeacher(1, "teacherNick1");
+            teacherBean.addPropostaTeacher(2, "teacherNick2");
+            teacherBean.addPropostaTeacher(1, "teacherNick3");
+            
+            propostaBean.addAreaCientifica(1, "Informática");
+            propostaBean.addAreaCientifica(1, "Saúde");
+            
+            propostaBean.addAreaCientifica(2, "Física");
+            propostaBean.addAreaCientifica(3, "Mecanica");
 
         } catch(Exception e){
             logger.warning(e.getMessage());
