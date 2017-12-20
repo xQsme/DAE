@@ -109,7 +109,7 @@ public class TeacherBean extends Bean<Teacher> {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no proposta with that code.");
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {
@@ -128,7 +128,7 @@ public class TeacherBean extends Bean<Teacher> {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no proposta with that code.");
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {

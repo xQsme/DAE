@@ -2,6 +2,7 @@ package ejbs;
 
 import dtos.PropostaDTO;
 import entities.Proposta;
+import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -14,15 +15,15 @@ import javax.validation.ConstraintViolationException;
 @Stateless
 public class PropostaBean extends Bean<Proposta> {
 
-    public void create(int code, String titulo, String tipoDeTrabalho, String resumo)//, int courseCode, int courseYear, String scholarYear)
+    public void create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
         throws EntityAlreadyExistsException, EntityDoesNotExistsException, MyConstraintViolationException {
         
         try {
             if (em.find(Proposta.class, code) != null) {
-                throw new EntityAlreadyExistsException("A student with that username already exists.");
+                throw new EntityAlreadyExistsException("A proposal with that code already exists.");
             }
             
-            Proposta proposta = new Proposta(code, titulo, tipoDeTrabalho, resumo);//, course, courseYear, scholarYear);
+            Proposta proposta = new Proposta(code, titulo, tipoDeTrabalho, resumo, planoDeTrabalho, local, orcamento, apoios);
             em.persist(proposta);
         
         } catch (EntityAlreadyExistsException e){//| EntityDoesNotExistsException e) {
@@ -51,7 +52,7 @@ public class PropostaBean extends Bean<Proposta> {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no propostas with that code.");
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }            
             em.remove(proposta);
             
@@ -62,11 +63,11 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }    
     
-        public void addAreaCientifica(int propostaCode, String areaCientifica) throws EntityDoesNotExistsException {
+    public void addAreaCientifica(int propostaCode, String areaCientifica) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             proposta.addAreaCientifica(areaCientifica);
         } catch (EntityDoesNotExistsException e) {
@@ -75,6 +76,53 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    
+    public void addObjetivo(int propostaCode, String objetivo) throws EntityDoesNotExistsException{
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            proposta.addObjetivo(objetivo);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void addReferencia(int propostaCode, String referencia) throws EntityDoesNotExistsException, BibliografiaIsFullException{
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            if (proposta.getBibliografia().size() > 4) {
+                throw new BibliografiaIsFullException("A Bibliografia so pode ter 5 referencia no maximo!");
+            }
+            proposta.addReferencia(referencia);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void addRequsito(int propostaCode, String requisito) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            proposta.addRequisito(requisito);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
 /*
     public Collection<PropostaDTO> getStudentSubjects(String username) throws EntityDoesNotExistsException {
         try {

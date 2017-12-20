@@ -24,17 +24,11 @@ public class Proposta implements Serializable {
  /* 
     faltam adicionar os seguintes parametros:
     
-    os seus proponentes, 
-    um resumo do trabalho a desenvolver,
-    os objetivos a cumprir, 
-    uma bibliografia com, no máximo, 5 referências, 
-    um plano de trabalhos,
-    o local de realização do trabalho, 
     os requisitos considerados fundamentais para que o trabalho tenha sucesso,
-    um orçamento (incluindo itens para bibliografia, 
-    aquisição de material,
-    aquisição de equipamento ou outros) e os apoios (financeiros ou de outro tipo) que Estudante poderá usufruir
+    um orçamento (incluindo itens para bibliografia, aquisição de material, aquisição de equipamento ou outros) 
+    e os apoios (financeiros ou de outro tipo) que Estudante poderá usufruir
 */
+    
     @Id
     private int code;
     
@@ -45,34 +39,62 @@ public class Proposta implements Serializable {
     private String tipoDeTrabalho;
     
     @ElementCollection
-    @CollectionTable(
-          name="AREA_CIENTIFICA",
-          joinColumns=@JoinColumn(name="PROPOSTA_ID")
-    )
-    @Column(name="NOME")
+    @CollectionTable(name="PROPOSTA_AREA_CIENTIFICA", joinColumns=@JoinColumn(name="PROPOSTA_ID"))
+    @Column(name="AREA_CIENTIFICA")
     private List<String> areasCientificas;
     
     @Column(nullable = false)
     private String resumo;
     
     @ManyToMany
-    @JoinTable(name = "PROPOSTA_PROPONENTE",
-            joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"),
-            inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
+    @JoinTable(name = "PROPOSTA_PROPONENTE", joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"), inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
     private List<Proponente> proponentes;
+    
+    @ElementCollection
+    @CollectionTable(name="PROPOSTA_OBJETIVOS", joinColumns=@JoinColumn(name="PROPOSTA_ID"))
+    @Column(name="OBJETIVO")
+    private List<String> objetivos;
+    
+    @ElementCollection
+    @CollectionTable(name="PROPOSTA_BIBLOGRAFIA", joinColumns=@JoinColumn(name="PROPOSTA_ID"))
+    @Column(name="REFERENCIA")
+    private List<String> bibliografia;
+    
+    @Column(nullable = false)
+    private String planoDeTrabalhos;
+    
+    @Column(nullable = false)
+    private String local;
+    
+    @ElementCollection
+    @CollectionTable(name="PROPOSTA_REQUISITOS", joinColumns=@JoinColumn(name="PROPOSTA_ID"))
+    @Column(name="REQUISITO")
+    private List<String> requisitos;
+    
+    @Column(nullable = false)
+    private String orcamento;
+    
+    @Column
+    private String apoios;
 
     public Proposta() {
-        //students = new LinkedList<>();
         proponentes = new LinkedList<>();
+        areasCientificas = new LinkedList<>();
+        objetivos = new LinkedList<>();
+        bibliografia = new LinkedList<>();
+        requisitos = new LinkedList<>();
     }
 
-    public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo){
+    public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
+        this();
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
         this.resumo = resumo;
-        proponentes = new LinkedList<>();
-        areasCientificas = new LinkedList<>();
+        this.planoDeTrabalhos = planoDeTrabalhos;
+        this.local = local;
+        this.orcamento = orcamento;
+        this.apoios = apoios;
     }
 
     public String getTipoDeTrabalho() {
@@ -138,4 +160,86 @@ public class Proposta implements Serializable {
     public void removeAreaCientifica(String areaCientifica) {
         areasCientificas.remove(areaCientifica);
     }
+
+    public List<String> getObjetivos() {
+        return objetivos;
+    }
+
+    public void setObjetivos(List<String> objetivos) {
+        this.objetivos = objetivos;
+    }
+    
+    public void addObjetivo(String objetivo){
+        objetivos.add(objetivo);
+    }
+    
+    public void removeObjetivo(String objetivo){
+        objetivos.remove(objetivo);
+    }
+
+    public List<String> getBibliografia() {
+        return bibliografia;
+    }
+
+    public void setBibliografia(List<String> bibliografia) {
+        this.bibliografia = bibliografia;
+    }
+    
+    public void addReferencia(String referencia){
+        bibliografia.add(referencia);
+    }
+    
+    public void removeReferencia(String referencia){
+        bibliografia.remove(referencia);   
+    }
+
+    public String getPlanoDeTrabalhos() {
+        return planoDeTrabalhos;
+    }
+
+    public void setPlanoDeTrabalhos(String planoDeTrabalhos) {
+        this.planoDeTrabalhos = planoDeTrabalhos;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public List<String> getRequisitos() {
+        return requisitos;
+    }
+
+    public void setRequisitos(List<String> requisitos) {
+        this.requisitos = requisitos;
+    }
+    
+    public void addRequisito(String requisito){
+        this.requisitos.add(requisito);
+    }
+    
+    public void removeRequisito(String requisito){
+        this.requisitos.remove(requisito);
+    }
+
+    public String getOrcamento() {
+        return orcamento;
+    }
+
+    public void setOrcamento(String orcamento) {
+        this.orcamento = orcamento;
+    }
+
+    public String getApoios() {
+        return apoios;
+    }
+
+    public void setApoios(String apoios) {
+        this.apoios = apoios;
+    }
+    
+    
 }
