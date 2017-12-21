@@ -39,7 +39,7 @@ dist/
 nbproject/
 DAE_PROJECT-ejb/build/
 DAE_PROJECT-ejb/dist/
-DAE_PROJECT-ejb/nbproject/
+DAE_PROJECT-ejb/nbproject/*
 DAE_PROJECT-ejb/setup/
 DAE_PROJECT-ejb/test/
 DAE_PROJECT-ejb/build.xml
