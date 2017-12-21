@@ -1,5 +1,6 @@
 package ejbs;
 
+import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -22,6 +23,8 @@ public class ConfigBean {
     private PropostaBean propostaBean;
     @EJB
     private TeacherBean teacherBean;
+    @EJB
+    private InstituicaoBean instituicaoBean;
 
     @PostConstruct
     public void populateBD() {
@@ -35,16 +38,21 @@ public class ConfigBean {
             teacherBean.create("teacherNick1", "secret", "teacher1", "t1@ipleiria.pt", "G1");
             teacherBean.create("teacherNick2", "secret", "teacher2", "t2@ipleiria.pt", "G2");
             teacherBean.create("teacherNick3", "secret", "teacher3", "t3@ipleiria.pt", "G3");
-
+            
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");
             teacherBean.addPropostaTeacher(1, "teacherNick3");
+            
+            instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao1", "I1@ipleiria.pt", TipoDeInstituicao.Associação.toString());
+            instituicaoBean.create("InstituicaoNick2", "secret", "Instituicao2", "I2@ipleiria.pt", TipoDeInstituicao.Empresa.toString());
+            instituicaoBean.create("InstituicaoNick3", "secret", "Instituicao3", "I3@ipleiria.pt", TipoDeInstituicao.Pública.toString());
+
+            instituicaoBean.addPropostaInstituicao(3, "InstituicaoNick1");
 
             propostaBean.addAreaCientifica(1, "Informática");
             propostaBean.addAreaCientifica(1, "Saúde");
             propostaBean.addAreaCientifica(2, "Física");
             propostaBean.addAreaCientifica(3, "Mecanica");
-            
             
             propostaBean.addObjetivo(1, "Acabar a Dissertação");
             propostaBean.addObjetivo(2, "Acabar o Estágio");

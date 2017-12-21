@@ -13,8 +13,8 @@ public class Teacher extends Proponente {
 
     private String office;
     
-    @ManyToMany(mappedBy = "teachers")
-    private List<Proposta> propostas;
+    //@ManyToMany(mappedBy = "teachers")
+    //private List<Proposta> propostas;
 
     public Teacher() {
         //super(null, null, null, null);   

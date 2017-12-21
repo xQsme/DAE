@@ -46,5 +46,4 @@ DAE_PROJECT-ejb/build.xml
 DAE_PROJECT-war/build/
 DAE_PROJECT-war/dist/
 DAE_PROJECT-war/nbproject/
-DAE_PROJECT-war/web/
 DAE_PROJECT-war/build.xml
