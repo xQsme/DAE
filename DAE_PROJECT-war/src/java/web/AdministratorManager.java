@@ -14,13 +14,10 @@ import ejbs.InstituicaoBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
-<<<<<<< HEAD
 import entities.Proponente;
-=======
 import ejbs.StudentBean;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
->>>>>>> eccba3b00ea0273a09c9fa3be3214a618c604abe
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -44,11 +41,8 @@ public class AdministratorManager implements Serializable {
     @EJB
     private PropostaBean propostaBean;
     @EJB
-<<<<<<< HEAD
     private ProponenteBean proponenteBean;
-=======
     private StudentBean studentBean;
->>>>>>> eccba3b00ea0273a09c9fa3be3214a618c604abe
     
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
     
@@ -60,6 +54,12 @@ public class AdministratorManager implements Serializable {
     private PropostaDTO newProposta;
     private StudentDTO currentStudent;
     private StudentDTO newStudent;
+    private InstituicaoDTO currentInstituicaoDTO;
+    private InstituicaoDTO newInstituicaoDTO;
+    private TeacherDTO currentTeacherDTO;
+    private TeacherDTO newTeacherDTO;
+    private PropostaDTO currentPropostaDTO;
+    private PropostaDTO newPropostaDTO;
     
     public AdministratorManager() {
         newInstituicao = new InstituicaoDTO();
@@ -76,23 +76,25 @@ public class AdministratorManager implements Serializable {
         }
     }
     
-<<<<<<< HEAD
     public Collection<PropostaDTO> getAllPropostas() {
         try {
             return propostaBean.getAllPropostas();
-=======
-    public Collection<TeacherDTO> getAllTeachers() {
-        try {
-            return teacherBean.getAllTeachers();
->>>>>>> eccba3b00ea0273a09c9fa3be3214a618c604abe
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
     }
     
-<<<<<<< HEAD
-        public InstituicaoDTO getCurrentInstituicaoDTO() {
+    public Collection<TeacherDTO> getAllTeachers() {
+        try {
+            return teacherBean.getAllTeachers();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public InstituicaoDTO getCurrentInstituicaoDTO() {
         return currentInstituicaoDTO;
     }
 
@@ -143,7 +145,12 @@ public class AdministratorManager implements Serializable {
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
             return proponenteBean.getPropostaProponentes(currentPropostaDTO.getCode());
-=======
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public Collection<StudentDTO> getAllStudents() {
         try {
             return studentBean.getAllStudents();
@@ -250,14 +257,10 @@ public class AdministratorManager implements Serializable {
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
->>>>>>> eccba3b00ea0273a09c9fa3be3214a618c604abe
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
-<<<<<<< HEAD
-    }
-=======
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
     
@@ -277,6 +280,4 @@ public class AdministratorManager implements Serializable {
         }
         return "/admin/teachers/view.xhtml?faces-redirect=true";
     }
-
->>>>>>> eccba3b00ea0273a09c9fa3be3214a618c604abe
 }
