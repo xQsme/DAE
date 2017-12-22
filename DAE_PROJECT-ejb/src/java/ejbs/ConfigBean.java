@@ -50,7 +50,7 @@ public class ConfigBean {
             teacherBean.addPropostaTeacher(2, "teacherNick2");
             teacherBean.addPropostaTeacher(1, "teacherNick3");
             
-            instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao1", "I1@ipleiria.pt", TipoDeInstituicao.Associação.toString());
+            instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao1", "I1@ipleiria.pt", "Associação");
             instituicaoBean.create("InstituicaoNick2", "secret", "Instituicao2", "I2@ipleiria.pt", TipoDeInstituicao.Empresa.toString());
             instituicaoBean.create("InstituicaoNick3", "secret", "Instituicao3", "I3@ipleiria.pt", TipoDeInstituicao.Pública.toString());
 

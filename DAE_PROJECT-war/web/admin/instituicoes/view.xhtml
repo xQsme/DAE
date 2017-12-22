@@ -29,7 +29,7 @@ and open the template in the editor.
                     </p:column>
                     <p:column>
                         <f:facet name="header">Tipo de Instituição</f:facet>
-                        ${t.tipo}
+                        ${i.tipo}
                     </p:column>
                     <p:column>
                         <f:facet name="header">Actions</f:facet>
@@ -37,19 +37,21 @@ and open the template in the editor.
                             <h:commandLink
                                 value="Update"
                                 action="update">
-                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${s}"></f:setPropertyActionListener>
+                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${i}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                         <span>
                             <h:commandLink
                                 value="Remove"
                                 action="${administratorManager.removeInstituicao}">
-                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${s}"></f:setPropertyActionListener>
+                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${i}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <br/>
+            <h:link value="Return" outcome="/index"/>
         </ui:define>
     </ui:composition>
 </html>

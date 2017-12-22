@@ -56,12 +56,12 @@
                     <h:outputLabel for="tipo" value="Tipo de Intituicao: " />
                     <h:selectOneMenu
                         id="course"
-                        value="#{administratorManager.currentInstituicao.courseCode}" >
+                        value="#{administratorManager.currentInstituicao.tipo}" >
                         <f:selectItems
                             value="#{administratorManager.allTiposInstituicao}"
                             var="tipo"
-                            itemValue="#{course.code}"
-                            itemLabel="#{course.name}" />
+                            itemValue="#{tipo}"
+                            itemLabel="#{tipo}" />
                     </h:selectOneMenu>
                     
                     <ui:remove>     isto é um comentario em xhtml

@@ -149,7 +149,12 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<String> getAllTiposInstituicao() {
-        return null;
+        try {
+            return InstituicaoBean.getAllTiposInstituicao();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
     }
     
     public void removeStudent(){ 
@@ -162,9 +167,19 @@ public class AdministratorManager implements Serializable {
         }
     }
     
-        public void removeTeacher(){ 
+    public void removeTeacher(){ 
         try {
             teacherBean.remove(currentTeacher.getUsername());
+        } catch (EntityDoesNotExistsException ex) {
+            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    public void removeInstituicao(){ 
+        try {
+            instituicaoBean.remove(currentInstituicao.getUsername());
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
@@ -203,6 +218,23 @@ public class AdministratorManager implements Serializable {
             return null;
         }
         return "/admin/teachers/view.xhtml?faces-redirect=true";
+    }
+    
+    public String updateInstituicao() {
+        try {
+            instituicaoBean.update(currentInstituicao.getUsername(),
+                    currentInstituicao.getName(),
+                    currentInstituicao.getEmail(),
+                    currentInstituicao.getTipo());
+
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/instituicoes/view.xhtml?faces-redirect=true";
     }
 
 }

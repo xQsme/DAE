@@ -1,5 +1,6 @@
 package ejbs;
 
+import auxiliar.TipoDeInstituicao;
 import dtos.InstituicaoDTO;
 import dtos.TeacherDTO;
 import entities.Instituicao;
@@ -11,6 +12,8 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -57,6 +60,25 @@ public class InstituicaoBean extends Bean<Instituicao> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    public void remove(String username) throws EntityDoesNotExistsException {
+        try {
+            Instituicao instituicao = em.find(Instituicao.class, username);
+            if (instituicao == null) {
+                throw new EntityDoesNotExistsException("There is no institution with that username.");
+            }
+            for (Proposta p : instituicao.getPropostas()) {
+                p.removeProponente(instituicao);
+                em.persist(p);
+            }
+            em.remove(instituicao);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
 
     public Collection<InstituicaoDTO> getAllInstitutions() {
         try {
@@ -68,44 +90,8 @@ public class InstituicaoBean extends Bean<Instituicao> {
     
     @Override
     protected Collection<Instituicao> getAll() {
-        return em.createNamedQuery("getAllTeachers").getResultList();
+        return em.createNamedQuery("getAllInstituicoes").getResultList();
     }
-/*
-    public Collection<TeacherDTO> getSujectTeachers(int subjectCode) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
-            
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
-            }
-            
-            return toDTOs(proposta.getProponente(), TeacherDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-
-    public Collection<TeacherDTO> getTeachersNotInSubject(int subjectCode) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
-            
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
-            }
-            
-            List<Teacher> teachers = (List<Teacher>) em.createNamedQuery("getAllTeachers").getResultList();
-            List<Teacher> teacher = proposta.getProponente();
-            teachers.removeAll(teacher);
-            
-            return toDTOs(teachers, TeacherDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }*/
 
     public void addPropostaInstituicao(int propostaCode, String username) throws EntityDoesNotExistsException {
         try {
@@ -143,5 +129,13 @@ public class InstituicaoBean extends Bean<Instituicao> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
-    }    
+    } 
+    
+    public static Collection<String> getAllTiposInstituicao() {
+        LinkedList<String> tipos = new LinkedList<>();
+        tipos.add(TipoDeInstituicao.Associação.toString());
+        tipos.add(TipoDeInstituicao.Empresa.toString());
+        tipos.add(TipoDeInstituicao.Pública.toString());
+        return tipos;
+    }
 }

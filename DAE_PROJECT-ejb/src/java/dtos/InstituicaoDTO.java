@@ -21,6 +21,7 @@ public class InstituicaoDTO extends UserDTO implements Serializable {
     }    
 
     public String getTipo() {
+        //return "ola mundo";
         return tipo;
     }
 
