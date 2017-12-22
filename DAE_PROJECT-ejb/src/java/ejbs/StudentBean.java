@@ -39,8 +39,7 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public void update(String username, String name, String email)
-            throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void update(String username, String name, String email) throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
@@ -57,8 +56,27 @@ public class StudentBean extends Bean<Student> {
             throw new EJBException(e.getMessage());
         }
     }
+   
+    public void remove(String username) throws EntityDoesNotExistsException {
+        try {
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with that username.");
+            }
+            for (Proposta p : student.getCandidaturas()) {
+                p.removeStudent(student);
+                em.persist(p);
+            }
+            em.remove(student);
 
-    public Collection<StudentDTO> getAllTeachers() {
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public Collection<StudentDTO> getAllStudents() {
         try {
             return getAll(StudentDTO.class);
         } catch (Exception e) {
@@ -70,42 +88,6 @@ public class StudentBean extends Bean<Student> {
     protected Collection<Student> getAll() {
         return em.createNamedQuery("getAllStudents").getResultList();
     }
-/*
-    public Collection<TeacherDTO> getSujectTeachers(int subjectCode) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
-            
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
-            }
-            
-            return toDTOs(proposta.getProponente(), TeacherDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-
-    public Collection<TeacherDTO> getTeachersNotInSubject(int subjectCode) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, subjectCode);
-            
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no subject with that code.");
-            }
-            
-            List<Teacher> teachers = (List<Teacher>) em.createNamedQuery("getAllTeachers").getResultList();
-            List<Teacher> teacher = proposta.getProponente();
-            teachers.removeAll(teacher);
-            
-            return toDTOs(teachers, TeacherDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }*/
     
     public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException{
         try {
