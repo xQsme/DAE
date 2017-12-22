@@ -16,9 +16,9 @@ public class ConfigBean {
     /*
     @EJB
     private AdministratorBean administratorBean;
+*/
     @EJB
     private StudentBean studentBean;
-*/
     @EJB
     private PropostaBean propostaBean;
     @EJB
@@ -29,7 +29,10 @@ public class ConfigBean {
     @PostConstruct
     public void populateBD() {
 
-        try {
+        try {   //todo verificar se o aluno ou proponente ja têm a proposta associada antes de associar (a verificação deve ser feita no bean do student e proponente, não aqui);
+            studentBean.create("studentNick1", "secret", "student1", "s1@ipleiria.pt");
+            studentBean.create("studentNick2", "secret", "student2", "s2@ipleiria.pt");
+            studentBean.create("studentNick3", "secret", "student3", "s3@ipleiria.pt");
 
             propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adequado a uma dissertação", "Plano adequado a uma dissertação", "Pombal", "500€", null);
             propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adequado a um estágio", "Plano adequado a um estágio", "Pombal", "30€", "Computador da Razer");
@@ -38,6 +41,10 @@ public class ConfigBean {
             teacherBean.create("teacherNick1", "secret", "teacher1", "t1@ipleiria.pt", "G1");
             teacherBean.create("teacherNick2", "secret", "teacher2", "t2@ipleiria.pt", "G2");
             teacherBean.create("teacherNick3", "secret", "teacher3", "t3@ipleiria.pt", "G3");
+            
+            studentBean.addCandidaturaStudent(1, "studentNick1");
+            studentBean.addCandidaturaStudent(2, "studentNick2");
+            studentBean.addCandidaturaStudent(1, "studentNick2");
             
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");

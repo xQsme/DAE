@@ -14,16 +14,15 @@ and open the template in the editor.
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="./templates/skeleton.xhtml">
+    <ui:composition template="templates/skeleton.xhtml">
         <ui:define name="title">
             Mestrados
         </ui:define>
         <ui:define name="main">
             
             <p:megaMenu style="margin-top:20px">
-                <p:menuitem value="Professores" outcome="Instituicoes/instituicoes_view" />
-                <p:menuitem value="Intituições" outcome="Propostas/propostas_view" />
-                <p:menuitem value="Propostas" outcome="Teachers/teachers_view" />
+                <p:menuitem value="Professores" outcome="Teachers/teachers_view" />
+                <p:menuitem value="Intituições" outcome="Instituicoes/instituicoes_view" />
             </p:megaMenu>
 
         </ui:define>

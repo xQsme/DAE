@@ -50,6 +50,10 @@ public class Proposta implements Serializable {
     @JoinTable(name = "PROPOSTA_PROPONENTE", joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"), inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
     private List<Proponente> proponentes;
     
+    @ManyToMany
+    @JoinTable(name = "PROPOSTA_STUDENT", joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"), inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
+    private List<Student> candidatos;
+    
     @ElementCollection
     @CollectionTable(name="PROPOSTA_OBJETIVOS", joinColumns=@JoinColumn(name="PROPOSTA_ID"))
     @Column(name="OBJETIVO")
@@ -83,6 +87,7 @@ public class Proposta implements Serializable {
         objetivos = new LinkedList<>();
         bibliografia = new LinkedList<>();
         requisitos = new LinkedList<>();
+        candidatos = new LinkedList<>();
     }
 
     public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
@@ -240,6 +245,20 @@ public class Proposta implements Serializable {
     public void setApoios(String apoios) {
         this.apoios = apoios;
     }
+
+    public List<Student> getStudentsCandidatos() {
+        return candidatos;
+    }
+
+    public void setStudentsCandidatos(List<Student> studentsCandidatos) {
+        this.candidatos = studentsCandidatos;
+    }
     
+    public void addStudent(Student student) {
+        this.candidatos.add(student);
+    }
     
+    public void removeStudent(Student student){
+        candidatos.remove(student);
+    }   
 }
