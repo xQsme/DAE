@@ -114,6 +114,14 @@ public class Proposta implements Serializable {
         return code;
     }
 
+    public List<Student> getCandidatos() {
+        return candidatos;
+    }
+
+    public void setCandidatos(List<Student> candidatos) {
+        this.candidatos = candidatos;
+    }
+
     public void setCode(int code) {
         this.code = code;
     }

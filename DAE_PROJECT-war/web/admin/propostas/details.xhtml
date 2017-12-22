@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Mestrados</title>
+    </h:head>
+    <h:body>
+        <p:panelGrid columns="2">
+
+            <h:outputLabel for="code" value="Code: " />
+            <h:outputText 
+                id="code"
+                value="#{administratorManager.currentPropostaDTO.code}"/>
+
+            <h:outputLabel for="titulo" value="Titulo: " />
+            <h:outputText 
+                id="titulo"
+                value="#{administratorManager.currentPropostaDTO.titulo}"/>
+
+            <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+            <h:outputText 
+                id="tipoDeTrabalho"
+                value="#{administratorManager.currentPropostaDTO.tipoDeTrabalho}"/>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.areasCientificas}" value="${administratorManager.currentPropostaDTO.areasCientificas}" var="a">			
+                <h:column>
+                    ${a}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="resumo" value="Resumo: " />
+            <h:outputText 
+                id="resumo"
+                value="#{administratorManager.currentPropostaDTO.resumo}"/>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaProponentes}" value="${administratorManager.currentPropostaProponentes}" var="p">			
+                <h:column>
+                    ${p.name}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaCandidatos}" value="${administratorManager.currentPropostaCandidatos}" var="c">			
+                <h:column>
+                    ${c.name}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.objetivos}" for="objetivos" value="Objetivos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.objetivos}" value="${administratorManager.currentPropostaDTO.objetivos}" var="o">			
+                <h:column>
+                    ${o}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.bibliografia}" value="${administratorManager.currentPropostaDTO.bibliografia}" var="b">			
+                <h:column>
+                    ${b}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+            <h:outputText 
+                id="planoDeTrabalhos"
+                value="#{administratorManager.currentPropostaDTO.planoDeTrabalhos}"/>
+            
+            <h:outputLabel for="local" value="Local: " />
+            <h:outputText 
+                id="local"
+                value="#{administratorManager.currentPropostaDTO.local}"/>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.requisitos}" for="requisitos" value="Requisitos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.requisitos}" value="${administratorManager.currentPropostaDTO.requisitos}" var="r">			
+                <h:column>
+                    ${r}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="orcamento" value="Orçamento: " />
+            <h:outputText 
+                id="orcamento"
+                value="#{administratorManager.currentPropostaDTO.orcamento}"/>
+            
+            <h:outputLabel for="apoios" value="Apoios: " />
+            <h:outputText 
+                id="apoios"
+                value="#{administratorManager.currentPropostaDTO.apoios}"/>
+
+        </p:panelGrid>
+        
+        <br/>
+        
+        <h:messages errorStyle="color: red" />        
+        
+    </h:body>
+</html>

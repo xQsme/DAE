@@ -1,34 +1,45 @@
 package dtos;
 
+import entities.Proponente;
+import entities.Student;
 import java.io.Serializable;
+import java.util.List;
 
 public class PropostaDTO  implements Serializable{
 
     private int code;
-    private String titulo;;   
-
+    private String titulo;
+    private String tipoDeTrabalho;
+    private List<String> areasCientificas;
+    private String resumo;
+    private List<Proponente> proponentes;
+    private List<Student> candidatos;
+    private List<String> objetivos;
+    private List<String> bibliografia;
+    private String planoDeTrabalhos;
+    private String local;
+    private List<String> requisitos;
+    private String orcamento;
+    private String apoios;
+    
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String name){//, int courseCode, String courseName, int courseYear, String scholarYear) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Proponente> proponentes, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios) {
         this.code = code;
         this.titulo = titulo;
-        /*
-        this.courseCode = courseCode;
-        this.courseName = courseName;
-        this.courseYear = courseYear;
-        this.scholarYear = scholarYear;
-*/
-    }
-    
-    public void reset(){
-        this.code = 0;
-        this.titulo = null;
-        /*
-        this.courseCode = 0;
-        this.courseName = null;
-        this.courseYear = 0;
-        this.scholarYear = null;  */      
+        this.tipoDeTrabalho = tipoDeTrabalho;
+        this.areasCientificas = areasCientificas;
+        this.resumo = resumo;
+        this.proponentes = proponentes;
+        this.candidatos = candidatos;
+        this.objetivos = objetivos;
+        this.bibliografia = bibliografia;
+        this.planoDeTrabalhos = planoDeTrabalhos;
+        this.local = local;
+        this.requisitos = requisitos;
+        this.orcamento = orcamento;
+        this.apoios = apoios;
     }
 
     public int getCode() {
@@ -43,39 +54,103 @@ public class PropostaDTO  implements Serializable{
         return titulo;
     }
 
-    public void setName(String titulo) {
+    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-/*
-    public int getCourseCode() {
-        return courseCode;
+
+    public String getTipoDeTrabalho() {
+        return tipoDeTrabalho;
     }
 
-    public void setCourseCode(int courseCode) {
-        this.courseCode = courseCode;
+    public void setTipoDeTrabalho(String tipoDeTrabalho) {
+        this.tipoDeTrabalho = tipoDeTrabalho;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public List<String> getAreasCientificas() {
+        return areasCientificas;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setAreasCientificas(List<String> areasCientificas) {
+        this.areasCientificas = areasCientificas;
     }
 
-    public int getCourseYear() {
-        return courseYear;
+    public String getResumo() {
+        return resumo;
     }
 
-    public void setCourseYear(int courseYear) {
-        this.courseYear = courseYear;
+    public void setResumo(String resumo) {
+        this.resumo = resumo;
     }
 
-    public String getScholarYear() {
-        return scholarYear;
+    public List<Proponente> getProponentes() {
+        return proponentes;
     }
 
-    public void setScholarYear(String scholarYear) {
-        this.scholarYear = scholarYear;
-    }*/
+    public void setProponentes(List<Proponente> proponentes) {
+        this.proponentes = proponentes;
+    }
+
+    public List<Student> getCandidatos() {
+        return candidatos;
+    }
+
+    public void setCandidatos(List<Student> candidatos) {
+        this.candidatos = candidatos;
+    }
+
+    public List<String> getObjetivos() {
+        return objetivos;
+    }
+
+    public void setObjetivos(List<String> objetivos) {
+        this.objetivos = objetivos;
+    }
+
+    public List<String> getBibliografia() {
+        return bibliografia;
+    }
+
+    public void setBibliografia(List<String> bibliografia) {
+        this.bibliografia = bibliografia;
+    }
+
+    public String getPlanoDeTrabalhos() {
+        return planoDeTrabalhos;
+    }
+
+    public void setPlanoDeTrabalhos(String planoDeTrabalhos) {
+        this.planoDeTrabalhos = planoDeTrabalhos;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public List<String> getRequisitos() {
+        return requisitos;
+    }
+
+    public void setRequisitos(List<String> requisitos) {
+        this.requisitos = requisitos;
+    }
+
+    public String getOrcamento() {
+        return orcamento;
+    }
+
+    public void setOrcamento(String orcamento) {
+        this.orcamento = orcamento;
+    }
+
+    public String getApoios() {
+        return apoios;
+    }
+
+    public void setApoios(String apoios) {
+        this.apoios = apoios;
+    }
 }
