@@ -129,4 +129,20 @@ public class StudentBean extends Bean<Student> {
             throw new EJBException(e.getMessage());
         }
     }    
+
+    public Collection<StudentDTO> getPropostaCandidatos(int code) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Student does not exists.");
+            }
+
+            return toDTOs(proposta.getCandidatos(), StudentDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
 }

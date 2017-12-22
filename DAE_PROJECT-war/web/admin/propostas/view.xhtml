@@ -10,12 +10,6 @@
     </h:head>
     <h:body>
         <h:form>
-            <p:megaMenu style="margin-top:20px">
-                <p:menuitem value="Professores" outcome="admin/teachers/view" />
-                <p:menuitem value="Intituições" outcome="admin/instituicoes/view" />
-                <p:menuitem value="Estudantes" outcome="admin/students/view" />
-                <p:menuitem value="Propostas" outcome="admin/propostas/view" />
-            </p:megaMenu>
             <p:dataTable rendered="${not empty administratorManager.allPropostas}" value="${administratorManager.allPropostas}" var="p">			
                 <p:column>
                     <f:facet name="header">Titulo</f:facet>
@@ -31,15 +25,15 @@
                 </p:column>
                 <p:column>
                     <f:facet name="header">Orçamento</f:facet>
-                    ${p.oracmento}
+                    ${p.orcamento}
                 </p:column>
                 <p:column>
                     <f:facet name="header">Actions</f:facet>
                     <span>
                         <h:commandLink
                             value="Details"
-                            action="Propostas/propostas_details">
-                            <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            action="/admin/propostas/details">
+                            <f:setPropertyActionListener target="#{administratorManager.currentPropostaDTO}" value="${p}"></f:setPropertyActionListener>
                         </h:commandLink>
                     </span>
                 </p:column>

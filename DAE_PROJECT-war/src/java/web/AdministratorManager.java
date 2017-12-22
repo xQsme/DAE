@@ -151,6 +151,15 @@ public class AdministratorManager implements Serializable {
         }
     }
     
+    public Collection<StudentDTO> getCurrentPropostaCandidatos(){
+        try {
+            return studentBean.getPropostaCandidatos(currentPropostaDTO.getCode());
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public Collection<StudentDTO> getAllStudents() {
         try {
             return studentBean.getAllStudents();
