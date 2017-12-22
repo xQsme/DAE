@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="../../templates/skeleton.xhtml">
+        <ui:define name="title">
+            Update ${administratorManager.currentInstituicao.username}
+        </ui:define>
+        <ui:define name="main">
+            <h:form>                  
+                <h:panelGrid columns="3">
+
+                    <h:outputLabel for="username" value="Username: " />
+                    <h:outputText 
+                        id="username"
+                        value="#{administratorManager.currentInstituicao.username}"/>
+                    <br></br>
+
+                    
+                    <ui:remove>     isto é um comentario em xhtml
+                    <h:outputLabel for="password" value="Password: " />
+                    <h:inputSecret
+                        id="password"
+                        size="20"
+                        required="true"
+                        requiredMessage="Error: Password cannot be empty."
+                        value="#{administratorManager.currentInstituicao.password}"/>
+                    <h:message for="password" errorStyle="color: red" />                        
+                    </ui:remove>
+                    
+                    <h:outputLabel for="name" value="Name: " />
+                    <h:inputText 
+                        id="name"
+                        size="52"
+                        required="true"
+                        requiredMessage="Error: Name cannot be empty."                            
+                        value="#{administratorManager.currentInstituicao.name}" />
+                    <h:message for="name" errorStyle="color: red" />
+
+                    <h:outputLabel for="email" value="Email: " />
+                    <h:inputText
+                        id="email"
+                        size="52"
+                        required="true"
+                        requiredMessage="Error: Email cannot be empty."                            
+                        value="#{administratorManager.currentInstituicao.email}" >
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                    </h:inputText>    
+                    <h:message for="email" errorStyle="color: red" />   
+                    
+                    <h:outputLabel for="tipo" value="Tipo de Intituicao: " />
+                    <h:selectOneMenu
+                        id="course"
+                        value="#{administratorManager.currentInstituicao.courseCode}" >
+                        <f:selectItems
+                            value="#{administratorManager.allTiposInstituicao}"
+                            var="tipo"
+                            itemValue="#{course.code}"
+                            itemLabel="#{course.name}" />
+                    </h:selectOneMenu>
+                    
+                    <ui:remove>     isto é um comentario em xhtml
+                    <h:outputLabel for="course" value="Course: " />
+                    <h:selectOneMenu
+                        id="course"
+                        value="#{administratorManager.currentInstituicao.courseCode}" >
+                        <f:selectItems
+                            value="#{administratorManager.allCourses}"
+                            var="course"
+                            itemValue="#{course.code}"
+                            itemLabel="#{course.name}" />
+                    </h:selectOneMenu>
+                    </ui:remove>
+                    
+                    <br></br>
+
+                    <br></br>
+
+                    <h:commandButton
+                        id="submit"
+                        value="Update"
+                        action="#{administratorManager.updateInstituicao}" />
+                    <h:message for="submit" style="color: red"/>
+                </h:panelGrid>  
+
+            </h:form>
+
+            <h:messages errorStyle="color: red" />        
+            <br/>
+            <h:link value="Return" outcome="view"/>
+        </ui:define>
+    </ui:composition>
+</html>

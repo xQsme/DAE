@@ -12,7 +12,7 @@ and open the template in the editor.
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="../templates/skeleton.xhtml">
+    <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
             Instituicoes
         </ui:define>
@@ -26,6 +26,27 @@ and open the template in the editor.
                     <p:column>
                         <f:facet name="header">Nome</f:facet>
                         ${i.name}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Tipo de Instituição</f:facet>
+                        ${t.tipo}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <span>
+                            <h:commandLink
+                                value="Update"
+                                action="update">
+                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${s}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                        <span>
+                            <h:commandLink
+                                value="Remove"
+                                action="${administratorManager.removeInstituicao}">
+                                <f:setPropertyActionListener target="${administratorManager.currentInstituicao}" value="${s}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
                     </p:column>
                 </p:dataTable>
             </h:form>

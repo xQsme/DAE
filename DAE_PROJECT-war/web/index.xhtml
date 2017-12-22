@@ -16,13 +16,14 @@ and open the template in the editor.
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:composition template="templates/skeleton.xhtml">
         <ui:define name="title">
-            Mestrados
+            Mestrados - Pagina Membro ECP
         </ui:define>
         <ui:define name="main">
             
             <p:megaMenu style="margin-top:20px">
-                <p:menuitem value="Professores" outcome="Teachers/teachers_view" />
-                <p:menuitem value="Intituições" outcome="Instituicoes/instituicoes_view" />
+                <p:menuitem value="Professores" outcome="admin/teachers/view" />
+                <p:menuitem value="Intituições" outcome="admin/instituicoes/view" />
+                <p:menuitem value="Estudantes" outcome="admin/students/view" />
             </p:megaMenu>
 
         </ui:define>

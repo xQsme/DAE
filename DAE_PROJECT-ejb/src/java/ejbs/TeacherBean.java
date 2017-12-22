@@ -2,6 +2,7 @@ package ejbs;
 
 import dtos.TeacherDTO;
 import entities.Proposta;
+import entities.Student;
 import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
@@ -51,6 +52,25 @@ public class TeacherBean extends Bean<Teacher> {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void remove(String username) throws EntityDoesNotExistsException {
+        try {
+            Teacher teacher = em.find(Teacher.class, username);
+            if (teacher == null) {
+                throw new EntityDoesNotExistsException("There is no teacher with that username.");
+            }
+            for (Proposta p : teacher.getPropostas()) {
+                p.removeProponente(teacher);
+                em.persist(p);
+            }
+            em.remove(teacher);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
