@@ -35,7 +35,7 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
 
-    public Collection<PropostaDTO> getAllSubjects() {
+    public Collection<PropostaDTO> getAllPropostas() {
         try {
             return getAll(PropostaDTO.class);
         } catch (Exception e) {
