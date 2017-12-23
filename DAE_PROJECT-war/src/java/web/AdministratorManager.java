@@ -16,6 +16,7 @@ import ejbs.PropostaBean;
 import ejbs.TeacherBean;
 import entities.Proponente;
 import ejbs.StudentBean;
+import entities.Student;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
@@ -42,6 +43,7 @@ public class AdministratorManager implements Serializable {
     private PropostaBean propostaBean;
     @EJB
     private ProponenteBean proponenteBean;
+    @EJB
     private StudentBean studentBean;
     
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
