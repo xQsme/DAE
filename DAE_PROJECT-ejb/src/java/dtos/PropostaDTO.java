@@ -21,11 +21,21 @@ public class PropostaDTO  implements Serializable{
     private List<String> requisitos;
     private String orcamento;
     private String apoios;
+    private Boolean estado;
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+    private String observacao;
     
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Proponente> proponentes, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Proponente> proponentes, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, Boolean estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
@@ -40,6 +50,8 @@ public class PropostaDTO  implements Serializable{
         this.requisitos = requisitos;
         this.orcamento = orcamento;
         this.apoios = apoios;
+        this.estado = estado;
+        this.observacao = observacao;
     }
 
     public int getCode() {
@@ -153,4 +165,16 @@ public class PropostaDTO  implements Serializable{
     public void setApoios(String apoios) {
         this.apoios = apoios;
     }
+    
+        
+    public String getEstado(){
+        if(estado==null) return null;
+        if(estado) return "aceite";
+        else return  "não aceite";
+    }
+    
+    public String getObservacao(){
+        return observacao;
+    }
+
 }

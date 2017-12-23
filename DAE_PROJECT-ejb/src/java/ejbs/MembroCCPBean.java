@@ -45,13 +45,13 @@ public class MembroCCPBean {
     
     
     //In case the Menber doesnt leave a comment
-    public void validarProposta(String username, String propostaCode, Boolean validar) 
+    public void validarProposta(String username, int propostaCode, Boolean validar) 
             throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
               validarProposta(username, propostaCode, validar, null);
     }
     
-    //In case the menber inteads to leave a comment
-    public void validarProposta(String username, String propostaCode, Boolean validar, String observacao) 
+    //In case the menber intends to leave a comment
+    public void validarProposta(String username, int propostaCode, Boolean validar, String observacao) 
             throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
         try {      
             MembroCCP menbroCCP = em.find(MembroCCP.class, username);
