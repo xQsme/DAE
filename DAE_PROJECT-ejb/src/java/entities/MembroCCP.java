@@ -12,17 +12,15 @@ import javax.persistence.Entity;
  * @author Yvtq8
  */
 @Entity
-public class MenbroCCP extends User{
+public class MembroCCP extends User{
     
-    public MenbroCCP(){
+    public MembroCCP(){
         
     }
     
-    public MenbroCCP(String username, String password, String name, String email) {
+    public MembroCCP(String username, String password, String name, String email) {
         super(username, password, name, email);
     }
     
-    public void aceitarProposta(Proposta proposta, Boolean validar){
-        //Proposta.valido        
-    }
+    
 }
