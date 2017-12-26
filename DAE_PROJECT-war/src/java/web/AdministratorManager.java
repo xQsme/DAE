@@ -5,6 +5,7 @@
  */
 package web;
 
+import auxiliar.TipoDeTrabalho;
 import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
@@ -205,6 +206,15 @@ public class AdministratorManager implements Serializable {
         }
     }
     
+    public Collection<String> getAllTiposTrabalho() {
+        try {
+            return PropostaBean.getAllTiposTrabalhos();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public void removeStudent(){ 
         try {
             studentBean.remove(currentStudent.getUsername());
@@ -228,6 +238,16 @@ public class AdministratorManager implements Serializable {
     public void removeInstituicao(){ 
         try {
             instituicaoBean.remove(currentInstituicao.getUsername());
+        } catch (EntityDoesNotExistsException ex) {
+            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    public void removeProposta(){ 
+        try {
+            propostaBean.remove(currentProposta.getCode());
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
@@ -284,6 +304,28 @@ public class AdministratorManager implements Serializable {
         }
         return "/admin/instituicoes/view.xhtml?faces-redirect=true";
     }
+    
+    public String updateProposta() {
+        try {
+            propostaBean.update(
+                    currentProposta.getCode(),
+                    currentProposta.getTitulo(),
+                    currentProposta.getTipoDeTrabalho(),
+                    currentProposta.getResumo(),
+                    currentProposta.getPlanoDeTrabalhos(),
+                    currentProposta.getLocal(),
+                    currentProposta.getOrcamento(),
+                    currentProposta.getApoios());
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }
+    
     
     public UIComponent getComponent() {
         return component;
@@ -371,5 +413,29 @@ public class AdministratorManager implements Serializable {
             return null;
         }
         return "/admin/instituicoes/view.xhtml?faces-redirect=true";
+    }
+    
+    public String createProposta() {
+        int code = propostaBean.getNextCode();
+        logger.info("" + code);
+        try {
+            propostaBean.create(
+                    code,
+                    newProposta.getTitulo(),
+                    newProposta.getTipoDeTrabalho(), 
+                    newProposta.getResumo(),
+                    newProposta.getPlanoDeTrabalhos(), 
+                    newProposta.getLocal(), 
+                    newProposta.getOrcamento(), 
+                    newProposta.getApoios());
+            newProposta.reset();
+        } catch (EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            return null;
+        }
+        return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
 }

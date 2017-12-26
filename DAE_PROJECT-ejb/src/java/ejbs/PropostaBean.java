@@ -1,15 +1,21 @@
 package ejbs;
 
+import auxiliar.TipoDeInstituicao;
+import auxiliar.TipoDeTrabalho;
 import dtos.PropostaDTO;
+import entities.Instituicao;
 import entities.Proposta;
 import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.math.BigInteger;
 import java.util.Collection;
+import java.util.LinkedList;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
@@ -34,6 +40,17 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    public int getNextCode(){
+        try {
+            Query query = em.createNativeQuery("SELECT max(code) FROM Proposta p");
+            int maxCode = ((Integer) query.getSingleResult()).intValue();
+            return maxCode + 1;
+            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
+    }
 
     public Collection<PropostaDTO> getAllPropostas() {
         try {
@@ -53,7 +70,7 @@ public class PropostaBean extends Bean<Proposta> {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
-            }            
+            }
             em.remove(proposta);
             
         } catch (EntityDoesNotExistsException e) {
@@ -118,6 +135,38 @@ public class PropostaBean extends Bean<Proposta> {
             proposta.addRequisito(requisito);
         } catch (EntityDoesNotExistsException e) {
             throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public static Collection<String> getAllTiposTrabalhos() {
+        LinkedList<String> tipos = new LinkedList<>();
+        tipos.add(TipoDeTrabalho.Dissertação.toString());
+        tipos.add(TipoDeTrabalho.Estágio.toString());
+        tipos.add(TipoDeTrabalho.Projeto.toString());
+        return tipos;
+    }
+    
+    public void update(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios) 
+            throws EntityDoesNotExistsException, MyConstraintViolationException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            proposta.setTitulo(titulo);
+            proposta.setTipoDeTrabalho(tipoDeTrabalho);
+            proposta.setResumo(resumo);
+            proposta.setPlanoDeTrabalhos(planoDeTrabalhos);
+            proposta.setLocal(local);
+            proposta.setOrcamento(orcamento);
+            proposta.setApoios(apoios);
+            em.merge(proposta);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

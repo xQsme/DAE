@@ -33,11 +33,29 @@
                         <h:commandLink
                             value="Details"
                             action="/admin/propostas/details">
-                            <f:setPropertyActionListener target="#{administratorManager.currentPropostaDTO}" value="${p}"></f:setPropertyActionListener>
+                            <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                        </h:commandLink>
+                    </span>
+                    <span>
+                        <h:commandLink
+                            value="Update"
+                            action="update">
+                            <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                        </h:commandLink>
+                    </span>
+                    <span>
+                        <h:commandLink
+                            value="Remove"
+                            action="${administratorManager.removeProposta}">
+                            <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                         </h:commandLink>
                     </span>
                 </p:column>
             </p:dataTable>
         </h:form>
+        <br/>
+        <h:link value="Criar proposta" outcome="create"/>
+        <br/>
+        <h:link value="Return" outcome="/index"/>
     </h:body>
 </html>

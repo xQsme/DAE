@@ -13,20 +13,20 @@
             <h:outputLabel for="code" value="Code: " />
             <h:outputText 
                 id="code"
-                value="#{administratorManager.currentPropostaDTO.code}"/>
+                value="#{administratorManager.currentProposta.code}"/>
 
             <h:outputLabel for="titulo" value="Titulo: " />
             <h:outputText 
                 id="titulo"
-                value="#{administratorManager.currentPropostaDTO.titulo}"/>
+                value="#{administratorManager.currentProposta.titulo}"/>
 
             <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
             <h:outputText 
                 id="tipoDeTrabalho"
-                value="#{administratorManager.currentPropostaDTO.tipoDeTrabalho}"/>
+                value="#{administratorManager.currentProposta.tipoDeTrabalho}"/>
             
-            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
-            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.areasCientificas}" value="${administratorManager.currentPropostaDTO.areasCientificas}" var="a">			
+            <h:outputLabel rendered="${not empty administratorManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentProposta.areasCientificas}" value="${administratorManager.currentProposta.areasCientificas}" var="a">			
                 <h:column>
                     ${a}
                 </h:column>
@@ -35,7 +35,7 @@
             <h:outputLabel for="resumo" value="Resumo: " />
             <h:outputText 
                 id="resumo"
-                value="#{administratorManager.currentPropostaDTO.resumo}"/>
+                value="#{administratorManager.currentProposta.resumo}"/>
             
             <h:outputLabel rendered="${not empty administratorManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
             <h:dataTable rendered="${not empty administratorManager.currentPropostaProponentes}" value="${administratorManager.currentPropostaProponentes}" var="p">			
@@ -51,15 +51,15 @@
                 </h:column>
             </h:dataTable>
             
-            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.objetivos}" for="objetivos" value="Objetivos:"/>
-            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.objetivos}" value="${administratorManager.currentPropostaDTO.objetivos}" var="o">			
+            <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentProposta.objetivos}" value="${administratorManager.currentProposta.objetivos}" var="o">			
                 <h:column>
                     ${o}
                 </h:column>
             </h:dataTable>
             
-            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.bibliografia}" for="bibliografia" value="Bibliografia:"/>
-            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.bibliografia}" value="${administratorManager.currentPropostaDTO.bibliografia}" var="b">			
+            <h:outputLabel rendered="${not empty administratorManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentProposta.bibliografia}" value="${administratorManager.currentProposta.bibliografia}" var="b">			
                 <h:column>
                     ${b}
                 </h:column>
@@ -68,15 +68,15 @@
             <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
             <h:outputText 
                 id="planoDeTrabalhos"
-                value="#{administratorManager.currentPropostaDTO.planoDeTrabalhos}"/>
+                value="#{administratorManager.currentProposta.planoDeTrabalhos}"/>
             
             <h:outputLabel for="local" value="Local: " />
             <h:outputText 
                 id="local"
-                value="#{administratorManager.currentPropostaDTO.local}"/>
+                value="#{administratorManager.currentProposta.local}"/>
             
-            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDTO.requisitos}" for="requisitos" value="Requisitos:"/>
-            <h:dataTable rendered="${not empty administratorManager.currentPropostaDTO.requisitos}" value="${administratorManager.currentPropostaDTO.requisitos}" var="r">			
+            <h:outputLabel rendered="${not empty administratorManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentProposta.requisitos}" value="${administratorManager.currentProposta.requisitos}" var="r">			
                 <h:column>
                     ${r}
                 </h:column>
@@ -85,33 +85,34 @@
             <h:outputLabel for="orcamento" value="Orçamento: " />
             <h:outputText 
                 id="orcamento"
-                value="#{administratorManager.currentPropostaDTO.orcamento}"/>
+                value="#{administratorManager.currentProposta.orcamento}"/>
             
             <h:outputLabel for="apoios" value="Apoios: " />
             <h:outputText 
                 id="apoios"
-                value="#{administratorManager.currentPropostaDTO.apoios}"/>
+                value="#{administratorManager.currentProposta.apoios}"/>
             
                 <h:outputLabel for="estado" value="Estado: "
-                               rendered="${not empty administratorManager.currentPropostaDTO.estado}"/>
+                               rendered="${not empty administratorManager.currentProposta.estado}"/>
                 <h:outputText 
                     id="estado"
-                    rendered="${not empty administratorManager.currentPropostaDTO.estado}"
-                    value="#{administratorManager.currentPropostaDTO.estado}"/>
+                    rendered="${not empty administratorManager.currentProposta.estado}"
+                    value="#{administratorManager.currentProposta.estado}"/>
                 
                 <h:outputLabel for="observacao" value="Observacao: " 
-                               rendered="${not empty administratorManager.currentPropostaDTO.estado and 
-                                           not empty administratorManager.currentPropostaDTO.observacao}" />
+                               rendered="${not empty administratorManager.currentProposta.estado and 
+                                           not empty administratorManager.currentProposta.observacao}" />
                 <h:outputText 
                     id="observacao"
-                    rendered="${not empty administratorManager.currentPropostaDTO.estado and
-                                not empty administratorManager.currentPropostaDTO.observacao}"
-                    value="#{administratorManager.currentPropostaDTO.observacao}"/>
+                    rendered="${not empty administratorManager.currentProposta.estado and
+                                not empty administratorManager.currentProposta.observacao}"
+                    value="#{administratorManager.currentProposta.observacao}"/>
         </p:panelGrid>
         
         <br/>
         
-        <h:messages errorStyle="color: red" />        
-        
+        <h:messages errorStyle="color: red" />    
+        <br/>
+        <h:link value="Return" outcome="view"/>
     </h:body>
 </html>
