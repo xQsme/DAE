@@ -1,7 +1,16 @@
 package entities;
 
 //import entities.UserGroup.GROUP;
+import entities.UserGroup.GROUP;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,12 +21,13 @@ import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-//import util.Security;
+import util.Security;
 
 @Entity
 @Table(name = "USERS")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQuery(name = "getAllUsers", query = "SELECT u FROM User u")
+
 public class User implements Serializable {
 
     @Id
@@ -31,6 +41,9 @@ public class User implements Serializable {
     
     @Column(nullable = false)
     protected String email;
+    
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    protected UserGroup group;
 
     //@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     //protected UserGroup group;
@@ -39,15 +52,15 @@ public class User implements Serializable {
         
     }
 
-    protected User(String username, String password, //GROUP group,
-            String name, String email) {
+    protected User(String username, String password, String name, String email, GROUP group) {
         this.username = username;
-        this.password = password;//Security.hashPassword(password);
-        //this.group = new UserGroup(group, this);
+        //this.password = password;
+        this.password=Security.hashPassword(password);
         this.name = name;
         this.email = email;
+        this.group = new UserGroup(group, this);
     }
-
+    
     public String getUsername() {
         return username;
     }

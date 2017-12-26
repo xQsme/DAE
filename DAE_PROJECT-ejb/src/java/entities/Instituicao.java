@@ -1,6 +1,7 @@
 package entities;
 
 //import entities.UserGroup.GROUP;
+import entities.UserGroup.GROUP;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ public class Instituicao extends Proponente {
     }
        
     public Instituicao(String username, String password, String name, String email, String tipo) {
-        super(username, password, name, email);
+        super(username, password, name, email, GROUP.Instituicao);
         this.tipo = tipo;
     }
 

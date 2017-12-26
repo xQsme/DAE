@@ -1,6 +1,7 @@
 package entities;
 
 //import entities.UserGroup.GROUP;
+import entities.UserGroup.GROUP;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -21,8 +22,7 @@ public class Teacher extends Proponente {
     }
        
     public Teacher(String username, String password, String name, String email, String office) {
-        super(username, password,// GROUP.Teacher,
-                name, email);
+        super(username, password, name, email, GROUP.Teacher);
         this.office = office;
     }
 

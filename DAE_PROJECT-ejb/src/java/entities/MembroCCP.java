@@ -5,6 +5,7 @@
  */
 package entities;
 
+import entities.UserGroup.GROUP;
 import javax.persistence.Entity;
 
 /**
@@ -19,8 +20,6 @@ public class MembroCCP extends User{
     }
     
     public MembroCCP(String username, String password, String name, String email) {
-        super(username, password, name, email);
-    }
-    
-    
+        super(username, password, name, email, GROUP.MembroCCP);
+    }    
 }

@@ -5,6 +5,7 @@
  */
 package entities;
 
+import entities.UserGroup.GROUP;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Student extends User  {
     }
    
    public Student(String username, String password, String name, String email) {
-        super(username, password, name, email);
+        super(username, password, name, email, GROUP.Student);
         candidaturas = new LinkedList<>();
     }
     

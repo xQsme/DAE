@@ -13,20 +13,37 @@ and open the template in the editor.
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="templates/skeleton.xhtml">
         <ui:define name="title">
             Mestrados - Pagina Membro ECP
         </ui:define>
         <ui:define name="main">
             
-            <p:megaMenu style="margin-top:20px">
-                <p:menuitem value="Professores" outcome="admin/teachers/view" />
-                <p:menuitem value="Intituições" outcome="admin/instituicoes/view" />
-                <p:menuitem value="Estudantes" outcome="admin/students/view" />
-                <p:menuitem value="Propostas" outcome="admin/propostas/view" />
-            </p:megaMenu>
-
+            <c:if test="${not userManager.someUserAuthenticated}">
+                <h:form rendered="${not userManager.someUserAuthenticated}">
+                    <h:panelGrid columns="2">                    
+                      <h:outputLabel for="username">Username: </h:outputLabel>
+                      <h:inputText id="username" value="#{userManager.username}" required="true" />
+                      <h:outputLabel for="password">Password: </h:outputLabel>
+                      <h:inputSecret id="password" value="#{userManager.password}" required="true" />
+                      <h:commandButton value="Login" action="#{userManager.login}" />
+                    </h:panelGrid>
+                </h:form>
+            </c:if>
+            <c:if test="${userManager.someUserAuthenticated}">
+                <p>You are logged in!</p>
+                <h:link outcome="${userManager.redirect()}" value="Return to Home Page"/>
+           
+                <p:megaMenu style="margin-top:20px">
+                    <p:menuitem value="Professores" outcome="admin/teachers/view" />
+                    <p:menuitem value="Intituições" outcome="admin/instituicoes/view" />
+                    <p:menuitem value="Estudantes" outcome="admin/students/view" />
+                    <p:menuitem value="Propostas" outcome="admin/propostas/view" />
+                </p:megaMenu>
+                
+            </c:if>
         </ui:define>
     </ui:composition>
 </html>
