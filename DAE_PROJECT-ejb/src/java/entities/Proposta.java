@@ -80,6 +80,30 @@ public class Proposta implements Serializable {
     
     @Column
     private String apoios;
+	
+	//Estado & observacao will be fill by MenbroCCP
+    @Column
+    private Boolean estado;
+    
+    @Column
+    private String observacao;
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+	
 
     public Proposta() {
         proponentes = new LinkedList<>();

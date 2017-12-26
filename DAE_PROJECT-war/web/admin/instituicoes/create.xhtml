@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="../../templates/skeleton.xhtml">
+        <ui:define name="title">
+            Criar professor
+        </ui:define>
+        <ui:define name="main">
+            <h:form>
+                <h:panelGrid columns="3">
+                    <h:outputLabel 
+                        for="username"
+                        value="Username:">
+                            
+                    </h:outputLabel>
+                    <h:inputText 
+                        id="username"
+                        required="true"
+                        requiredMessage="Error: Username is required"
+                        value="#{administratorManager.newInstituicao.username}">
+                        <f:validator validatorId="usernameValidator"/>
+                    </h:inputText>
+                    <h:message 
+                        for="username" 
+                        errorStyle="color: red">
+                    </h:message>
+
+                    <h:outputLabel 
+                        for="password"
+                        value="Password:">
+                    </h:outputLabel>
+                    <h:inputSecret 
+                        id="password"
+                        required="true"
+                        requiredMessage="Error: Password is required"
+                        value="#{administratorManager.newInstituicao.password}">
+                    </h:inputSecret>
+                    <h:message 
+                        for="password" 
+                        errorStyle="color: red">
+                    </h:message>
+
+                    <h:outputLabel 
+                        for="name"
+                        value="Name:">
+                    </h:outputLabel>
+                    <h:inputText 
+                        id="name"
+                        required="true"
+                        requiredMessage="Error: Name is required"
+                        value="#{administratorManager.newInstituicao.name}">
+                    </h:inputText>
+                    <h:message 
+                        for="name" 
+                        errorStyle="color: red">
+                    </h:message>
+
+                    <h:outputLabel 
+                        for="email"
+                        value="Email:">
+                    </h:outputLabel>
+                    <h:inputText 
+                        id="email"
+                        required="true"
+                        requiredMessage="Error: Email is required"
+                        value="#{administratorManager.newInstituicao.email}">
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"></f:validateRegex>
+                    </h:inputText>
+                    <h:message 
+                        for="email" 
+                        errorStyle="color: red">
+                    </h:message>
+                    
+                    <h:outputLabel for="tipo" value="Tipo de Intituicao: " />
+                    <h:selectOneMenu
+                        id="course"
+                        value="#{administratorManager.newInstituicao.tipo}" >
+                        <f:selectItems
+                            value="#{administratorManager.allTiposInstituicao}"
+                            var="tipo"
+                            itemValue="#{tipo}"
+                            itemLabel="#{tipo}" />
+                    </h:selectOneMenu>
+                    <br></br>
+
+                    <br></br>
+                    <h:commandButton
+                        value="Create"
+                        action="${administratorManager.createInstituicao}"
+                        binding="#{administratorManager.component}">
+                    </h:commandButton>
+                </h:panelGrid>
+            </h:form>
+            <h:messages errorStyle="color: red" />
+            <br/>
+            <h:link value="Return" outcome="view"/>
+        </ui:define>
+    </ui:composition>
+</html>
