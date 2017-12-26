@@ -26,7 +26,7 @@ public class ConfigBean {
     @EJB
     private InstituicaoBean instituicaoBean;
     @EJB
-    private MembroCCPBean membroCPPBean;
+    private MembroCCPBean membroCCPBean;
 
     @PostConstruct
     public void populateBD() {
@@ -83,9 +83,9 @@ public class ConfigBean {
             
             
              //Adding a menbroCCP
-            membroCPPBean.create("membroCPP", "secret", "membroCPP", "membrocpp1@ipleiria.pt");
-            membroCPPBean.validarProposta("membroCPP", 1, false, "Because i Can muahahaha");
-            membroCPPBean.validarProposta("membroCPP", 2, true);
+            membroCCPBean.create("membroCPP", "secret", "membroCPP", "membrocpp1@ipleiria.pt");
+            membroCCPBean.validarProposta("membroCPP", 1, false, "Because i Can muahahaha");
+            membroCCPBean.validarProposta("membroCPP", 2, true);
             
             //propostaBean.addReferencia(1, "Este ja não entra (> 5)");  // ao descomentar esta linha uma excepção vai ser mandada e o codigo neste try passa a não ser executadopropostaBean.addReferencia(1, "1984");
             

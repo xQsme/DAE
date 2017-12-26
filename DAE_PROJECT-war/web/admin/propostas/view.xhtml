@@ -28,6 +28,10 @@
                     ${p.orcamento}
                 </p:column>
                 <p:column>
+                    <f:facet name="header">Estado</f:facet>
+                    ${p.estado}
+                </p:column>
+                <p:column>
                     <f:facet name="header">Actions</f:facet>
                     <span>
                         <h:commandLink
@@ -39,5 +43,7 @@
                 </p:column>
             </p:dataTable>
         </h:form>
+        <br/>
+        <h:link value="Return" outcome="/index"/>
     </h:body>
 </html>
