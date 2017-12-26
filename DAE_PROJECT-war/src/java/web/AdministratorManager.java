@@ -10,22 +10,31 @@ import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
+import dtos.UserDTO;
 import ejbs.InstituicaoBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
 import entities.Proponente;
 import ejbs.StudentBean;
+import ejbs.UserBean;
 import entities.Student;
+import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -50,20 +59,20 @@ public class AdministratorManager implements Serializable {
     
     private InstituicaoDTO currentInstituicao;
     private InstituicaoDTO newInstituicao;
+   
     private TeacherDTO currentTeacher;
     private TeacherDTO newTeacher;
+    
     private PropostaDTO currentProposta;
     private PropostaDTO newProposta;
+    
     private StudentDTO currentStudent;
     private StudentDTO newStudent;
-    private InstituicaoDTO currentInstituicaoDTO;
-    private InstituicaoDTO newInstituicaoDTO;
-    private TeacherDTO currentTeacherDTO;
-    private TeacherDTO newTeacherDTO;
-    private PropostaDTO currentPropostaDTO;
-    private PropostaDTO newPropostaDTO;
+    
+    private UIComponent component;
     
     public AdministratorManager() {
+        newStudent = new StudentDTO();
         newInstituicao = new InstituicaoDTO();
         newTeacher = new TeacherDTO();
         newProposta = new PropostaDTO();
@@ -96,57 +105,9 @@ public class AdministratorManager implements Serializable {
         }
     }
     
-    public InstituicaoDTO getCurrentInstituicaoDTO() {
-        return currentInstituicaoDTO;
-    }
-
-    public void setCurrentInstituicaoDTO(InstituicaoDTO currentInstituicaoDTO) {
-        this.currentInstituicaoDTO = currentInstituicaoDTO;
-    }
-
-    public InstituicaoDTO getNewInstituicaoDTO() {
-        return newInstituicaoDTO;
-    }
-
-    public void setNewInstituicaoDTO(InstituicaoDTO newInstituicaoDTO) {
-        this.newInstituicaoDTO = newInstituicaoDTO;
-    }
-
-    public TeacherDTO getCurrentTeacherDTO() {
-        return currentTeacherDTO;
-    }
-
-    public void setCurrentTeacherDTO(TeacherDTO currentTeacherDTO) {
-        this.currentTeacherDTO = currentTeacherDTO;
-    }
-
-    public TeacherDTO getNewTeacherDTO() {
-        return newTeacherDTO;
-    }
-
-    public void setNewTeacherDTO(TeacherDTO newTeacherDTO) {
-        this.newTeacherDTO = newTeacherDTO;
-    }
-
-    public PropostaDTO getCurrentPropostaDTO() {
-        return currentPropostaDTO;
-    }
-
-    public void setCurrentPropostaDTO(PropostaDTO currentPropostaDTO) {
-        this.currentPropostaDTO = currentPropostaDTO;
-    }
-
-    public PropostaDTO getNewPropostaDTO() {
-        return newPropostaDTO;
-    }
-
-    public void setNewPropostaDTO(PropostaDTO newPropostaDTO) {
-        this.newPropostaDTO = newPropostaDTO;
-    }
-    
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
-            return proponenteBean.getPropostaProponentes(currentPropostaDTO.getCode());
+            return proponenteBean.getPropostaProponentes(currentProposta.getCode());
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -155,7 +116,7 @@ public class AdministratorManager implements Serializable {
     
     public Collection<StudentDTO> getCurrentPropostaCandidatos(){
         try {
-            return studentBean.getPropostaCandidatos(currentPropostaDTO.getCode());
+            return studentBean.getPropostaCandidatos(currentProposta.getCode());
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -319,6 +280,94 @@ public class AdministratorManager implements Serializable {
             return null;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/instituicoes/view.xhtml?faces-redirect=true";
+    }
+    
+    public UIComponent getComponent() {
+        return component;
+    }
+
+    public void setComponent(UIComponent component) {
+        this.component = component;
+    }
+    
+    /* esta função nao esta a ser utilizada, esta antes a ser usada a classe usernamevalidator
+    public void validateUsername(FacesContext context, UIComponent toValidate, Object value) {
+        try {
+            //Your validation code goes here
+            String username = (String) value;
+            //If the validation fails
+            ArrayList<UserDTO> users = (ArrayList<UserDTO>) userBean.getAllUsers();
+            
+            for (UserDTO user : users) {
+                if (username.equalsIgnoreCase(user.getUsername())) {
+                    FacesMessage message = new FacesMessage("Error: invalid username.");
+                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
+                    context.addMessage(toValidate.getClientId(context), message);
+                    ((UIInput) toValidate).setValid(false);
+                }
+            }
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unkown error.", logger);
+        }
+    }*/
+    
+    public String createStudent() {
+        
+        try {
+            studentBean.create(
+                    newStudent.getUsername(),
+                    newStudent.getPassword(),
+                    newStudent.getName(),
+                    newStudent.getEmail());
+            newStudent.reset();
+        } catch (EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            return null;
+        }
+        return "/admin/students/view.xhtml?faces-redirect=true";
+    }
+    
+    public String createTeacher() {
+        
+        try {
+            teacherBean.create(
+                    newTeacher.getUsername(),
+                    newTeacher.getPassword(),
+                    newTeacher.getName(),
+                    newTeacher.getEmail(),
+                    newTeacher.getOffice());
+            newTeacher.reset();
+        } catch (EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            return null;
+        }
+        return "/admin/teachers/view.xhtml?faces-redirect=true";
+    }
+    
+    public String createInstituicao() {
+            
+        try {
+            instituicaoBean.create(
+                    newInstituicao.getUsername(),
+                    newInstituicao.getPassword(),
+                    newInstituicao.getName(),
+                    newInstituicao.getEmail(),
+                    newInstituicao.getTipo());
+            newTeacher.reset();
+        } catch (EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
         }
         return "/admin/instituicoes/view.xhtml?faces-redirect=true";
