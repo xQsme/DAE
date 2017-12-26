@@ -4,7 +4,9 @@ import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
 import dtos.PropostaDTO;
 import entities.Instituicao;
+import entities.Proponente;
 import entities.Proposta;
+import entities.Student;
 import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -70,6 +72,12 @@ public class PropostaBean extends Bean<Proposta> {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            for(Student s : proposta.getCandidatos()){
+                s.removeCandidatura(proposta);
+            }
+            for(Proponente p : proposta.getProponentes()){
+                p.removeProposta(proposta);
             }
             em.remove(proposta);
             
