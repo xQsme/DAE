@@ -60,6 +60,8 @@ public class UserManager implements Serializable {
         
         return redirect();
     }
+    
+    
 
     public boolean isUserInRole(UserGroup.GROUP group) {
         return isUserInRole(group.toString());

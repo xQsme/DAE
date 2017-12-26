@@ -35,7 +35,7 @@
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>ProjectSecurity</realm-name>
+        <realm-name>projecto_realm</realm-name>
     </login-config>
     <security-role>
         <description/>
