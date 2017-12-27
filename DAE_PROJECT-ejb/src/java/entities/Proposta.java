@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
-@NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p ORDER BY p.titulo")
+@NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p")
 public class Proposta implements Serializable {
     
  /* 

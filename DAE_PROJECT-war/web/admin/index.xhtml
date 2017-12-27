@@ -15,9 +15,9 @@ and open the template in the editor.
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <ui:composition template="templates/skeleton.xhtml">
+    <ui:composition template="../templates/skeleton.xhtml">
         <ui:define name="title">
-            Mestrados - Pagina Membro ECP
+            Mestrados
         </ui:define>
         <ui:define name="main">
             
@@ -33,14 +33,11 @@ and open the template in the editor.
                 </h:form>
             </c:if>
             <c:if test="${userManager.someUserAuthenticated}">
-                <p>You are logged in!</p>
-                <h:link outcome="${userManager.redirect()}" value="Return to Home Page"/>
-           
                 <p:megaMenu style="margin-top:20px">
-                    <p:menuitem value="Professores" outcome="admin/teachers/view" />
-                    <p:menuitem value="Intituições" outcome="admin/instituicoes/view" />
-                    <p:menuitem value="Estudantes" outcome="admin/students/view" />
-                    <p:menuitem value="Propostas" outcome="admin/propostas/view" />
+                    <p:menuitem value="Professores" outcome="teachers/view" />
+                    <p:menuitem value="Intituições" outcome="instituicoes/view" />
+                    <p:menuitem value="Estudantes" outcome="students/view" />
+                    <p:menuitem value="Propostas" outcome="propostas/view" />
                 </p:megaMenu>
                 
             </c:if>

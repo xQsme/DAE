@@ -19,39 +19,47 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
+        <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
-        <display-name>InstituicaoConstraint</display-name>
+        <display-name>ProponenteConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>Instituicao Pages</web-resource-name>
+            <web-resource-name>Proponente Pages</web-resource-name>
             <description/>
-            <url-pattern>/faces/admin/instituicoes/*</url-pattern>
+            <url-pattern>/faces/proponente/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
-            <role-name>Instituicao</role-name>
+            <role-name>Proponente</role-name>
         </auth-constraint>
     </security-constraint>
-    
+    <security-constraint>
+        <display-name>StudentConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Student Pages</web-resource-name>
+            <description/>
+            <url-pattern>/faces/student/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>Student</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>projecto_realm</realm-name>
+        <realm-name>dae_project_realm</realm-name>
     </login-config>
     <security-role>
         <description/>
-        <role-name>Instituicao</role-name>
-    </security-role>
-    <security-role>
-        <description/>
-        <role-name>MenbroCCP</role-name>
+        <role-name>MembroCCP</role-name>
     </security-role>
     <security-role>
         <description/>
         <role-name>Student</role-name>
     </security-role>
     <security-role>
-        <description/>
-        <role-name>Teacher</role-name>
+        <description>Professores + Instituicoes
+</description>
+        <role-name>Proponente</role-name>
     </security-role>
 </web-app>

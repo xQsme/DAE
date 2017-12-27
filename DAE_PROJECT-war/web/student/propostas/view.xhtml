@@ -6,11 +6,11 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Mestrados</title>
+        <title>Lista de Todas as propostas</title>
     </h:head>
     <h:body>
         <h:form>
-            <p:dataTable rendered="${not empty administratorManager.allPropostas}" value="${administratorManager.allPropostas}" var="p">			
+            <p:dataTable rendered="${not empty studentManager.allPropostas}" value="${studentManager.allPropostas}" var="p">			
                 <p:column>
                     <f:facet name="header">Titulo</f:facet>
                     ${p.titulo}
@@ -28,38 +28,25 @@
                     ${p.orcamento}
                 </p:column>
                 <p:column>
-                    <f:facet name="header">Estado</f:facet>
-                    ${p.estado}
-                </p:column>
-                <p:column>
                     <f:facet name="header">Actions</f:facet>
                     <span>
                         <h:commandLink
                             value="Details"
-                            action="/admin/propostas/details">
-                            <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            action="/student/propostas/details">
+                            <f:setPropertyActionListener target="#{studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                         </h:commandLink>
                     </span>
                     <span>
                         <h:commandLink
-                            value="Update"
-                            action="update">
-                            <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
-                        </h:commandLink>
-                    </span>
-                    <span>
-                        <h:commandLink
-                            value="Remove"
-                            action="${administratorManager.removeProposta}">
-                            <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            value="Candidatar"
+                            action="${studentManager.candidatar}">
+                            <f:setPropertyActionListener target="${studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                         </h:commandLink>
                     </span>
                 </p:column>
             </p:dataTable>
         </h:form>
         <br/>
-        <h:link value="Criar proposta" outcome="create"/>
-        <br/>
-        <h:link value="Return" outcome="/admin/index"/>
+        <h:link value="Return" outcome="/student/index"/>
     </h:body>
 </html>

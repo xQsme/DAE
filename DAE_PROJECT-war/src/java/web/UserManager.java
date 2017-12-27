@@ -26,21 +26,25 @@ public class UserManager implements Serializable {
     
     public String redirect() {
         if (isUserInRole(UserGroup.GROUP.Instituicao)) {
-            return "/faces/admin/index?faces-redirect=true";
+            logger.info("Instituicao");
+            return "/faces/proponente/index.xhtml?faces-redirect=true";
         }
         
         if (isUserInRole(UserGroup.GROUP.MembroCCP)) {
-            return "/faces/admin/index?faces-redirect=true";
+            logger.info("Admin");
+            return "/faces/admin/index.xhtml?faces-redirect=true";
         }
         
         if (isUserInRole(UserGroup.GROUP.Student)) {
-            return "/faces/students/index?faces-redirect=true";
+            logger.info("Estudante");
+            return "/faces/student/index.xhtml?faces-redirect=true";
         }
         
         if (isUserInRole(UserGroup.GROUP.Teacher)) {
-            return "/faces/teacher/subjects?faces-redirect=true";
+            logger.info("Professor");
+            return "/faces/proponente/index.xhtml?faces-redirect=true";
         }
-        
+        logger.info("erro");
         return "error?faces-redirect=true";
     }
     

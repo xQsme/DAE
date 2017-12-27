@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title><ui:insert name="title">Mestrados</ui:insert></title>
@@ -12,6 +13,12 @@
         </ui:insert>
     </h:head>
     <h:body>
+        <c:if test="${userManager.someUserAuthenticated}">
+            <div style="margin:20px">
+                <p>You are logged in!</p>
+                <h:link outcome="${userManager.logout()}" value="Logout"/>
+            </div>
+        </c:if>
         <div id="main">
             <ui:insert name="main">
                 <!-- All the main application content goes here -->

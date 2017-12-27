@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Proposta</title>
+    </h:head>
+    <h:body>
+        <p:panelGrid columns="2">
+
+            <h:outputLabel for="code" value="Code: " />
+            <h:outputText 
+                id="code"
+                value="#{studentManager.currentProposta.code}"/>
+
+            <h:outputLabel for="titulo" value="Titulo: " />
+            <h:outputText 
+                id="titulo"
+                value="#{studentManager.currentProposta.titulo}"/>
+
+            <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+            <h:outputText 
+                id="tipoDeTrabalho"
+                value="#{studentManager.currentProposta.tipoDeTrabalho}"/>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+            <h:dataTable rendered="${not empty studentManager.currentProposta.areasCientificas}" value="${studentManager.currentProposta.areasCientificas}" var="a">			
+                <h:column>
+                    ${a}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="resumo" value="Resumo: " />
+            <h:outputText 
+                id="resumo"
+                value="#{studentManager.currentProposta.resumo}"/>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+            <h:dataTable rendered="${not empty studentManager.currentPropostaProponentes}" value="${studentManager.currentPropostaProponentes}" var="p">			
+                <h:column>
+                    ${p.name}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+            <h:dataTable rendered="${not empty studentManager.currentPropostaCandidatos}" value="${studentManager.currentPropostaCandidatos}" var="c">			
+                <h:column>
+                    ${c.name}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+            <h:dataTable rendered="${not empty studentManager.currentProposta.objetivos}" value="${studentManager.currentProposta.objetivos}" var="o">			
+                <h:column>
+                    ${o}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+            <h:dataTable rendered="${not empty studentManager.currentProposta.bibliografia}" value="${studentManager.currentProposta.bibliografia}" var="b">			
+                <h:column>
+                    ${b}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+            <h:outputText 
+                id="planoDeTrabalhos"
+                value="#{studentManager.currentProposta.planoDeTrabalhos}"/>
+            
+            <h:outputLabel for="local" value="Local: " />
+            <h:outputText 
+                id="local"
+                value="#{studentManager.currentProposta.local}"/>
+            
+            <h:outputLabel rendered="${not empty studentManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+            <h:dataTable rendered="${not empty studentManager.currentProposta.requisitos}" value="${studentManager.currentProposta.requisitos}" var="r">			
+                <h:column>
+                    ${r}
+                </h:column>
+            </h:dataTable>
+            
+            <h:outputLabel for="orcamento" value="Orçamento: " />
+            <h:outputText 
+                id="orcamento"
+                value="#{studentManager.currentProposta.orcamento}"/>
+            
+            <h:outputLabel for="apoios" value="Apoios: " />
+            <h:outputText 
+                id="apoios"
+                value="#{studentManager.currentProposta.apoios}"/>
+
+                <h:outputLabel for="estado" value="Estado: "
+                               rendered="${not empty studentManager.currentProposta.estado}"/>
+                <h:outputText 
+                    id="estado"
+                    rendered="${not empty studentManager.currentProposta.estado}"
+                    value="#{studentManager.currentProposta.estado}"/>
+                
+                <h:outputLabel for="observacao" value="Observacao: " 
+                               rendered="${not empty studentManager.currentProposta.estado and 
+                                           not empty studentManager.currentProposta.observacao}" />
+                <h:outputText 
+                    id="observacao"
+                    rendered="${not empty studentManager.currentProposta.estado and
+                                not empty studentManager.currentProposta.observacao}"
+                    value="#{studentManager.currentProposta.observacao}"/>
+
+        </p:panelGrid>
+        <br/>
+
+        
+        <h:messages errorStyle="color: red" />    
+        <br/>
+        <h:link value="Return" outcome="view"/>
+    </h:body>
+</html>

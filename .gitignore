@@ -43,6 +43,7 @@ DAE_PROJECT-ejb/nbproject/
 DAE_PROJECT-ejb/setup/
 DAE_PROJECT-ejb/test/
 DAE_PROJECT-ejb/build.xml
+DAE_PROJECT-ejb/src/conf
 DAE_PROJECT-war/build/
 DAE_PROJECT-war/dist/
 DAE_PROJECT-war/nbproject/
