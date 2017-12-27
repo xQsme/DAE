@@ -33,6 +33,7 @@
             <role-name>Instituicao</role-name>
         </auth-constraint>
     </security-constraint>
+    
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>projecto_realm</realm-name>
