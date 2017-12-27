@@ -1,5 +1,6 @@
 package ejbs;
 
+import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
 import entities.Proposta;
@@ -10,18 +11,25 @@ import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.StudentAlreadyHasAppliedException;
 import exceptions.StudentCandidaturasFullException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
 public class StudentBean extends Bean<Student> {
+    
+    private static final Logger logger = Logger.getLogger("ejb.StudentBean");
 
     @PersistenceContext
     private EntityManager em;
@@ -89,7 +97,7 @@ public class StudentBean extends Bean<Student> {
         return em.createNamedQuery("getAllStudents").getResultList();
     }
     
-    public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException{
+    public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException, StudentAlreadyHasAppliedException{
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
@@ -101,6 +109,11 @@ public class StudentBean extends Bean<Student> {
             }
             if (student.getCandidaturas().size() > 4) {
                 throw new StudentCandidaturasFullException ("O aluno so se pode candidatar a 5 candidaturas no máximo!");
+            }
+            for(Proposta p : student.getCandidaturas()){
+                if (p.getCode() == propostaCode) {
+                    throw new StudentAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
+                }
             }
             proposta.addStudent(student);
             student.addCandidatura(proposta);
@@ -144,5 +157,30 @@ public class StudentBean extends Bean<Student> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+
+    public Collection<PropostaDTO> getCandidaturas(String username) {
+        try {
+            Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
+            List<Proposta> candidaturas = query.getResultList();
+            return PropostaBean.toPropostaDTOcollection(query.getResultList());
+            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
+    }
+
+    public StudentDTO getStudent(String username) {
+        try {
+            Query query = em.createQuery("SELECT s FROM Student s where s.username = '" + username + "'", Student.class);
+            ArrayList<StudentDTO> estudantes = (ArrayList<StudentDTO>) toDTOs(query.getResultList(), StudentDTO.class);
+            return estudantes.get(0);            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
+    }
+
+    public void removeCandidatura(String username, int code) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

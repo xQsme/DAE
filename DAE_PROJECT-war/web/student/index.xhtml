@@ -20,21 +20,10 @@ and open the template in the editor.
             Pagina Estudantes
         </ui:define>
         <ui:define name="main">
-            
-            <c:if test="${not userManager.someUserAuthenticated}">
-                <h:form rendered="${not userManager.someUserAuthenticated}">
-                    <h:panelGrid columns="2">                    
-                      <h:outputLabel for="username">Username: </h:outputLabel>
-                      <h:inputText id="username" value="#{userManager.username}" required="true" />
-                      <h:outputLabel for="password">Password: </h:outputLabel>
-                      <h:inputSecret id="password" value="#{userManager.password}" required="true" />
-                      <h:commandButton value="Login" action="#{userManager.login}" />
-                    </h:panelGrid>
-                </h:form>
-            </c:if>
             <c:if test="${userManager.someUserAuthenticated}">
                 <p:megaMenu style="margin-top:20px">
                     <p:menuitem value="Propostas" outcome="propostas/view" />
+                    <p:menuitem value="Candidaturas" outcome="propostas/candidaturas" />
                 </p:megaMenu>
             </c:if>
         </ui:define>

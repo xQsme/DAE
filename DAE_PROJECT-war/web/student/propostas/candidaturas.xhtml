@@ -6,11 +6,11 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Lista de Todas as propostas</title>
+        <title>Lista de Candidaturas</title>
     </h:head>
     <h:body>
         <h:form>
-            <p:dataTable rendered="${not empty studentManager.allPropostas}" value="${studentManager.allPropostas}" var="p">			
+            <p:dataTable rendered="${not empty studentManager.candidaturas}" value="${studentManager.candidaturas}" var="p">			
                 <p:column>
                     <f:facet name="header">Titulo</f:facet>
                     ${p.titulo}
@@ -38,16 +38,14 @@
                     </span>
                     <span>
                         <h:commandLink
-                            value="Candidatar"
-                            action="${studentManager.candidatar}">
+                            value="Remover"
+                            action="${studentManager.removerCandidatura}">
                             <f:setPropertyActionListener target="${studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                         </h:commandLink>
-                    </span>                
+                    </span>
                 </p:column>
             </p:dataTable>
         </h:form>
-        <br/>
-        <h:messages globalOnly="true" />
         <br/>
         <h:link value="Return" outcome="/student/index"/>
     </h:body>

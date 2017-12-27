@@ -87,6 +87,8 @@ public class Proposta implements Serializable {
     
     @Column
     private String observacao;
+    
+    
 
     public String getObservacao() {
         return observacao;

@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title><ui:insert name="title">Mestrados</ui:insert></title>
@@ -15,8 +16,10 @@
     <h:body>
         <c:if test="${userManager.someUserAuthenticated}">
             <div style="margin:20px">
-                <p>You are logged in!</p>
-                <h:link outcome="${userManager.logout()}" value="Logout"/>
+                <h:form>   
+                    <span>You are logged in!     </span>
+                    <p:commandButton action="#{userManager.logout}" value="Logout"  ajax="false"></p:commandButton>
+                </h:form>
             </div>
         </c:if>
         <div id="main">

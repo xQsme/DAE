@@ -1,10 +1,14 @@
 package web;
 
+import dtos.UserDTO;
+import ejbs.StudentBean;
+import ejbs.UserBean;
 import entities.UserGroup;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
@@ -18,6 +22,7 @@ public class UserManager implements Serializable {
 
     private String username;
     private String password;
+        
     private static final Logger logger = Logger.getLogger("web.UserManager");
         
     public UserManager() {
@@ -54,6 +59,7 @@ public class UserManager implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request
                 = (HttpServletRequest) context.getExternalContext().getRequest();
+        
         try {
             request.login(username, password);
         } catch (ServletException e) {

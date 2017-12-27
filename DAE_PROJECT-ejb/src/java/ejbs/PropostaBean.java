@@ -56,10 +56,36 @@ public class PropostaBean extends Bean<Proposta> {
 
     public Collection<PropostaDTO> getAllPropostas() {
         try {
-            return getAll(PropostaDTO.class);
+            //return getAll(PropostaDTO.class);
+            return toPropostaDTOcollection(getAll());
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {
+        LinkedList<PropostaDTO> dtos = new LinkedList<>();
+        for(Proposta p : propostas){
+            dtos.add(new PropostaDTO(
+                p.getCode(),
+                p.getTitulo(),
+                p.getTipoDeTrabalho(),
+                p.getAreasCientificas(),
+                p.getResumo(),
+                p.getProponentes(),
+                p.getCandidatos(),
+                p.getObjetivos(),
+                p.getBibliografia(),
+                p.getPlanoDeTrabalhos(),
+                p.getLocal(),
+                p.getRequisitos(),
+                p.getOrcamento(),
+                p.getApoios(),
+                p.getEstado(),
+                p.getObservacao()   
+            ));
+        }
+        return dtos;
     }
     
     @Override

@@ -13,16 +13,22 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.StudentCandidaturasFullException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
 public class UserBean extends Bean<User> {
+    
+    private static final Logger logger = Logger.getLogger("ejb.userBean");
 
     @PersistenceContext
     private EntityManager em;
