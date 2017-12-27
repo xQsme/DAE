@@ -177,4 +177,23 @@ public class PropostaDTO  implements Serializable{
         return observacao;
     }
 
+    public void reset() {
+        setCode(0);
+        setTitulo(null);
+        setTipoDeTrabalho(null);
+        setAreasCientificas(null);
+        setResumo(null);
+        setProponentes(null);
+        setCandidatos(null);
+        setObjetivos(null);
+        setBibliografia(null);
+        setPlanoDeTrabalhos(null);
+        setLocal(null);
+        setRequisitos(null);
+        setOrcamento(null);
+        setApoios(null);
+        setEstado(null);
+        setObservacao(null);
+    }
+
 }
