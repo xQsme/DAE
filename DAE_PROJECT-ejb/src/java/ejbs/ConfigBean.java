@@ -32,6 +32,7 @@ public class ConfigBean {
     public void populateBD() {
 
         try {   //todo verificar se o aluno ou proponente ja têm a proposta associada antes de associar (a verificação deve ser feita no bean do student e proponente, não aqui);
+            studentBean.create("1", "1", "1", "1");
             studentBean.create("studentNick1", "secret", "student1", "s1@ipleiria.pt");
             studentBean.create("studentNick2", "secret", "student2", "s2@ipleiria.pt");
             studentBean.create("studentNick3", "secret", "student3", "s3@ipleiria.pt");

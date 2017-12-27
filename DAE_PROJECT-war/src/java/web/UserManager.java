@@ -51,7 +51,6 @@ public class UserManager implements Serializable {
         HttpServletRequest request
                 = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
-            logger.log(Level.WARNING, "Inputed password: "+ Security.hashPassword(password));
             request.login(username, password);
         } catch (ServletException e) {
             logger.log(Level.WARNING, e.getMessage());
