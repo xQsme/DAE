@@ -11,7 +11,7 @@ import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
-import exceptions.StudentAlreadyHasAppliedException;
+import exceptions.UserAlreadyHasAppliedException;
 import exceptions.StudentCandidaturasFullException;
 import exceptions.Utils;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class StudentBean extends Bean<Student> {
         return em.createNamedQuery("getAllStudents").getResultList();
     }
     
-    public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException, StudentAlreadyHasAppliedException{
+    public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
@@ -112,7 +112,7 @@ public class StudentBean extends Bean<Student> {
             }
             for(Proposta p : student.getCandidaturas()){
                 if (p.getCode() == propostaCode) {
-                    throw new StudentAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
+                    throw new UserAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
                 }
             }
             proposta.addStudent(student);

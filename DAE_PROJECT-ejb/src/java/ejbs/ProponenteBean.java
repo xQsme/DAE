@@ -6,13 +6,17 @@
 package ejbs;
 
 import dtos.ProponenteDTO;
+import dtos.StudentDTO;
 import entities.Proponente;
 import entities.Proposta;
+import entities.Student;
 import exceptions.EntityDoesNotExistsException;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.persistence.Query;
 
 /**
  *
@@ -49,5 +53,15 @@ public class ProponenteBean extends Bean<Proponente> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    public ProponenteDTO getProponente(String username) {
+        try {
+            Query query = em.createQuery("SELECT p FROM Proponente p where p.username = '" + username + "'", Proponente.class);
+            ArrayList<ProponenteDTO> proponentes = (ArrayList<ProponenteDTO>) toDTOs(query.getResultList(), ProponenteDTO.class);
+            return proponentes.get(0);            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
     }
 }

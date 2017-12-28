@@ -16,12 +16,12 @@ import java.util.List;
  */
 public class ProponenteDTO extends UserDTO implements Serializable {
     
-    private List<Proposta> propostas;
+    private List<PropostaDTO> propostas;
 
     public ProponenteDTO() {
     }    
     
-    public ProponenteDTO(String username, String password, String name, String email, List<Proposta> propostas) {
+    public ProponenteDTO(String username, String password, String name, String email, List<PropostaDTO> propostas) {
         super(username, password, name, email);
         this.propostas = propostas;
     }
@@ -32,11 +32,15 @@ public class ProponenteDTO extends UserDTO implements Serializable {
         this.propostas = new LinkedList<>();
     }    
 
-    public List<Proposta> getPropostas() {
+    public List<PropostaDTO> getPropostas() {
         return propostas;
     }
 
-    public void addProposta(Proposta proposta) {
+    public void addProposta(PropostaDTO proposta) {
         propostas.add(proposta);
+    }
+
+    public void setPropostas(List<PropostaDTO> propostas) {
+        this.propostas = propostas;
     }
 }

@@ -4,49 +4,53 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <h:head>
-        <title>Lista de Candidaturas</title>
-    </h:head>
-    <h:body>
-        <h:form>
-            <p:dataTable rendered="${not empty studentManager.candidaturas}" value="${studentManager.candidaturas}" var="p">			
-                <p:column>
-                    <f:facet name="header">Titulo</f:facet>
-                    ${p.titulo}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">Tipo de Trabalho</f:facet>
-                    ${p.tipoDeTrabalho}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">Local</f:facet>
-                    ${p.local}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">Orçamento</f:facet>
-                    ${p.orcamento}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">Actions</f:facet>
-                    <span>
-                        <h:commandLink
-                            value="Details"
-                            action="/student/propostas/details">
-                            <f:setPropertyActionListener target="#{studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
-                        </h:commandLink>
-                    </span>
-                    <span>
-                        <h:commandLink
-                            value="Remover"
-                            action="${studentManager.removerCandidatura}">
-                            <f:setPropertyActionListener target="${studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
-                        </h:commandLink>
-                    </span>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-        <br/>
-        <h:link value="Return" outcome="/student/index"/>
-    </h:body>
+    <ui:composition template="../../templates/skeleton.xhtml">
+        <ui:define name="title">
+            Lista de Candidaturas
+        </ui:define>
+        <ui:define name="main">
+            <h:form>
+                <p:dataTable rendered="${not empty studentManager.candidaturas}" value="${studentManager.candidaturas}" var="p">			
+                    <p:column>
+                        <f:facet name="header">Titulo</f:facet>
+                        ${p.titulo}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Tipo de Trabalho</f:facet>
+                        ${p.tipoDeTrabalho}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Local</f:facet>
+                        ${p.local}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Orçamento</f:facet>
+                        ${p.orcamento}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <span>
+                            <h:commandLink
+                                value="Details"
+                                action="/student/propostas/details">
+                                <f:setPropertyActionListener target="#{studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                        <span>
+                            <h:commandLink
+                                value="Remover"
+                                action="${studentManager.removerCandidatura}">
+                                <f:setPropertyActionListener target="${studentManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <br/>
+            <h:link value="Return" outcome="/student/index"/>
+        </ui:define>
+    </ui:composition>
 </html>

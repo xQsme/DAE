@@ -49,12 +49,14 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @SessionScoped
-public class StudentManager implements Serializable {
+public class TeacherManager implements Serializable {
     
     @EJB
     private ProponenteBean proponenteBean;
     @EJB
     private PropostaBean propostaBean;
+    @EJB
+    private TeacherBean teacherBean;
     @EJB
     private StudentBean studentBean;
     
@@ -63,18 +65,20 @@ public class StudentManager implements Serializable {
     
     private static final Logger logger = Logger.getLogger("web.StudentManager");
     
-    private StudentDTO student;
+    private TeacherDTO teacher;
+    
     private PropostaDTO currentProposta;
+    private PropostaDTO newProposta;
     
     private UIComponent component;
     
-    public StudentManager() {
-        
+    public TeacherManager() {
+        newProposta = new PropostaDTO();
     }
     
     @PostConstruct
     public void Init(){
-        setUpStudent();
+        setUpTeacher();
     }
     
     public Collection<PropostaDTO> getAllPropostas() {
@@ -86,13 +90,14 @@ public class StudentManager implements Serializable {
         }
     }
     
-    public List<PropostaDTO> getCandidaturas() {
-        return student.getCandidaturas();
+    public List<PropostaDTO> getTeacherPropostas() {
+        logger.info("tamanho propostas = " + teacher.getPropostas().size());
+        return teacher.getPropostas();
     }
     
-    public Boolean isStudentCandidatoProposta(int codeProposta){
+    public Boolean isTeacherProponenteProposta(int codeProposta){
         logger.info("codigo = " + codeProposta);
-        for (PropostaDTO p : student.getCandidaturas()){
+        for (PropostaDTO p : teacher.getPropostas()){
             if (p.getCode() == codeProposta) {
                 return true;
             }
@@ -100,12 +105,21 @@ public class StudentManager implements Serializable {
         return false;
     }
     
-    public void removerCandidatura(){
+    public Collection<String> getAllTiposTrabalho() {
         try {
-            studentBean.removePropostaStudent(currentProposta.getCode(), student.getUsername());
-            for(PropostaDTO p : student.getCandidaturas()){
+            return propostaBean.getAllTiposTrabalhos();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public void removerProposta(){
+        try {
+            teacherBean.removePropostaTeacher(currentProposta.getCode(), teacher.getUsername());
+            for(PropostaDTO p : teacher.getPropostas()){
                 if (p.getCode() == currentProposta.getCode()) {
-                    student.getCandidaturas().remove(p);                    
+                    teacher.getPropostas().remove(p);                    
                 }
             }
 
@@ -116,10 +130,10 @@ public class StudentManager implements Serializable {
         }
     }
     
-    public void candidatar(){
+    public void adicionarProposta(){
         try {
-            studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
-            student.getCandidaturas().add(currentProposta);
+            teacherBean.addPropostaTeacher(currentProposta.getCode(), teacher.getUsername());
+            teacher.getPropostas().add(currentProposta);
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -151,6 +165,14 @@ public class StudentManager implements Serializable {
     public void setCurrentProposta(PropostaDTO currentProposta) {
         this.currentProposta = currentProposta;
     }    
+
+    public PropostaDTO getNewProposta() {
+        return newProposta;
+    }
+
+    public void setNewProposta(PropostaDTO newProposta) {
+        this.newProposta = newProposta;
+    }
     
     public UIComponent getComponent() {
         return component;
@@ -160,11 +182,19 @@ public class StudentManager implements Serializable {
         this.component = component;
     }
 
-    private void setUpStudent() {
+    private void setUpTeacher() {
         logger.info(userManager.toString());
         String username = userManager.getUsername();
         logger.info(username);
-        student = studentBean.getStudent( username );
+        teacher = teacherBean.getTeacher( username );
+        logger.info(teacher.toString());
+                /*
+        ProponenteDTO proponente  = proponenteBean.getProponente(username );
+        logger.info(proponente.toString());
+        logger.info(" " + proponente.getPropostas().size());
+
+        proponente.s
+        teacher.set*/
     }
 
     public UserManager getUserManager() {
@@ -174,6 +204,63 @@ public class StudentManager implements Serializable {
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }
+
+    public TeacherDTO getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(TeacherDTO teacher) {
+        this.teacher = teacher;
+    }
+    
+    public String updateProposta() {
+        try {
+            propostaBean.update(
+                    currentProposta.getCode(),
+                    currentProposta.getTitulo(),
+                    currentProposta.getTipoDeTrabalho(),
+                    currentProposta.getResumo(),
+                    currentProposta.getPlanoDeTrabalhos(),
+                    currentProposta.getLocal(),
+                    currentProposta.getOrcamento(),
+                    currentProposta.getApoios());
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/teacher/propostas/mine.xhtml?faces-redirect=true";
+    }
+    
+    public String createProposta() {
+        int code = propostaBean.getNextCode();
+        logger.info("" + code);
+        try {
+            propostaBean.create(
+                    code,
+                    newProposta.getTitulo(),
+                    newProposta.getTipoDeTrabalho(), 
+                    newProposta.getResumo(),
+                    newProposta.getPlanoDeTrabalhos(), 
+                    newProposta.getLocal(), 
+                    newProposta.getOrcamento(), 
+                    newProposta.getApoios());
+            teacherBean.addPropostaTeacher(code, teacher.getUsername());
+            newProposta.reset();
+            //teacher.addProposta(new PropostaDTO (p.getCode(), p.getTitulo(), p.getTipoDeTrabalho(), p.getAreasCientificas(), p.getResumo(), p.getProponentes().) );
+            setUpTeacher();
+        } catch (EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            return null;
+        }
+        return "/teacher/propostas/mine.xhtml?faces-redirect=true";
+    }
+    
     
     
 }

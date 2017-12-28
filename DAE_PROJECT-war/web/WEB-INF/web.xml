@@ -22,18 +22,6 @@
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
-        <display-name>ProponenteConstraint</display-name>
-        <web-resource-collection>
-            <web-resource-name>Proponente Pages</web-resource-name>
-            <description/>
-            <url-pattern>/faces/proponente/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description/>
-            <role-name>Proponente</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <security-constraint>
         <display-name>StudentConstraint</display-name>
         <web-resource-collection>
             <web-resource-name>Student Pages</web-resource-name>
@@ -45,10 +33,38 @@
             <role-name>Student</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>TeacherConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Teacher Pages</web-resource-name>
+            <description/>
+            <url-pattern>/faces/teacher/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>Teacher</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>InstitucaoConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Instituicao pages</web-resource-name>
+            <description/>
+            <url-pattern>/faces/instituicao/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>Instituicao</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>dae_project_realm</realm-name>
     </login-config>
+    <security-role>
+        <description/>
+        <role-name>Instituicao</role-name>
+    </security-role>
     <security-role>
         <description/>
         <role-name>MembroCCP</role-name>
@@ -58,8 +74,7 @@
         <role-name>Student</role-name>
     </security-role>
     <security-role>
-        <description>Professores + Instituicoes
-</description>
-        <role-name>Proponente</role-name>
+        <description/>
+        <role-name>Teacher</role-name>
     </security-role>
 </web-app>

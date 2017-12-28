@@ -1,5 +1,6 @@
 package ejbs;
 
+import dtos.StudentDTO;
 import dtos.TeacherDTO;
 import entities.Proposta;
 import entities.Student;
@@ -8,13 +9,16 @@ import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.UserAlreadyHasAppliedException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
@@ -135,6 +139,11 @@ public class TeacherBean extends Bean<Teacher> {
             if (teacher == null) {
                 throw new EntityDoesNotExistsException("There is no teacher with that username.");
             }
+            for(Proposta p : teacher.getPropostas()){
+                if (p.getCode() == propostaCode) {
+                    throw new UserAlreadyHasAppliedException("O professor ja está aplicado a essa Proposta!");
+                }
+            }
             proposta.addProponente(teacher);
             teacher.addProposta(proposta);
         } catch (EntityDoesNotExistsException e) {
@@ -162,4 +171,14 @@ public class TeacherBean extends Bean<Teacher> {
             throw new EJBException(e.getMessage());
         }
     }    
+    
+    public TeacherDTO getTeacher(String username) {
+        try {
+            Query query = em.createQuery("SELECT t FROM Teacher t where t.username = '" + username + "'", Teacher.class);
+            ArrayList<TeacherDTO> professores = (ArrayList<TeacherDTO>) toDTOs(query.getResultList(), TeacherDTO.class);
+            return professores.get(0);            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
+    }
 }

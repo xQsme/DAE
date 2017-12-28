@@ -1,16 +1,18 @@
 package dtos;
 
+import entities.Proposta;
 import java.io.Serializable;
+import java.util.List;
 
-public class TeacherDTO extends UserDTO implements Serializable {
+public class TeacherDTO extends ProponenteDTO implements Serializable {
     
     private String office;
 
     public TeacherDTO() {
     }    
     
-    public TeacherDTO(String username, String password, String name, String email, String office) {
-        super(username, password, name, email);
+    public TeacherDTO(String username, String password, String name, String email, List<PropostaDTO> propostas, String office) {
+        super(username, password, name, email, propostas);
         this.office = office;
     }
     
@@ -27,4 +29,6 @@ public class TeacherDTO extends UserDTO implements Serializable {
     public void setOffice(String office) {
         this.office = office;
     }
+    
+    
 }

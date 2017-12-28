@@ -23,7 +23,7 @@ import javax.validation.ConstraintViolationException;
 @Stateless
 public class PropostaBean extends Bean<Proposta> {
 
-    public void create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
+    public Proposta create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
         throws EntityAlreadyExistsException, EntityDoesNotExistsException, MyConstraintViolationException {
         
         try {
@@ -33,6 +33,7 @@ public class PropostaBean extends Bean<Proposta> {
             
             Proposta proposta = new Proposta(code, titulo, tipoDeTrabalho, resumo, planoDeTrabalho, local, orcamento, apoios);
             em.persist(proposta);
+            return proposta;
         
         } catch (EntityAlreadyExistsException e){//| EntityDoesNotExistsException e) {
             throw e;           
