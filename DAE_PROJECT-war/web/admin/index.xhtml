@@ -19,8 +19,16 @@ and open the template in the editor.
         <ui:define name="title">
             Mestrados
         </ui:define>
+           
         <ui:define name="main">
-            
+            <c:if test="${userManager.someUserAuthenticated}">
+            <p:megaMenu style="margin-top:20px">
+                <p:menuitem value="Professores" outcome="teachers/view" />
+                <p:menuitem value="Intituições" outcome="instituicoes/view" />
+                <p:menuitem value="Estudantes" outcome="students/view" />
+                <p:menuitem value="Propostas" outcome="propostas/view" />
+            </p:megaMenu>
+            </c:if>
             <c:if test="${not userManager.someUserAuthenticated}">
                 <h:form rendered="${not userManager.someUserAuthenticated}">
                     <h:panelGrid columns="2">                    
@@ -31,15 +39,6 @@ and open the template in the editor.
                       <h:commandButton value="Login" action="#{userManager.login}" />
                     </h:panelGrid>
                 </h:form>
-            </c:if>
-            <c:if test="${userManager.someUserAuthenticated}">
-                <p:megaMenu style="margin-top:20px">
-                    <p:menuitem value="Professores" outcome="teachers/view" />
-                    <p:menuitem value="Intituições" outcome="instituicoes/view" />
-                    <p:menuitem value="Estudantes" outcome="students/view" />
-                    <p:menuitem value="Propostas" outcome="propostas/view" />
-                </p:megaMenu>
-                
             </c:if>
         </ui:define>
     </ui:composition>
