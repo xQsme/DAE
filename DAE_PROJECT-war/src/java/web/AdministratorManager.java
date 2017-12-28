@@ -215,6 +215,15 @@ public class AdministratorManager implements Serializable {
         }
     }
     
+    public Collection<String> getAllPropostaEstados() {
+        try {
+            return PropostaBean.getAllPropostaEstados();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public void removeStudent(){ 
         try {
             studentBean.remove(currentStudent.getUsername());
@@ -317,6 +326,22 @@ public class AdministratorManager implements Serializable {
                     currentProposta.getOrcamento(),
                     currentProposta.getApoios());
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }
+    
+    public String validateProposta() {
+        try {
+            propostaBean.addValidacao(
+                    currentProposta.getCode(),
+                    currentProposta.getBoolEstado(),
+                    currentProposta.getObservacao());
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         } catch (Exception e) {

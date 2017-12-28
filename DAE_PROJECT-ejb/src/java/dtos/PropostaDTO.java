@@ -23,8 +23,9 @@ public class PropostaDTO  implements Serializable{
     private String apoios;
     private Boolean estado;
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
+    public void setEstado(String estado) {
+        if(estado==null||estado.isEmpty()) this.estado=null;
+        else this.estado = (estado.toUpperCase().equals("ACEITE"))? true:false;
     }
 
     public void setObservacao(String observacao) {
@@ -171,6 +172,10 @@ public class PropostaDTO  implements Serializable{
         if(estado==null) return null;
         if(estado) return "aceite";
         else return  "não aceite";
+    }
+    
+    public Boolean getBoolEstado(){
+        return this.estado;
     }
     
     public String getObservacao(){

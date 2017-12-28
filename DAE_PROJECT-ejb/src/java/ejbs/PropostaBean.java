@@ -175,11 +175,51 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
+    public void addEstado(int propostaCode, Boolean estado) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Estado de Proposta: Invalido ");
+            }
+            proposta.setEstado(estado);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void addObservacao(int propostaCode, String observacao) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Proposta Invalida ");
+            }
+            proposta.setObservacao(observacao);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void addValidacao(int propostaCode, Boolean estado, String observacao) throws EntityDoesNotExistsException{
+        addEstado(propostaCode, estado);
+        addObservacao(propostaCode, observacao);
+    }
+    
     public static Collection<String> getAllTiposTrabalhos() {
         LinkedList<String> tipos = new LinkedList<>();
         tipos.add(TipoDeTrabalho.Dissertação.toString());
         tipos.add(TipoDeTrabalho.Estágio.toString());
         tipos.add(TipoDeTrabalho.Projeto.toString());
+        return tipos;
+    }
+    
+    public static Collection<String> getAllPropostaEstados() {
+        LinkedList<String> tipos = new LinkedList<>();
+        tipos.add("Aceite");
+        tipos.add("Não Aceite");
         return tipos;
     }
     

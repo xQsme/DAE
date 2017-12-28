@@ -57,6 +57,18 @@
             <role-name>Instituicao</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>AdminConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Admin Pages</web-resource-name>
+            <description/>
+            <url-pattern>/faces/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>MembroCCP</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>dae_project_realm</realm-name>

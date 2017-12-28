@@ -73,10 +73,10 @@ public class UserManager implements Serializable {
     
 
     public boolean isUserInRole(UserGroup.GROUP group) {
-        return isUserInRole(group.toString());
+        return isUserRole(group.toString());
     }
     
-    public boolean isUserInRole(String role) {
+    public boolean isUserRole(String role) {
         logger.info("isUserInRole ("+ role +")");
         logger.info("isSomeUserAuthenticated = " + isSomeUserAuthenticated());
         logger.info("isUserInRole = " + FacesContext.getCurrentInstance().getExternalContext().isUserInRole(role));
