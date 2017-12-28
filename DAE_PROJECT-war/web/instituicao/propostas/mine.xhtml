@@ -17,11 +17,11 @@ and open the template in the editor.
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
-            Todas as Propostas
+            As minhas Propostas
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty teacherManager.teacherPropostas}" value="${teacherManager.teacherPropostas}" var="p">			
+                <p:dataTable rendered="${not empty  instituicaoManager.instituicaoPropostas}" value="${ instituicaoManager.instituicaoPropostas}" var="p">			
                     <p:column>
                         <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
@@ -47,22 +47,22 @@ and open the template in the editor.
                         <span>
                             <h:commandLink
                                 value="Details"
-                                action="/teacher/propostas/details">
-                                <f:setPropertyActionListener target="#{teacherManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                                action="/instituicao/propostas/details">
+                                <f:setPropertyActionListener target="#{ instituicaoManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                         <span>
                             <h:commandLink
                                 value="Update"
                                 action="update">
-                                <f:setPropertyActionListener target="${teacherManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                                <f:setPropertyActionListener target="${ instituicaoManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                         <span>
                             <h:commandLink
                                 value="Remove"
-                                action="${teacherManager.removeProposta}">
-                                <f:setPropertyActionListener target="${teacherManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                                action="${ instituicaoManager.removeProposta}">
+                                <f:setPropertyActionListener target="${ instituicaoManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                     </p:column>
@@ -71,7 +71,7 @@ and open the template in the editor.
             <br/>
             <h:link value="Criar proposta" outcome="create"/>
             <br/>
-            <h:link value="Return" outcome="/teacher/index"/>
+            <h:link value="Return" outcome="/instituicao/index"/>
         </ui:define>
     </ui:composition>
 </html>

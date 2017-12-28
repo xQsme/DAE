@@ -11,6 +11,7 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
@@ -137,5 +139,15 @@ public class InstituicaoBean extends Bean<Instituicao> {
         tipos.add(TipoDeInstituicao.Empresa.toString());
         tipos.add(TipoDeInstituicao.Pública.toString());
         return tipos;
+    }
+    
+    public InstituicaoDTO getInstituicao(String username) {
+        try {
+            Query query = em.createQuery("SELECT i FROM Instituicao i where i.username = '" + username + "'", Instituicao.class);
+            ArrayList<InstituicaoDTO> instituicoes = (ArrayList<InstituicaoDTO>) toDTOs(query.getResultList(), InstituicaoDTO.class);
+            return instituicoes.get(0);            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        } 
     }
 }
