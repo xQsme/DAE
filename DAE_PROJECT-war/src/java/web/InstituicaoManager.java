@@ -263,6 +263,15 @@ public class InstituicaoManager implements Serializable {
         return "/instituicao/propostas/mine.xhtml?faces-redirect=true";
     }
     
-    
+    public void removeProposta(){ 
+        try {
+            propostaBean.remove(currentProposta.getCode());
+            setUpInstituicao();
+        } catch (EntityDoesNotExistsException ex) {
+            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
     
 }
