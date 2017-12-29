@@ -8,19 +8,23 @@ package web;
 import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
+import dtos.MembroCCPDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
 import dtos.UserDTO;
 import ejbs.InstituicaoBean;
+import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
 import entities.Proponente;
 import ejbs.StudentBean;
 import ejbs.UserBean;
+import entities.MembroCCP;
 import entities.Student;
+import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -37,6 +42,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.mail.internet.AddressException;
 
 /**
  *
@@ -52,6 +58,10 @@ public class AdministratorManager implements Serializable {
     private TeacherBean teacherBean;
     @EJB
     private PropostaBean propostaBean;
+    
+    @EJB
+    private MembroCCPBean membroCCPBean;
+    
     @EJB
     private ProponenteBean proponenteBean;
     @EJB
@@ -345,12 +355,26 @@ public class AdministratorManager implements Serializable {
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
-    public String validateProposta() {
+    public String validateProposta(String username) throws AddressException, Exception {
         try {
             propostaBean.addValidacao(
                     currentProposta.getCode(),
                     currentProposta.getBoolEstado(),
                     currentProposta.getObservacao());
+            
+            MembroCCP membro=membroCCPBean.find(username);
+            EmailManager mail = new EmailManager();//currentUser.getEmail(),
+            
+            String titulo = currentProposta.getTitulo();
+            String message = buildMessage(username);
+             
+            List<String> recipients= new LinkedList<String>();
+            for(Proponente proponente: currentProposta.getProponentes()){
+                recipients.add(proponente.getEmail());
+            }            
+            
+            mail.send(membro.getEmail(), membro.getPassword(), membro.getEmail(), titulo, message, recipients);
+            
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
@@ -358,6 +382,7 @@ public class AdministratorManager implements Serializable {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
+      
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
@@ -472,5 +497,20 @@ public class AdministratorManager implements Serializable {
             return null;
         }
         return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }
+
+    private String buildMessage(String username) {
+        String msg = "<strong>A proposta:</strong> "+currentProposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ currentProposta.getResumo()+"."
+                    +".<br><br><strong>Foi avaliada por:</strong> "+ username+".";
+                  
+        msg+= (currentProposta.getBoolEstado())? 
+            ("<br><br>Sendo esta <strong>" + currentProposta.getEstado()).toUpperCase()+"</strong>.": 
+            ("<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado().toUpperCase()) +"</strong>.";
+            
+        msg+= (currentProposta.getObservacao()!=null && !currentProposta.getObservacao().isEmpty())?
+            ("<br><strong>Observação:</strong> "+ currentProposta.getObservacao())+".": "<br><br>Não deixou Observação.";
+        
+        return msg;
     }
 }

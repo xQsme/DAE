@@ -84,7 +84,7 @@
                     <h:commandButton
                         id="submit"
                         value="Validar"
-                        action="#{administratorManager.validateProposta()}" />
+                        action="#{administratorManager.validateProposta(userManager.username)}" />
                     <h:message for="submit" style="color: red"/>
                 </h:panelGrid>  
 

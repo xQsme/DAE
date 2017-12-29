@@ -5,6 +5,8 @@
  */
 package ejbs;
 
+import dtos.MembroCCPDTO;
+import dtos.TeacherDTO;
 import entities.MembroCCP;
 import entities.Proposta;
 import entities.Teacher;
@@ -12,6 +14,7 @@ import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.ProposalStateAlreadyDefineException;
+import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,7 +27,7 @@ import javax.persistence.PersistenceContext;
 
 
 @Stateless
-public class MembroCCPBean {
+public class MembroCCPBean{
     
     @PersistenceContext
     private EntityManager em;
@@ -43,6 +46,20 @@ public class MembroCCPBean {
         }
     }
     
+    public MembroCCP find(String username){
+        try {
+            MembroCCP membroCCP = em.find(MembroCCP.class, username);
+            if (membroCCP == null) {
+                throw new EntityDoesNotExistsException("Invalid MembroCPP Username");
+            }
+            return membroCCP; 
+        } catch (EntityDoesNotExistsException e) {
+            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return null;
+    }
     
     //In case the Menber doesnt leave a comment
     public void validarProposta(String username, int propostaCode, Boolean validar) 
