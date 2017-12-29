@@ -6,12 +6,14 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
             Validate ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
+            <c:if test="#{empty administratorManager.currentProposta.estado}">
             <h:form>                  
                 <h:panelGrid columns="3">
 
@@ -80,19 +82,24 @@
                     <br></br>
 
                     <br></br>
-
+                   
+       
                     <h:commandButton
                         id="submit"
                         value="Validar"
+                        onclick="if (! confirm('Tem a certeza?')) return false"
                         action="#{administratorManager.validateProposta(userManager.username)}" />
-                    <h:message for="submit" style="color: red"/>
+                    <h:message for="submit" style="color: red"/>    
                 </h:panelGrid>  
 
             </h:form>
-
             <h:messages errorStyle="color: red" />        
-            <br/>
+            </c:if>
+            <c:if test="#{not empty administratorManager.currentProposta.estado}">
+                <p>Proposta com o Titulo: #{administratorManager.currentProposta.titulo} ja validada</p>
+            </c:if>
             <h:link value="Return" outcome="view"/>
+            
         </ui:define>
     </ui:composition>
 </html>
