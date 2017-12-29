@@ -225,11 +225,11 @@ public class StudentManager implements Serializable {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
 
-            client.target(URILookup.getBaseAPI())
+            System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document));
+                    .put(Entity.xml(document)));
 
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -238,5 +238,4 @@ public class StudentManager implements Serializable {
 
         //return "details?faces-redirect=true";
     }
-
 }
