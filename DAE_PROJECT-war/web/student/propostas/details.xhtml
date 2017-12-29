@@ -12,123 +12,138 @@
             Detalhes
         </ui:define>
         <ui:define name="main">
-            <p:panelGrid columns="2">
+            <h:form>
+                <p:panelGrid columns="2">
 
-                <h:outputLabel for="code" value="Code: " />
-                <h:outputText 
-                    id="code"
-                    value="#{studentManager.currentProposta.code}"/>
+                    <h:outputLabel for="code" value="Code: " />
+                    <h:outputText 
+                        id="code"
+                        value="#{studentManager.currentProposta.code}"/>
 
-                <h:outputLabel for="titulo" value="Titulo: " />
-                <h:outputText 
-                    id="titulo"
-                    value="#{studentManager.currentProposta.titulo}"/>
+                    <h:outputLabel for="titulo" value="Titulo: " />
+                    <h:outputText 
+                        id="titulo"
+                        value="#{studentManager.currentProposta.titulo}"/>
 
-                <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
-                <h:outputText 
-                    id="tipoDeTrabalho"
-                    value="#{studentManager.currentProposta.tipoDeTrabalho}"/>
+                    <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+                    <h:outputText 
+                        id="tipoDeTrabalho"
+                        value="#{studentManager.currentProposta.tipoDeTrabalho}"/>
 
-                <h:outputLabel rendered="${not empty studentManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
-                <h:dataTable rendered="${not empty studentManager.currentProposta.areasCientificas}" value="${studentManager.currentProposta.areasCientificas}" var="a">			
-                    <h:column>
-                        ${a}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+                    <h:dataTable id="areasCientificas" rendered="${not empty studentManager.currentProposta.areasCientificas}" value="${studentManager.currentProposta.areasCientificas}" var="a">			
+                        <h:column>
+                            ${a}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel for="resumo" value="Resumo: " />
-                <h:outputText 
-                    id="resumo"
-                    value="#{studentManager.currentProposta.resumo}"/>
+                    <h:outputLabel for="resumo" value="Resumo: " />
+                    <h:outputText 
+                        id="resumo"
+                        value="#{studentManager.currentProposta.resumo}"/>
 
-                <h:outputLabel rendered="${not empty studentManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
-                <h:dataTable rendered="${not empty studentManager.currentPropostaProponentes}" value="${studentManager.currentPropostaProponentes}" var="p">			
-                    <h:column>
-                        ${p.name}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+                    <h:dataTable id="proponentes" rendered="${not empty studentManager.currentPropostaProponentes}" value="${studentManager.currentPropostaProponentes}" var="p">			
+                        <h:column>
+                            ${p.name}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel rendered="${not empty studentManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                <h:dataTable rendered="${not empty studentManager.currentPropostaCandidatos}" value="${studentManager.currentPropostaCandidatos}" var="c">			
-                    <h:column>
-                        ${c.name}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+                    <h:dataTable id="candidatos" rendered="${not empty studentManager.currentPropostaCandidatos}" value="${studentManager.currentPropostaCandidatos}" var="c">			
+                        <h:column>
+                            ${c.name}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel rendered="${not empty studentManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
-                <h:dataTable rendered="${not empty studentManager.currentProposta.objetivos}" value="${studentManager.currentProposta.objetivos}" var="o">			
-                    <h:column>
-                        ${o}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+                    <h:dataTable id="objetivos" rendered="${not empty studentManager.currentProposta.objetivos}" value="${studentManager.currentProposta.objetivos}" var="o">			
+                        <h:column>
+                            ${o}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel rendered="${not empty studentManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
-                <h:dataTable rendered="${not empty studentManager.currentProposta.bibliografia}" value="${studentManager.currentProposta.bibliografia}" var="b">			
-                    <h:column>
-                        ${b}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+                    <h:dataTable id="bibliografia" rendered="${not empty studentManager.currentProposta.bibliografia}" value="${studentManager.currentProposta.bibliografia}" var="b">			
+                        <h:column>
+                            ${b}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
-                <h:outputText 
-                    id="planoDeTrabalhos"
-                    value="#{studentManager.currentProposta.planoDeTrabalhos}"/>
+                    <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+                    <h:outputText 
+                        id="planoDeTrabalhos"
+                        value="#{studentManager.currentProposta.planoDeTrabalhos}"/>
 
-                <h:outputLabel for="local" value="Local: " />
-                <h:outputText 
-                    id="local"
-                    value="#{studentManager.currentProposta.local}"/>
+                    <h:outputLabel for="local" value="Local: " />
+                    <h:outputText 
+                        id="local"
+                        value="#{studentManager.currentProposta.local}"/>
 
-                <h:outputLabel rendered="${not empty studentManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
-                <h:dataTable rendered="${not empty studentManager.currentProposta.requisitos}" value="${studentManager.currentProposta.requisitos}" var="r">			
-                    <h:column>
-                        ${r}
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+                    <h:dataTable id="requisitos" rendered="${not empty studentManager.currentProposta.requisitos}" value="${studentManager.currentProposta.requisitos}" var="r">			
+                        <h:column>
+                            ${r}
+                        </h:column>
+                    </h:dataTable>
 
-                <h:outputLabel for="orcamento" value="Orçamento: " />
-                <h:outputText 
-                    id="orcamento"
-                    value="#{studentManager.currentProposta.orcamento}"/>
+                    <h:outputLabel for="orcamento" value="Orçamento: " />
+                    <h:outputText 
+                        id="orcamento"
+                        value="#{studentManager.currentProposta.orcamento}"/>
 
-                <h:outputLabel for="apoios" value="Apoios: " />
-                <h:outputText 
-                    id="apoios"
-                    value="#{studentManager.currentProposta.apoios}"/>
+                    <h:outputLabel for="apoios" value="Apoios: " />
+                    <h:outputText 
+                        id="apoios"
+                        value="#{studentManager.currentProposta.apoios}"/>
 
-                <h:outputLabel for="estado" value="Estado: "
-                               rendered="${not empty studentManager.currentProposta.estado}"/>
-                <h:outputText 
-                    id="estado"
-                    rendered="${not empty studentManager.currentProposta.estado}"
-                    value="#{studentManager.currentProposta.estado}"/>
+                    <h:outputLabel for="estado" value="Estado: "
+                                   rendered="${not empty studentManager.currentProposta.estado}"/>
+                    <h:outputText 
+                        id="estado"
+                        rendered="${not empty studentManager.currentProposta.estado}"
+                        value="#{studentManager.currentProposta.estado}"/>
 
-                <h:outputLabel for="observacao" value="Observacao: " 
-                               rendered="${not empty studentManager.currentProposta.estado and 
-                                           not empty studentManager.currentProposta.observacao}" />
-                <h:outputText 
-                    id="observacao"
-                    rendered="${not empty studentManager.currentProposta.estado and
-                                not empty studentManager.currentProposta.observacao}"
-                    value="#{studentManager.currentProposta.observacao}"/>
-                    
-                <h:outputLabel rendered="${not empty studentManager.currentPropostaDocumentos}" for="requisitos" value="Documentos:"/>
-                <h:dataTable rendered="${not empty studentManager.currentPropostaDocumentos}" value="${studentManager.currentPropostaDocumentos}" var="d">			
-                    <h:column>
-                        ${d.desiredName}
-                    </h:column>
-                    <h:column>
-                        Download
-                    </h:column>
-                    <h:column>
-                        Atualizar
-                    </h:column>
-                    <h:column>
-                        Remover
-                    </h:column>
-                </h:dataTable>
+                    <h:outputLabel for="observacao" value="Observacao: " 
+                                   rendered="${not empty studentManager.currentProposta.estado and 
+                                               not empty studentManager.currentProposta.observacao}" />
+                    <h:outputText 
+                        id="observacao"
+                        rendered="${not empty studentManager.currentProposta.estado and
+                                    not empty studentManager.currentProposta.observacao}"
+                        value="#{studentManager.currentProposta.observacao}"/>
 
-            </p:panelGrid>
+                    <h:outputLabel rendered="${not empty studentManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
+                    <h:dataTable id="documentos" rendered="${not empty studentManager.currentPropostaDocumentos}" value="${studentManager.currentPropostaDocumentos}" var="d">			
+                        <h:column>
+                            ${d.desiredName}
+                        </h:column>
+                        <h:column>
+                            <span>
+                                <h:commandLink
+                                    value="Download">
+                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.file}" />
+                                </h:commandLink>
+                            </span>
+                            <span>
+                                <h:commandLink 
+                                    value="Atualizar" 
+                                    action="atualizar">
+                                    <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
+                                </h:commandLink>
+                            </span>
+                            <span>
+                                <h:commandLink
+                                    value="Remover"
+                                    action="${studentManager.removerDocumento}">
+                                    <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
+                                </h:commandLink>
+                            </span>
+                        </h:column>
+                    </h:dataTable>
+                </p:panelGrid>
+            </h:form>
             <br/>
             <h:link value="Upload Document" outcome="upload" />
             <br/>

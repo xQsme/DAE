@@ -12,6 +12,7 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -307,7 +308,7 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    @PUT
+    /*@PUT
     @RolesAllowed({"Student"})
     @Path("/addDocument/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -328,5 +329,65 @@ public class PropostaBean extends Bean<Proposta> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }*/
+    public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
+
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta);
+            em.persist(document);
+            proposta.addDocument(document);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
+
+    public void atualizarDocumento(int code, int id, DocumentDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
+            Document document = em.find(Document.class, id);
+            if(document == null){
+                throw new EntityDoesNotExistsException("Não existe documento com o id " + id + ".");
+            }
+            File f = new File(document.getFilepath());
+            f.delete();
+            document.setFilepath(doc.getFilepath());
+            document.setDesiredName(doc.getDesiredName());
+            document.setMimeType(doc.getMimeType());
+            em.persist(document);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public void removerDocumento(int code, int id) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
+            Document document = em.find(Document.class, id);
+            if (document == null) {
+                throw new EntityDoesNotExistsException("O documento com id " + id + " não existe.");
+            }
+            proposta.removeDocument(document);
+            em.remove(document);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    } 
 }

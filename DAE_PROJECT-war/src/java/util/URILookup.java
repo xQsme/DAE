@@ -20,9 +20,6 @@ public final class URILookup {
     }
     
     public static final String getServerDocumentsFolder() {
-        File f = new File("");
-        String exePath = f.getAbsolutePath();
-        System.out.println(exePath);
         return FacesContext.getCurrentInstance().getExternalContext().getInitParameter("SERVER_DOCUMENTS_FOLDER");
     }
 }

@@ -28,7 +28,7 @@ public class Document implements Serializable {
     
     private String mimeType;
     
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Proposta proposta;
     
     public Document() {

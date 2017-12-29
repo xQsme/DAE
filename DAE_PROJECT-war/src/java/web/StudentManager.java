@@ -13,6 +13,7 @@ import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.StudentBean;
 import exceptions.EntityDoesNotExistsException;
+import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -60,6 +61,7 @@ public class StudentManager implements Serializable {
     private List<DocumentDTO> documents;
     private DocumentDTO document;
     private PropostaDTO currentProposta;
+    private DocumentDTO currentDocumento;
     
     private UIComponent component;
     
@@ -210,7 +212,13 @@ public class StudentManager implements Serializable {
         this.document = document;
     }
     
-    
+    public DocumentDTO getCurrentDocumento() {
+        return currentDocumento;
+    }
+
+    public void setCurrentDocumento(DocumentDTO currentDocumento) {
+        this.currentDocumento = currentDocumento;
+    }
     
     public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
         try {
@@ -225,11 +233,12 @@ public class StudentManager implements Serializable {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
 
-            System.out.println(client.target(URILookup.getBaseAPI())
+            /*System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document)));
+                    .put(Entity.xml(document)));*/
+            propostaBean.addDocument(currentProposta.getCode(), document);
 
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -237,5 +246,35 @@ public class StudentManager implements Serializable {
         }
 
         //return "details?faces-redirect=true";
+    }
+    
+    public void atualizarDocumento() {
+        try {
+            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
+
+            /*System.out.println(client.target(URILookup.getBaseAPI())
+                    .path("/propostas/addDocument")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(document)));*/
+            propostaBean.atualizarDocumento(currentProposta.getCode(), currentDocumento.getId(), document);
+
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            //return null;
+        }
+
+        //return "details?faces-redirect=true";
+    }
+    
+    public String removerDocumento(){
+        try{
+            propostaBean.removerDocumento(currentProposta.getCode(), currentDocumento.getId());
+            File f = new File(currentDocumento.getFilepath());
+            f.delete();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return "details?faces-redirect=true";
     }
 }
