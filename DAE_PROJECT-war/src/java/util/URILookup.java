@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,9 @@ public final class URILookup {
     }
     
     public static final String getServerDocumentsFolder() {
+        File f = new File("");
+        String exePath = f.getAbsolutePath();
+        System.out.println(exePath);
         return FacesContext.getCurrentInstance().getExternalContext().getInitParameter("SERVER_DOCUMENTS_FOLDER");
     }
 }
