@@ -6,6 +6,7 @@
 package web;
 
 import auxiliar.TipoDeTrabalho;
+import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
@@ -118,6 +119,15 @@ public class AdministratorManager implements Serializable {
     public Collection<StudentDTO> getCurrentPropostaCandidatos(){
         try {
             return studentBean.getPropostaCandidatos(currentProposta.getCode());
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        try {
+            return propostaBean.getDocuments(currentProposta.getCode());
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;

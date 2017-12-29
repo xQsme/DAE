@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -81,12 +82,15 @@ public class Proposta implements Serializable {
     @Column
     private String apoios;
 	
-	//Estado & observacao will be fill by MenbroCCP
+    //Estado & observacao will be fill by MembroCCP
     @Column
     private Boolean estado;
     
     @Column
     private String observacao;
+    
+    @OneToMany(mappedBy = "proposta")
+    private List<Document> documentos;
     
     
 
@@ -114,6 +118,7 @@ public class Proposta implements Serializable {
         bibliografia = new LinkedList<>();
         requisitos = new LinkedList<>();
         candidatos = new LinkedList<>();
+        documentos = new LinkedList<>();
     }
 
     public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
@@ -295,4 +300,20 @@ public class Proposta implements Serializable {
     public void removeStudent(Student student){
         candidatos.remove(student);
     }   
+
+    public List<Document> getDocuments() {
+        return documentos;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documentos = documents;
+    }
+    
+    public void addDocument(Document document) {
+        this.documentos.add(document);
+    }
+    
+    public void removeDocument(Document document) {
+        this.documentos.remove(document);
+    }
 }

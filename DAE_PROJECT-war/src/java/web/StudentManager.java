@@ -5,43 +5,31 @@
  */
 package web;
 
-import auxiliar.TipoDeTrabalho;
-import dtos.InstituicaoDTO;
+import dtos.DocumentDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import dtos.TeacherDTO;
-import dtos.UserDTO;
-import ejbs.InstituicaoBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
-import ejbs.TeacherBean;
-import entities.Proponente;
 import ejbs.StudentBean;
-import ejbs.UserBean;
-import entities.Proposta;
-import entities.Student;
-import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
-import exceptions.MyConstraintViolationException;
-import exceptions.UserAlreadyHasAppliedException;
-import exceptions.StudentCandidaturasFullException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import util.URILookup;
+
 
 /**
  *
@@ -51,6 +39,14 @@ import javax.faces.context.FacesContext;
 @SessionScoped
 public class StudentManager implements Serializable {
     
+    private Client client;
+    
+    @ManagedProperty(value="#{userManager}")
+    private UserManager userManager;
+        
+    @ManagedProperty(value = "#{uploadManager}")
+    private UploadManager uploadManager;
+    
     @EJB
     private ProponenteBean proponenteBean;
     @EJB
@@ -58,18 +54,17 @@ public class StudentManager implements Serializable {
     @EJB
     private StudentBean studentBean;
     
-    @ManagedProperty(value="#{userManager}") // this references the @ManagedBean
-    private UserManager userManager;
-    
     private static final Logger logger = Logger.getLogger("web.StudentManager");
     
     private StudentDTO student;
+    private List<DocumentDTO> documents;
+    private DocumentDTO document;
     private PropostaDTO currentProposta;
     
     private UIComponent component;
     
     public StudentManager() {
-        
+        client = ClientBuilder.newClient();
     }
     
     @PostConstruct
@@ -174,6 +169,74 @@ public class StudentManager implements Serializable {
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public UploadManager getUploadManager() {
+        return uploadManager;
+    }
+
+    public void setUploadManager(UploadManager uploadManager) {
+        this.uploadManager = uploadManager;
+    }
+
+    public StudentDTO getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentDTO student) {
+        this.student = student;
+    }
+
+    public List<DocumentDTO> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<DocumentDTO> documents) {
+        this.documents = documents;
+    }
+
+    public DocumentDTO getDocument() {
+        return document;
+    }
+
+    public void setDocument(DocumentDTO document) {
+        this.document = document;
+    }
     
     
+    
+    public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        try {
+            return propostaBean.getDocuments(currentProposta.getCode());
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public void uploadDocument() {
+        try {
+            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
+
+            client.target(URILookup.getBaseAPI())
+                    .path("/propostas/addDocument")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(document));
+
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            //return null;
+        }
+
+        //return "details?faces-redirect=true";
+    }
+
 }
