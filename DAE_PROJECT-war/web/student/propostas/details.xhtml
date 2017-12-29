@@ -96,26 +96,42 @@
                     id="apoios"
                     value="#{studentManager.currentProposta.apoios}"/>
 
-                    <h:outputLabel for="estado" value="Estado: "
-                                   rendered="${not empty studentManager.currentProposta.estado}"/>
-                    <h:outputText 
-                        id="estado"
-                        rendered="${not empty studentManager.currentProposta.estado}"
-                        value="#{studentManager.currentProposta.estado}"/>
+                <h:outputLabel for="estado" value="Estado: "
+                               rendered="${not empty studentManager.currentProposta.estado}"/>
+                <h:outputText 
+                    id="estado"
+                    rendered="${not empty studentManager.currentProposta.estado}"
+                    value="#{studentManager.currentProposta.estado}"/>
 
-                    <h:outputLabel for="observacao" value="Observacao: " 
-                                   rendered="${not empty studentManager.currentProposta.estado and 
-                                               not empty studentManager.currentProposta.observacao}" />
-                    <h:outputText 
-                        id="observacao"
-                        rendered="${not empty studentManager.currentProposta.estado and
-                                    not empty studentManager.currentProposta.observacao}"
-                        value="#{studentManager.currentProposta.observacao}"/>
+                <h:outputLabel for="observacao" value="Observacao: " 
+                               rendered="${not empty studentManager.currentProposta.estado and 
+                                           not empty studentManager.currentProposta.observacao}" />
+                <h:outputText 
+                    id="observacao"
+                    rendered="${not empty studentManager.currentProposta.estado and
+                                not empty studentManager.currentProposta.observacao}"
+                    value="#{studentManager.currentProposta.observacao}"/>
+                    
+                <h:outputLabel rendered="${not empty studentManager.currentPropostaDocumentos}" for="requisitos" value="Documentos:"/>
+                <h:dataTable rendered="${not empty studentManager.currentPropostaDocumentos}" value="${studentManager.currentPropostaDocumentos}" var="d">			
+                    <h:column>
+                        ${d.desiredName}
+                    </h:column>
+                    <h:column>
+                        Download
+                    </h:column>
+                    <h:column>
+                        Atualizar
+                    </h:column>
+                    <h:column>
+                        Remover
+                    </h:column>
+                </h:dataTable>
 
             </p:panelGrid>
             <br/>
-
-
+            <h:link value="Upload Document" outcome="upload" />
+            <br/>
             <h:messages errorStyle="color: red" />    
             <br/>
             <h:link value="Return" outcome="/student/index"/>

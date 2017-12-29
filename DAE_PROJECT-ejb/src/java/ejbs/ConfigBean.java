@@ -2,6 +2,11 @@ package ejbs;
 
 import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
+import ejbs.InstituicaoBean;
+import ejbs.MembroCCPBean;
+import ejbs.PropostaBean;
+import ejbs.StudentBean;
+import ejbs.TeacherBean;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

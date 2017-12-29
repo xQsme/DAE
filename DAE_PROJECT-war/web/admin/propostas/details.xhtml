@@ -110,15 +110,22 @@
                 </c:if>
                 
             </c:if>
+            
+            <h:outputLabel rendered="${not empty administratorManager.currentPropostaDocumentos}" for="requisitos" value="Documentos:"/>
+            <h:dataTable rendered="${not empty administratorManager.currentPropostaDocumentos}" value="${administratorManager.currentPropostaDocumentos}" var="d">			
+                <h:column>
+                    ${d.desiredName}
+                </h:column>
+                <h:column>
+                    Download
+                </h:column>
+            </h:dataTable>
          
-
         </p:panelGrid>
         <br/>
-
         <h:messages errorStyle="color: red" />    
         <br/>
         <h:link value="Return" outcome="view"/>
-     
     </ui:define>
     </ui:composition>
 </html>

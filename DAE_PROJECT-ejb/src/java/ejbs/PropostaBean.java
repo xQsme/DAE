@@ -1,9 +1,9 @@
 package ejbs;
 
-import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
+import dtos.DocumentDTO;
 import dtos.PropostaDTO;
-import entities.Instituicao;
+import entities.Document;
 import entities.Proponente;
 import entities.Proposta;
 import entities.Student;
@@ -12,15 +12,23 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
+import static javax.ws.rs.HttpMethod.PUT;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/propostas")
 public class PropostaBean extends Bean<Proposta> {
 
     public Proposta create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
@@ -280,4 +288,45 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
 */
+
+    public DocumentDTO getDocument(int documentId) throws EntityDoesNotExistsException {
+        Document doc = em.find(Document.class, documentId);
+            
+        if (doc == null)
+            throw new EntityDoesNotExistsException();
+
+        return toDTO(doc, DocumentDTO.class);
+    }
+    
+    public Collection<DocumentDTO> getDocuments(int code) throws EntityDoesNotExistsException {
+        try {
+            List<Document> docs = em.createNamedQuery("getDocumentsOfProposta", Document.class).setParameter("code", code).getResultList();
+            return toDTOs(docs, DocumentDTO.class);
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    @PUT
+    @RolesAllowed({"Student"})
+    @Path("/addDocument/{code}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+        System.out.println("PUT");
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
+
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta);
+            em.persist(document);
+            proposta.addDocument(document);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
 }
