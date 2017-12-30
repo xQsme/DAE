@@ -19,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 public class EmailBean {
 
     //@Resource(name="mail/gmail")  //I did not use, to not cause problems to all
+    //private Session session;      //This session is based on the glashfish version
                                     //Basicaly it sets the property i set as Properties
     private String mailhost = "smtp.gmail.com";
     //private String mailhost= "mail.ipleiria.pt"; 
