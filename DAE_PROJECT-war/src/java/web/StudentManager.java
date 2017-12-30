@@ -28,7 +28,6 @@ import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
-
 /**
  *
  * @author rick_sanchez

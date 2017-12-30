@@ -32,6 +32,16 @@ public class UploadManager {
 
                 filename = file.getFileName().substring(file.getFileName().lastIndexOf("\\") + 1);
 
+                File mainDir = new File(URILookup.getServerDocumentsFolder());
+
+                // if the directory does not exist, create it
+                if (!mainDir.exists()) {
+                    try{
+                        mainDir.mkdir();
+                    } 
+                    catch(SecurityException ignored){}        
+                }
+                
                 completePathFile = URILookup.getServerDocumentsFolder() + currentPropostaId;
                 
                 File theDir = new File(completePathFile);
