@@ -159,7 +159,7 @@ public class PropostaDTO  implements Serializable{
     
         
     public String getEstado(){
-        if(estado==null) return null;
+        if(estado==null) return "pendente";
         if(estado) return "aceite";
         else return  "não aceite";
     }

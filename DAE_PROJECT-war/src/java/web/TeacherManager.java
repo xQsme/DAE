@@ -93,7 +93,9 @@ public class TeacherManager implements Serializable {
     public Collection<PropostaDTO> getTeacherPropostas(){
         try{
             return teacherBean.getPropostasTeacher(teacher.getUsername());
-        }catch(Exception ignored){}
+        }catch(Exception e){
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        }
         return null;
     }
     

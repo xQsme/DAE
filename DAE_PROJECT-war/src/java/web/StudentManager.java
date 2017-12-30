@@ -5,6 +5,7 @@
  */
 package web;
 
+import exceptions.ProposalStateDoesNotAllowException;
 import dtos.DocumentDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
@@ -91,7 +92,9 @@ public class StudentManager implements Serializable {
                     return true;
                 }
             }
-        }catch(Exception ignored){}
+        }catch(Exception e){
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        }
         return false;
     }
     
@@ -113,7 +116,11 @@ public class StudentManager implements Serializable {
     
     public void candidatar(){
         try {
-            studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
+            if(currentProposta.getBoolEstado()!=null){
+                throw new ProposalStateDoesNotAllowException();
+            }else{
+                studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
+            }
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);

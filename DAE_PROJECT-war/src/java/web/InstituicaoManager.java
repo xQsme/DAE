@@ -81,7 +81,8 @@ public class InstituicaoManager implements Serializable {
         try{
             return instituicaoBean.getInstituicaoPropostas(instituicao.getUsername());
         }
-        catch(Exception ignored){
+        catch(Exception e){
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
     }

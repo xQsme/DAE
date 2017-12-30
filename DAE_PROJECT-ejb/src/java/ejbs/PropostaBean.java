@@ -358,8 +358,10 @@ public class PropostaBean extends Bean<Proposta> {
             if(document == null){
                 throw new EntityDoesNotExistsException("Não existe documento com o id " + id + ".");
             }
-            File f = new File(document.getFilepath());
-            f.delete();
+            if(!document.getFilepath().equals(doc.getFilepath())){
+                File f = new File(document.getFilepath());
+                f.delete();
+            }
             document.setFilepath(doc.getFilepath());
             document.setDesiredName(doc.getDesiredName());
             document.setMimeType(doc.getMimeType());
