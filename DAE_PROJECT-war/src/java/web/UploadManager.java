@@ -1,5 +1,6 @@
 package web;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,8 @@ import util.URILookup;
 @SessionScoped
 public class UploadManager {
 
+    int currentPropostaId;
+    
     UploadedFile file;
     
     String completePathFile;
@@ -29,8 +32,20 @@ public class UploadManager {
 
                 filename = file.getFileName().substring(file.getFileName().lastIndexOf("\\") + 1);
 
-                completePathFile = URILookup.getServerDocumentsFolder() + filename;
+                completePathFile = URILookup.getServerDocumentsFolder() + currentPropostaId;
                 
+                File theDir = new File(completePathFile);
+
+                // if the directory does not exist, create it
+                if (!theDir.exists()) {
+                    try{
+                        theDir.mkdir();
+                    } 
+                    catch(SecurityException ignored){}        
+                }
+                
+                completePathFile = completePathFile +  "/" + filename;
+
                 InputStream in = file.getInputstream();
                 FileOutputStream out = new FileOutputStream(completePathFile);
 
@@ -78,6 +93,13 @@ public class UploadManager {
     public void setFilename(String filename) {
         this.filename = filename;
     }
-    
+
+    public int getCurrentPropostaId() {
+        return currentPropostaId;
+    }
+
+    public void setCurrentPropostaId(int currentPropostaId) {
+        this.currentPropostaId = currentPropostaId;
+    }
     
 }

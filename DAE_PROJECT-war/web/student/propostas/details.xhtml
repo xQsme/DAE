@@ -130,6 +130,7 @@
                                 <h:commandLink 
                                     value="Atualizar" 
                                     action="atualizar">
+                                    <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${studentManager.currentProposta.code}"></f:setPropertyActionListener>
                                     <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
                                 </h:commandLink>
                             </span>
@@ -143,9 +144,13 @@
                         </h:column>
                     </h:dataTable>
                 </p:panelGrid>
+                <br/>
+                <h:commandLink 
+                    value="Upload Document" 
+                    action="upload">
+                    <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${studentManager.currentProposta.code}"></f:setPropertyActionListener>
+                </h:commandLink>
             </h:form>
-            <br/>
-            <h:link value="Upload Document" outcome="upload" />
             <br/>
             <h:messages errorStyle="color: red" />    
             <br/>
