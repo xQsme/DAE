@@ -14,6 +14,7 @@ import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
 import dtos.UserDTO;
+import ejbs.EmailBean;
 import ejbs.InstituicaoBean;
 import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
@@ -58,14 +59,14 @@ public class AdministratorManager implements Serializable {
     private TeacherBean teacherBean;
     @EJB
     private PropostaBean propostaBean;
-    
     @EJB
     private MembroCCPBean membroCCPBean;
-    
     @EJB
     private ProponenteBean proponenteBean;
     @EJB
     private StudentBean studentBean;
+    @EJB
+    private EmailBean emailBean;
     
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
     
@@ -363,8 +364,7 @@ public class AdministratorManager implements Serializable {
                     currentProposta.getObservacao());
             
             MembroCCP membro=membroCCPBean.find(username);
-            EmailManager mail = new EmailManager();//currentUser.getEmail(),
-            
+         
             String titulo = currentProposta.getTitulo();
             String message = buildMessage(username);
              
@@ -373,7 +373,7 @@ public class AdministratorManager implements Serializable {
                 recipients.add(proponente.getEmail());
             }            
             
-            mail.send(membro.getEmail(), membro.getPassword(), membro.getEmail(), titulo, message, recipients);
+            emailBean.send(membro.getEmail(), membro.getPassword(), membro.getEmail(), titulo, message, recipients);
             
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);

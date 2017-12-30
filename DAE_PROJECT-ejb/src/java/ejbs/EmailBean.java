@@ -1,26 +1,11 @@
-package web;
+package ejbs;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Yvtq8
- */
 import java.security.Security;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -30,14 +15,11 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-@ManagedBean
-@SessionScoped
-@Deprecated
-public class EmailManager {
-    
-    //@Resource(name="mail/gmail") //I did not use to not cause problems to all
-    //private Session session;    //This session is based on the glashfish version
-    
+@Stateless
+public class EmailBean {
+
+    //@Resource(name="mail/gmail")  //I did not use, to not cause problems to all
+                                    //Basicaly it sets the property i set as Properties
     private String mailhost = "smtp.gmail.com";
     //private String mailhost= "mail.ipleiria.pt"; 
     
@@ -74,5 +56,4 @@ public class EmailManager {
      
         Transport.send(message);        
     }
-     
 }
