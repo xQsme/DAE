@@ -11,8 +11,8 @@ public class TeacherDTO extends ProponenteDTO implements Serializable {
     public TeacherDTO() {
     }    
     
-    public TeacherDTO(String username, String password, String name, String email, List<PropostaDTO> propostas, String office) {
-        super(username, password, name, email, propostas);
+    public TeacherDTO(String username, String password, String name, String email, String office) {
+        super(username, password, name, email);
         this.office = office;
     }
     

@@ -1,5 +1,6 @@
 package ejbs;
 
+import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
 import entities.Proposta;
@@ -180,5 +181,21 @@ public class TeacherBean extends Bean<Teacher> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         } 
+    }
+    
+    public Collection<PropostaDTO> getPropostasTeacher(String username) throws EntityDoesNotExistsException{
+        try {
+            Teacher teacher = em.find(Teacher.class, username);
+            
+            if (teacher == null) {
+                throw new EntityDoesNotExistsException("Teacher does not exists.");
+            }
+
+            return toDTOs(teacher.getPropostas(), PropostaDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
 }

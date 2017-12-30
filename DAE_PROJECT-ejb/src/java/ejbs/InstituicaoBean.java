@@ -2,9 +2,11 @@ package ejbs;
 
 import auxiliar.TipoDeInstituicao;
 import dtos.InstituicaoDTO;
+import dtos.PropostaDTO;
 import dtos.TeacherDTO;
 import entities.Instituicao;
 import entities.Proposta;
+import entities.Student;
 import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
@@ -149,5 +151,21 @@ public class InstituicaoBean extends Bean<Instituicao> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         } 
+    }
+
+    public Collection<PropostaDTO> getInstituicaoPropostas(String username) throws EntityDoesNotExistsException {
+        try {
+            Instituicao instituicao = em.find(Instituicao.class, username);
+            
+            if (instituicao == null) {
+                throw new EntityDoesNotExistsException("Instituição does not exists.");
+            }
+
+            return toDTOs(instituicao.getPropostas(), PropostaDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
 }

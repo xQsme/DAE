@@ -80,26 +80,28 @@ public class StudentManager implements Serializable {
         }
     }
     
-    public List<PropostaDTO> getCandidaturas() {
-        return student.getCandidaturas();
+    public Collection<PropostaDTO> getCandidaturas() {
+        return studentBean.getCandidaturas(student.getUsername());
     }
     
     public Boolean isStudentCandidatoProposta(int codeProposta){
         logger.info("codigo = " + codeProposta);
-        for (PropostaDTO p : student.getCandidaturas()){
-            if (p.getCode() == codeProposta) {
-                return true;
+        try{
+            for (PropostaDTO p : propostaBean.getStudentPropostas(student.getUsername())){
+                if (p.getCode() == codeProposta) {
+                    return true;
+                }
             }
-        }
+        }catch(Exception ignored){}
         return false;
     }
     
     public void removerCandidatura(){
         try {
             studentBean.removePropostaStudent(currentProposta.getCode(), student.getUsername());
-            for(PropostaDTO p : student.getCandidaturas()){
+            for(PropostaDTO p : getCandidaturas()){
                 if (p.getCode() == currentProposta.getCode()) {
-                    student.getCandidaturas().remove(p);                    
+                    studentBean.removePropostaStudent(p.getCode(), student.getUsername());                    
                 }
             }
 
@@ -113,7 +115,6 @@ public class StudentManager implements Serializable {
     public void candidatar(){
         try {
             studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
-            student.getCandidaturas().add(currentProposta);
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);

@@ -5,44 +5,33 @@
  */
 package web;
 
-import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
-import dtos.MembroCCPDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
-import dtos.UserDTO;
 import ejbs.EmailBean;
 import ejbs.InstituicaoBean;
 import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
-import entities.Proponente;
 import ejbs.StudentBean;
-import ejbs.UserBean;
 import entities.MembroCCP;
-import entities.Student;
-import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
 import javax.mail.internet.AddressException;
 
 /**
@@ -369,7 +358,7 @@ public class AdministratorManager implements Serializable {
             String message = buildMessage(username);
              
             List<String> recipients= new LinkedList<String>();
-            for(Proponente proponente: currentProposta.getProponentes()){
+            for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                 recipients.add(proponente.getEmail());
             }            
             

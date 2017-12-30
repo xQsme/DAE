@@ -3,6 +3,7 @@ package ejbs;
 import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
 import dtos.PropostaDTO;
+import dtos.StudentDTO;
 import entities.Document;
 import entities.Proponente;
 import entities.Proposta;
@@ -82,7 +83,6 @@ public class PropostaBean extends Bean<Proposta> {
                 p.getTipoDeTrabalho(),
                 p.getAreasCientificas(),
                 p.getResumo(),
-                p.getProponentes(),
                 p.getCandidatos(),
                 p.getObjetivos(),
                 p.getBibliografia(),
@@ -390,4 +390,20 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     } 
+    
+    public Collection<PropostaDTO> getStudentPropostas(String username) throws EntityDoesNotExistsException{
+        try {
+            Student student = em.find(Student.class, username);
+            
+            if (student == null) {
+                throw new EntityDoesNotExistsException("Student does not exists.");
+            }
+
+            return toDTOs(student.getCandidaturas(), PropostaDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
 }

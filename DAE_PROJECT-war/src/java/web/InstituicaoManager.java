@@ -77,14 +77,18 @@ public class InstituicaoManager implements Serializable {
         }
     }
     
-    public List<PropostaDTO> getInstituicaoPropostas() {
-        logger.info("tamanho propostas = " + instituicao.getPropostas().size());
-        return instituicao.getPropostas();
+    public Collection<PropostaDTO> getInstituicaoPropostas() {
+        try{
+            return instituicaoBean.getInstituicaoPropostas(instituicao.getUsername());
+        }
+        catch(Exception ignored){
+            return null;
+        }
     }
     
     public Boolean isInstituicaoProponenteProposta(int codeProposta){
         logger.info("codigo = " + codeProposta);
-        for (PropostaDTO p : instituicao.getPropostas()){
+        for (PropostaDTO p : getInstituicaoPropostas()){
             if (p.getCode() == codeProposta) {
                 return true;
             }
@@ -104,9 +108,9 @@ public class InstituicaoManager implements Serializable {
     public void removerProposta(){
         try {
             instituicaoBean.removePropostaInstituicao(currentProposta.getCode(), instituicao.getUsername());
-            for(PropostaDTO p : instituicao.getPropostas()){
+            for(PropostaDTO p : getInstituicaoPropostas()){
                 if (p.getCode() == currentProposta.getCode()) {
-                    instituicao.getPropostas().remove(p);                    
+                    instituicaoBean.removePropostaInstituicao(p.getCode(), instituicao.getUsername());                    
                 }
             }
 
@@ -120,7 +124,6 @@ public class InstituicaoManager implements Serializable {
     public void adicionarProposta(){
         try {
             instituicaoBean.addPropostaInstituicao(currentProposta.getCode(), instituicao.getUsername());
-            instituicao.getPropostas().add(currentProposta);
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);

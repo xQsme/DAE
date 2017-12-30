@@ -90,14 +90,15 @@ public class TeacherManager implements Serializable {
         }
     }
     
-    public List<PropostaDTO> getTeacherPropostas() {
-        logger.info("tamanho propostas = " + teacher.getPropostas().size());
-        return teacher.getPropostas();
+    public Collection<PropostaDTO> getTeacherPropostas(){
+        try{
+            return teacherBean.getPropostasTeacher(teacher.getUsername());
+        }catch(Exception ignored){}
+        return null;
     }
     
     public Boolean isTeacherProponenteProposta(int codeProposta){
-        logger.info("codigo = " + codeProposta);
-        for (PropostaDTO p : teacher.getPropostas()){
+        for (PropostaDTO p : getTeacherPropostas()){
             if (p.getCode() == codeProposta) {
                 return true;
             }
@@ -117,12 +118,6 @@ public class TeacherManager implements Serializable {
     public void removerProposta(){
         try {
             teacherBean.removePropostaTeacher(currentProposta.getCode(), teacher.getUsername());
-            for(PropostaDTO p : teacher.getPropostas()){
-                if (p.getCode() == currentProposta.getCode()) {
-                    teacher.getPropostas().remove(p);                    
-                }
-            }
-
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
@@ -133,7 +128,6 @@ public class TeacherManager implements Serializable {
     public void adicionarProposta(){
         try {
             teacherBean.addPropostaTeacher(currentProposta.getCode(), teacher.getUsername());
-            teacher.getPropostas().add(currentProposta);
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);

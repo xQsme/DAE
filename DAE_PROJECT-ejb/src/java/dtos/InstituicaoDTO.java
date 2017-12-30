@@ -10,8 +10,8 @@ public class InstituicaoDTO extends ProponenteDTO implements Serializable {
     public InstituicaoDTO() {
     }    
     
-    public InstituicaoDTO(String username, String password, String name, String email, List<PropostaDTO> propostas , String tipo) {
-        super(username, password, name, email, propostas);
+    public InstituicaoDTO(String username, String password, String name, String email, String tipo) {
+        super(username, password, name, email);
         this.tipo = tipo;
     }
     

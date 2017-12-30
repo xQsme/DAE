@@ -12,7 +12,6 @@ public class PropostaDTO  implements Serializable{
     private String tipoDeTrabalho;
     private List<String> areasCientificas;
     private String resumo;
-    private List<Proponente> proponentes;
     private List<Student> candidatos;
     private List<String> objetivos;
     private List<String> bibliografia;
@@ -36,13 +35,12 @@ public class PropostaDTO  implements Serializable{
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Proponente> proponentes, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, Boolean estado, String observacao) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, Boolean estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
         this.areasCientificas = areasCientificas;
         this.resumo = resumo;
-        this.proponentes = proponentes;
         this.candidatos = candidatos;
         this.objetivos = objetivos;
         this.bibliografia = bibliografia;
@@ -93,14 +91,6 @@ public class PropostaDTO  implements Serializable{
 
     public void setResumo(String resumo) {
         this.resumo = resumo;
-    }
-
-    public List<Proponente> getProponentes() {
-        return proponentes;
-    }
-
-    public void setProponentes(List<Proponente> proponentes) {
-        this.proponentes = proponentes;
     }
 
     public List<Student> getCandidatos() {
@@ -188,7 +178,6 @@ public class PropostaDTO  implements Serializable{
         setTipoDeTrabalho(null);
         setAreasCientificas(null);
         setResumo(null);
-        setProponentes(null);
         setCandidatos(null);
         setObjetivos(null);
         setBibliografia(null);
