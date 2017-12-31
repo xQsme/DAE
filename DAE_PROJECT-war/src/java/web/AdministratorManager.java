@@ -5,6 +5,7 @@
  */
 package web;
 
+import auxiliar.Estado;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
@@ -227,7 +228,7 @@ public class AdministratorManager implements Serializable {
     
     public Collection<String> getAllPropostaEstados() {
         try {
-            return PropostaBean.getAllPropostaEstados();
+            return Estado.getVerificationStates();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -494,8 +495,8 @@ public class AdministratorManager implements Serializable {
                     +".<br><br><strong>Com descricao:</strong> "+ currentProposta.getResumo()+"."
                     +".<br><br><strong>Foi avaliada por:</strong> "+ username+".";
                   
-        if (currentProposta.getIntEstado()==1) msg+= ("<br><br>Sendo esta <strong>" + currentProposta.getEstado().name().replace('_', ' ')) +"</strong>."; 
-        else if (currentProposta.getIntEstado()==-1) msg+= ("<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado().name().replace('_', ' ')) +"</strong>.";
+        if (currentProposta.getIntEstado()==1) msg+= "<br><br>Sendo esta <strong>" + currentProposta.getEstado() +"</strong>."; 
+        else if (currentProposta.getIntEstado()==-1) msg+= "<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado() +"</strong>.";
             
         msg+= (currentProposta.getObservacao()!=null && !currentProposta.getObservacao().isEmpty())?
             ("<br><strong>Observação:</strong> "+ currentProposta.getObservacao())+".": "<br><br>Não deixou Observação.";

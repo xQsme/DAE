@@ -85,7 +85,7 @@ public class Proposta implements Serializable {
 	
     //Estado & observacao will be fill by MembroCCP
     @Column
-    private int estado;
+    private int estado=0;
     
     @Column
     private String observacao;

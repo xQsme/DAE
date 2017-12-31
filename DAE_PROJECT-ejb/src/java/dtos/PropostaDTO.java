@@ -1,5 +1,6 @@
 package dtos;
 
+import auxiliar.Estado;
 import entities.Proponente;
 import entities.Student;
 import java.io.Serializable;
@@ -21,9 +22,7 @@ public class PropostaDTO  implements Serializable{
     private String orcamento;
     private String apoios;
     
-    public enum Estado {
-        Não_Aceite, Pendente , Aceite, Finalizado
-    }
+    
     private Estado estado;
 
     public final void setEstado(Integer estado) {//Must be Integer because it supports null
@@ -38,7 +37,24 @@ public class PropostaDTO  implements Serializable{
                     break;
         }
     }
+    
+    public final void setStringEstado(String estado) {//Must be Integer because it supports null
+        switch(estado){
+            case "Não_Aceite":this.estado=Estado.Não_Aceite; 
+                    break;
+            case "Pendente": this.estado=Estado.Pendente; 
+                    break;
+            case "Aceite": this.estado=Estado.Aceite; 
+                    break;
+            case "Finalizado": this.estado=Estado.Finalizado; 
+                    break;
+        }
+    }
 
+    public void setEnumEstado(Estado estado){
+        this.estado=estado;
+    }
+    
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
@@ -169,20 +185,23 @@ public class PropostaDTO  implements Serializable{
         this.apoios = apoios;
     }
     
+    public String getEstado(){
+        return estado.name();
+    }
         
-    public Estado getEstado(){
-        return estado;
+    public String getStringEstado(){
+        return estado.name();
     }
     
     public Integer getIntEstado(){
         switch(estado){
-            case Não_Aceite: return 1;
+            case Não_Aceite: return -1;
                              
-            case Pendente: return 2;
+            case Pendente: return 0;
                            
-            case Aceite: return 3;
+            case Aceite: return 1;
                          
-            case Finalizado: return 4;
+            case Finalizado: return 2;
             
             default: return null;
         }

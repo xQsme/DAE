@@ -225,10 +225,10 @@ public class PropostaBean extends Bean<Proposta> {
         return tipos;
     }
     
-    public static Collection<String> getAllPropostaEstados() {
-        LinkedList<String> tipos = new LinkedList<>();
-        tipos.add("Aceite");
-        tipos.add("Não Aceite");
+    public static Collection<Integer> getAllPropostaEstados() {
+        LinkedList<Integer> tipos = new LinkedList<>();
+        tipos.add(-1);
+        tipos.add(1);
         return tipos;
     }
     

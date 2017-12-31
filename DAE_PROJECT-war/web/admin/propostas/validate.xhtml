@@ -12,8 +12,8 @@
             Validate ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <c:if test="#{empty administratorManager.currentProposta.boolEstado}">
-                <h:form target="#{administratorManager.validateProposta(userManager.username)}">                       
+            <c:if test="#{administratorManager.currentProposta.intEstado==0}">
+                <h:form>                       
                 <b:labeledContainer  id="titulo"
                         label="Título:">
                     #{administratorManager.currentProposta.titulo}
@@ -72,7 +72,7 @@
                    
                 <b:treeBox id="estado"
                     label="Estado:"
-                    value="#{administratorManager.currentProposta.estado}"
+                    value="#{administratorManager.currentProposta.stringEstado}"
                     values="#{administratorManager.allPropostaEstados}"
                     styleClass=""
                     readonly="false"
@@ -94,21 +94,17 @@
                     required="false"
                     rendered="true"/>
                 
-                <p:growl id="message" showDetail="true" />
- 
-                <p:commandButton styleClass="btn btn-primary" value="Validar" actionListener="#{dialogView.destroyWorld}" update="message">
-                        <p:confirm header="Confirmation" message="Esta operação não podera ser anulada.\nTem a certeza que pertende realizar esta operação?" icon="ui-icon-alert" />
-                </p:commandButton>
+               <h:commandButton
+                    id="submit"
+                    styleClass="btn btn-primary"
+                    value="Validar"
+                    onclick="if (! confirm('Tem a certeza?')) return false"
+                    action="#{administratorManager.validateProposta(userManager.username)}" />
 
-                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                    <p:commandButton value="Yes" type="submit" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                </p:confirmDialog>
-               
  
               </h:form>  
             </c:if>
-            <c:if test="#{not empty administratorManager.currentProposta.boolEstado}">
+            <c:if test="#{administratorManager.currentProposta.intEstado!=0}">
                 <p>Proposta com o Titulo: #{administratorManager.currentProposta.titulo} ja foi validada</p>
             </c:if>
             <h:link value="Return" outcome="view"/>
