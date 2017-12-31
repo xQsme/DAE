@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import static jdk.nashorn.internal.parser.TokenType.ENUM;
 
 @Entity
 @Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
@@ -84,7 +85,7 @@ public class Proposta implements Serializable {
 	
     //Estado & observacao will be fill by MembroCCP
     @Column
-    private Boolean estado;
+    private int estado;
     
     @Column
     private String observacao;
@@ -102,11 +103,11 @@ public class Proposta implements Serializable {
         this.observacao = observacao;
     }
 
-    public Boolean getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 	

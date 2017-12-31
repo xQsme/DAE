@@ -184,7 +184,7 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    public void addEstado(int propostaCode, Boolean estado) throws EntityDoesNotExistsException {
+    public void addEstado(int propostaCode, int estado) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
@@ -212,7 +212,7 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    public void addValidacao(int propostaCode, Boolean estado, String observacao) throws EntityDoesNotExistsException{
+    public void addValidacao(int propostaCode, Integer estado, String observacao) throws EntityDoesNotExistsException{
         addEstado(propostaCode, estado);
         addObservacao(propostaCode, observacao);
     }

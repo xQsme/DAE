@@ -20,11 +20,23 @@ public class PropostaDTO  implements Serializable{
     private List<String> requisitos;
     private String orcamento;
     private String apoios;
-    private Boolean estado;
+    
+    public enum Estado {
+        Não_Aceite, Pendente , Aceite, Finalizado
+    }
+    private Estado estado;
 
-    public void setEstado(String estado) {
-        if(estado==null||estado.isEmpty()) this.estado=null;
-        else this.estado = (estado.toUpperCase().equals("ACEITE"))? true:false;
+    public final void setEstado(Integer estado) {//Must be Integer because it supports null
+        switch(estado){
+            case -1:this.estado=Estado.Não_Aceite; 
+                    break;
+            case 0: this.estado=Estado.Pendente; 
+                    break;
+            case 1: this.estado=Estado.Aceite; 
+                    break;
+            case 2: this.estado=Estado.Finalizado; 
+                    break;
+        }
     }
 
     public void setObservacao(String observacao) {
@@ -35,7 +47,7 @@ public class PropostaDTO  implements Serializable{
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, Boolean estado, String observacao) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
@@ -49,7 +61,7 @@ public class PropostaDTO  implements Serializable{
         this.requisitos = requisitos;
         this.orcamento = orcamento;
         this.apoios = apoios;
-        this.estado = estado;
+        setEstado(estado);
         this.observacao = observacao;
     }
 
@@ -158,15 +170,24 @@ public class PropostaDTO  implements Serializable{
     }
     
         
-    public String getEstado(){
-        if(estado==null) return "pendente";
-        if(estado) return "aceite";
-        else return  "não aceite";
+    public Estado getEstado(){
+        return estado;
     }
     
-    public Boolean getBoolEstado(){
-        return this.estado;
+    public Integer getIntEstado(){
+        switch(estado){
+            case Não_Aceite: return 1;
+                             
+            case Pendente: return 2;
+                           
+            case Aceite: return 3;
+                         
+            case Finalizado: return 4;
+            
+            default: return null;
+        }
     }
+    
     
     public String getObservacao(){
         return observacao;

@@ -349,7 +349,7 @@ public class AdministratorManager implements Serializable {
         try {
             propostaBean.addValidacao(
                     currentProposta.getCode(),
-                    currentProposta.getBoolEstado(),
+                    currentProposta.getIntEstado(),
                     currentProposta.getObservacao());
             
             MembroCCP membro=membroCCPBean.find(username);
@@ -494,9 +494,8 @@ public class AdministratorManager implements Serializable {
                     +".<br><br><strong>Com descricao:</strong> "+ currentProposta.getResumo()+"."
                     +".<br><br><strong>Foi avaliada por:</strong> "+ username+".";
                   
-        msg+= (currentProposta.getBoolEstado())? 
-            ("<br><br>Sendo esta <strong>" + currentProposta.getEstado()).toUpperCase()+"</strong>.": 
-            ("<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado().toUpperCase()) +"</strong>.";
+        if (currentProposta.getIntEstado()==1) msg+= ("<br><br>Sendo esta <strong>" + currentProposta.getEstado().name().replace('_', ' ')) +"</strong>."; 
+        else if (currentProposta.getIntEstado()==-1) msg+= ("<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado().name().replace('_', ' ')) +"</strong>.";
             
         msg+= (currentProposta.getObservacao()!=null && !currentProposta.getObservacao().isEmpty())?
             ("<br><strong>Observação:</strong> "+ currentProposta.getObservacao())+".": "<br><br>Não deixou Observação.";

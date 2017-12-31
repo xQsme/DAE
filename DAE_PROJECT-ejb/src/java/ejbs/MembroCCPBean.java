@@ -62,13 +62,13 @@ public class MembroCCPBean{
     }
     
     //In case the Menber doesnt leave a comment
-    public void validarProposta(String username, int propostaCode, Boolean validar) 
+    public void validarProposta(String username, int propostaCode, Integer validar) 
             throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
               validarProposta(username, propostaCode, validar, null);
     }
     
     //In case the menber intends to leave a comment
-    public void validarProposta(String username, int propostaCode, Boolean validar, String observacao) 
+    public void validarProposta(String username, int propostaCode, Integer validar, String observacao) 
             throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
         try {      
             MembroCCP menbroCCP = em.find(MembroCCP.class, username);
@@ -85,7 +85,7 @@ public class MembroCCPBean{
                 throw new NullPointerException("Invalid State Parameter");
             }
             
-            Boolean estado = proposta.getEstado();
+            Integer estado = proposta.getEstado();
             if (estado != null){
                 throw new ProposalStateAlreadyDefineException("The current proposal already has state");
             }

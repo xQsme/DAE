@@ -116,7 +116,7 @@ public class StudentManager implements Serializable {
     
     public void candidatar(){
         try {
-            if(currentProposta.getBoolEstado()!=null){
+            if(currentProposta.getIntEstado()!=0){
                 throw new ProposalStateDoesNotAllowException();
             }else{
                 studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
