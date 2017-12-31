@@ -98,15 +98,6 @@ public class AdministratorManager implements Serializable {
         }
     }
     
-    public Collection<PropostaDTO> getAllPropostas() {
-        try {
-            return propostaBean.getAllPropostas();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
-    }
-    
     public Collection<TeacherDTO> getAllTeachers() {
         try {
             return teacherBean.getAllTeachers();
@@ -170,6 +161,15 @@ public class AdministratorManager implements Serializable {
         }
     }
 
+    public Collection<PropostaDTO> getAllPropostas() {
+        try {
+            return propostaBean.getAllPropostas();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public InstituicaoDTO getCurrentInstituicao() {
         return currentInstituicao;
     }
@@ -401,6 +401,20 @@ public class AdministratorManager implements Serializable {
         }
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }
+    
+    public Collection<PropostaDTO> getAllProvas() {
+        LinkedList<PropostaDTO> provas = new LinkedList<>();
+        try {
+            for(PropostaDTO prova : propostaBean.getAllPropostas()){
+                if(prova.getIntEstado()==1){
+                    provas.add(prova);
+                }
+            }
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Aconteceu um erro em obter os dados das Provas", logger);
+        }
+        return provas;
     }
     
     
