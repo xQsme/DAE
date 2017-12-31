@@ -91,6 +91,8 @@ public class ConfigBean {
             membroCCPBean.validarProposta("membroCCP", 1, false, "Because i Can muahahaha");
             membroCCPBean.validarProposta("membroCCP", 2, true);
             
+            membroCCPBean.addProfessorOrientador("teacherNick1", "2151159");
+            
             //propostaBean.addReferencia(1, "Este ja não entra (> 5)");  // ao descomentar esta linha uma excepção vai ser mandada e o codigo neste try passa a não ser executadopropostaBean.addReferencia(1, "1984");
             
             

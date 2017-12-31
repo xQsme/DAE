@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="../../templates/skeleton.xhtml">
+        <ui:define name="title">
+            Associar professor Orientador
+        </ui:define>
+        <ui:define name="main">
+            <h:form>                  
+                <h:panelGrid columns="3">
+
+                    <h:outputLabel for="guide" value="Professor Orientador: " />
+                    <h:selectOneMenu
+                        id="guide"
+                        value="#{administratorManager.newTeacher.username}" >
+                        <f:selectItems
+                            value="#{administratorManager.allTeachers}"
+                            var="teacher"
+                            itemValue="#{teacher.username}"
+                            itemLabel="#{teacher.name}" />
+                    </h:selectOneMenu>
+                    
+                    <br></br>
+
+                    <br></br>
+
+                    <h:commandButton
+                        id="submit"
+                        value="Associar Professor"
+                        action="#{administratorManager.addGuidingTeacher}" />
+                    <h:message for="submit" style="color: red"/>
+                </h:panelGrid>  
+            </h:form>
+
+            <h:messages errorStyle="color: red" />        
+            <br/>
+            <h:link value="Return" outcome="view"/>
+        </ui:define>
+    </ui:composition>
+</html>

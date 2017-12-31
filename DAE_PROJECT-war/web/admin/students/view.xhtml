@@ -42,6 +42,13 @@
                                 <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${s}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
+                        <span>
+                            <h:commandLink
+                                value="Orientar"
+                                action="guide">
+                                <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${s}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
                     </p:column>
                 </p:dataTable>
             </h:form>

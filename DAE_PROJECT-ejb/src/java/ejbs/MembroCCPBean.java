@@ -9,11 +9,13 @@ import dtos.MembroCCPDTO;
 import dtos.TeacherDTO;
 import entities.MembroCCP;
 import entities.Proposta;
+import entities.Student;
 import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.ProposalStateAlreadyDefineException;
+import exceptions.TeacherAlreadyAssignedException;
 import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -101,5 +103,37 @@ public class MembroCCPBean{
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }        
+    }
+    
+    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException {
+        try {
+            Teacher teacher = em.find(Teacher.class, teacherUsername);
+            if (teacher == null) {
+                throw new EntityDoesNotExistsException("There is no teacher with such username.");
+            }
+            
+            Student student = em.find(Student.class, studentUsername);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with such username.");
+            }
+            for(Teacher t : student.getGuidingTeachers()){
+                if (t.getUsername().equalsIgnoreCase(teacherUsername)){
+                    throw new TeacherAlreadyAssignedException("This Teacher is already guiding this Student.");
+                }
+            }
+            
+            
+            teacher.addGuidedStudent(student);
+            student.addGuidingTeacher(teacher);
+
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            if (e != null) {
+                throw new EJBException(e.toString() +  "Exception");
+            }
+            throw new EJBException("Exception a excecão ou a mensagem dela vem a null");
+        }
     }
 }
