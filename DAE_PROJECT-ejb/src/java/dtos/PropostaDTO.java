@@ -186,7 +186,7 @@ public class PropostaDTO  implements Serializable{
     }
     
     public String getEstado(){
-        return estado.name();
+        return estado.name().equals("Não_Aceite") ? "Não Aceite" : estado.name() ;
     }
         
     public String getStringEstado(){

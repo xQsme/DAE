@@ -19,6 +19,7 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -274,12 +275,17 @@ public class InstituicaoManager implements Serializable {
     }
     
     public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        LinkedList<DocumentDTO> documents = new LinkedList<>();
         try {
-            return propostaBean.getDocuments(currentProposta.getCode());
-        } catch (Exception e) {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(!d.isAta()){
+                    documents.add(d);
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
         }
+        return documents;
     }
     
 }

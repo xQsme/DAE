@@ -88,8 +88,8 @@ public class ConfigBean {
             
             //Adding a menbroCCP
             membroCCPBean.create("membroCCP", "secret", "membroCCP", "menbroCPPdae@gmail.com");
-            //membroCCPBean.validarProposta("membroCCP", 1, false, "Because i Can muahahaha");
-            //membroCCPBean.validarProposta("membroCCP", 2, true);
+            membroCCPBean.validarProposta("membroCCP", 1, -1, "Because i Can muahahaha");
+            membroCCPBean.validarProposta("membroCCP", 2, 1);
             
             membroCCPBean.addProfessorOrientador("teacherNick1", "2151159");
             

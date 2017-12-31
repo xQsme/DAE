@@ -21,7 +21,7 @@ and open the template in the editor.
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty teacherManager.allPropostas}" value="${teacherManager.allPropostas}" var="p">			
+                <p:dataTable rendered="${not empty guestManager.allPropostas}" value="${guestManager.allPropostas}" var="p">			
                     <p:column>
                         <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
@@ -47,17 +47,15 @@ and open the template in the editor.
                         <span>
                             <h:commandLink
                                 value="Details"
-                                action="/teacher/propostas/details">
-                                <f:setPropertyActionListener target="#{teacherManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                                action="details">
+                                <f:setPropertyActionListener target="#{guestManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                     </p:column>
                 </p:dataTable>
             </h:form>
             <br/>
-            <h:link value="Criar proposta" outcome="create"/>
-            <br/>
-            <h:link value="Return" outcome="/teacher/index"/>
+            <h:link value="Return" outcome="/guest/index"/>
         </ui:define>
     </ui:composition>
 </html>

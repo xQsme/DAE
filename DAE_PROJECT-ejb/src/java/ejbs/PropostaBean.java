@@ -337,7 +337,7 @@ public class PropostaBean extends Bean<Proposta> {
                 throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
             }
 
-            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta);
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, false);
             em.persist(document);
             proposta.addDocument(document);
 
@@ -402,6 +402,25 @@ public class PropostaBean extends Bean<Proposta> {
             }
 
             return toDTOs(student.getCandidaturas(), PropostaDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public void finalizarDocumento(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
+
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, true);
+            em.persist(document);
+            proposta.addDocument(document);
+            proposta.setEstado(2);
+
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {

@@ -126,7 +126,7 @@
                                     <p:fileDownload value="#{downloadManager.file}" />
                                 </h:commandLink>
                             </span>
-                            <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.boolEstado}">
+                            <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.intEstado==1}">
                                 <span>
                                     <h:commandLink 
                                         value="Atualizar" 
@@ -145,11 +145,24 @@
                             </c:if>
                         </h:column>
                     </h:dataTable>
+                    <h:outputLabel rendered="${not empty studentManager.currentPropostaAta}" for="ata" value="Ata:"/>
+                    <h:dataTable id="ata" rendered="${not empty studentManager.currentPropostaAta}" value="${studentManager.currentPropostaAta}" var="a">			
+                        <h:column>
+                            ${a.desiredName}
+                            <span>
+                                <h:commandLink
+                                    value="Download">
+                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.file}" />
+                                </h:commandLink>
+                            </span>
+                        </h:column>
+                    </h:dataTable>
                 </p:panelGrid>
                 <br/>
-                <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.boolEstado}">
+                <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.intEstado==1}">
                     <h:commandLink 
-                        value="Upload Document" 
+                        value="Upload Documento" 
                         action="upload">
                         <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${studentManager.currentProposta.code}"></f:setPropertyActionListener>
                     </h:commandLink>

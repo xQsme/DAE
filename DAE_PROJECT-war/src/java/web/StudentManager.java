@@ -17,6 +17,7 @@ import exceptions.EntityDoesNotExistsException;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -225,17 +226,35 @@ public class StudentManager implements Serializable {
     }
     
     public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        LinkedList<DocumentDTO> documents = new LinkedList<>();
         try {
-            return propostaBean.getDocuments(currentProposta.getCode());
-        } catch (Exception e) {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(!d.isAta()){
+                    documents.add(d);
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
         }
+        return documents;
+    }
+    
+    public DocumentDTO getCurrentPropostaAta(){
+        try {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(d.isAta()){
+                    return d;
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
     }
     
     public void uploadDocument() {
         try {
-            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
+            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
 
             /*System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
@@ -246,15 +265,12 @@ public class StudentManager implements Serializable {
 
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            //return null;
         }
-
-        //return "details?faces-redirect=true";
     }
     
-    public void atualizarDocumento() {
+    public String atualizarDocumento() {
         try {
-            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
+            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
 
             /*System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
@@ -265,10 +281,10 @@ public class StudentManager implements Serializable {
 
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            //return null;
+            return null;
         }
 
-        //return "details?faces-redirect=true";
+        return "details?faces-redirect=true";
     }
     
     public String removerDocumento(){
@@ -281,4 +297,6 @@ public class StudentManager implements Serializable {
         }
         return "details?faces-redirect=true";
     }
+    
+    
 }

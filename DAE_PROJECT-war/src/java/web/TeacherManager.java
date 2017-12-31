@@ -6,6 +6,7 @@
 package web;
 
 import auxiliar.TipoDeTrabalho;
+import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
@@ -63,7 +64,7 @@ public class TeacherManager implements Serializable {
     @ManagedProperty(value="#{userManager}") // this references the @ManagedBean
     private UserManager userManager;
     
-    private static final Logger logger = Logger.getLogger("web.StudentManager");
+    private static final Logger logger = Logger.getLogger("web.TeacherManager");
     
     private TeacherDTO teacher;
     
@@ -266,6 +267,33 @@ public class TeacherManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
+    }
+    
+        public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        LinkedList<DocumentDTO> documents = new LinkedList<>();
+        try {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(!d.isAta()){
+                    documents.add(d);
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return documents;
+    }
+    
+    public DocumentDTO getCurrentPropostaAta(){
+        try {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(d.isAta()){
+                    return d;
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
     }
     
     

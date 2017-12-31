@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.mail.internet.AddressException;
@@ -43,6 +44,9 @@ import javax.mail.internet.AddressException;
 @ManagedBean
 @SessionScoped
 public class AdministratorManager implements Serializable {
+    
+    @ManagedProperty(value = "#{uploadManager}")
+    private UploadManager uploadManager;
     
     @EJB
     private InstituicaoBean instituicaoBean;
@@ -66,6 +70,9 @@ public class AdministratorManager implements Serializable {
    
     private TeacherDTO currentTeacher;
     private TeacherDTO newTeacher;
+    
+    private DocumentDTO document;
+    private DocumentDTO currentDocumento;
     
     private PropostaDTO currentProposta;
     private PropostaDTO newProposta;
@@ -128,12 +135,30 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+        LinkedList<DocumentDTO> documents = new LinkedList<>();
         try {
-            return propostaBean.getDocuments(currentProposta.getCode());
-        } catch (Exception e) {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(!d.isAta()){
+                    documents.add(d);
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
         }
+        return documents;
+    }
+    
+    public DocumentDTO getCurrentPropostaAta(){
+        try {
+            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+                if(d.isAta()){
+                    return d;
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
     }
     
     public Collection<StudentDTO> getAllStudents() {
@@ -515,4 +540,50 @@ public class AdministratorManager implements Serializable {
         }
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
+    
+        public String finalizarDocumento() {
+        try {
+            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
+            System.out.println("Document created");
+            /*System.out.println(client.target(URILookup.getBaseAPI())
+                    .path("/propostas/addDocument")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(document)));*/
+            propostaBean.finalizarDocumento(currentProposta.getCode(), document);
+            System.out.println("Document finalized");
+
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+
+        return "view?faces-redirect=true";
+    }
+
+    public UploadManager getUploadManager() {
+        return uploadManager;
+    }
+
+    public void setUploadManager(UploadManager uploadManager) {
+        this.uploadManager = uploadManager;
+    }
+
+    public DocumentDTO getDocument() {
+        return document;
+    }
+
+    public void setDocument(DocumentDTO document) {
+        this.document = document;
+    }
+
+    public DocumentDTO getCurrentDocumento() {
+        return currentDocumento;
+    }
+
+    public void setCurrentDocumento(DocumentDTO currentDocumento) {
+        this.currentDocumento = currentDocumento;
+    }
+        
+        
 }

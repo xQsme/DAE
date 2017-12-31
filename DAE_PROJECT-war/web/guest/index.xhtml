@@ -17,15 +17,12 @@ and open the template in the editor.
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../templates/skeleton.xhtml">
         <ui:define name="title">
-            Pagina Estudantes
+            Pagina Visitantes
         </ui:define>
         <ui:define name="main">
-            <c:if test="${userManager.someUserAuthenticated}">
-                <p:megaMenu style="margin-top:20px">
-                    <p:menuitem value="Propostas" outcome="propostas/view" />
-                    <p:menuitem value="Candidaturas" outcome="propostas/candidaturas" />
-                </p:megaMenu>
-            </c:if>
+            <p:megaMenu style="margin-top:20px">
+                <p:menuitem value="Propostas Finalizadas" outcome="propostas/view" />
+            </p:megaMenu>
         </ui:define>
     </ui:composition>
 </html>

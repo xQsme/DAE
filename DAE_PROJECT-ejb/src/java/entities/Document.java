@@ -28,6 +28,8 @@ public class Document implements Serializable {
     
     private String mimeType;
     
+    private boolean ata;
+    
     @ManyToOne
     private Proposta proposta;
     
@@ -35,11 +37,12 @@ public class Document implements Serializable {
         
     }
 
-    public Document(String filepath, String desiredName, String mimeType, Proposta proposta) {
+    public Document(String filepath, String desiredName, String mimeType, Proposta proposta, boolean ata) {
         this.filepath = filepath;
         this.desiredName = desiredName;
         this.mimeType = mimeType;
         this.proposta = proposta;
+        this.ata = ata;
     }
 
     public int getId() {
@@ -81,5 +84,15 @@ public class Document implements Serializable {
     public void setProposta(Proposta proposta) {
         this.proposta = proposta;
     }
+
+    public boolean isAta() {
+        return ata;
+    }
+
+    public void setAta(boolean ata) {
+        this.ata = ata;
+    }
+    
+    
     
 }

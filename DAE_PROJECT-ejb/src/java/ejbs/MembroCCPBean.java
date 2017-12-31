@@ -73,9 +73,9 @@ public class MembroCCPBean{
     public void validarProposta(String username, int propostaCode, Integer validar, String observacao) 
             throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
         try {      
-            MembroCCP menbroCCP = em.find(MembroCCP.class, username);
-            if (username == null) {
-                throw new EntityDoesNotExistsException("There is no MenberCCP with that username.");
+            MembroCCP membroCCP = em.find(MembroCCP.class, username);
+            if (membroCCP == null) {
+                throw new EntityDoesNotExistsException("There is no MemberCCP with that username.");
             }
             
             Proposta proposta = em.find(Proposta.class, propostaCode);
@@ -83,24 +83,17 @@ public class MembroCCPBean{
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             
-            if (validar==null){
+            if (validar< -1 || validar > 2){
                 throw new NullPointerException("Invalid State Parameter");
-            }
-            
-            Integer estado = proposta.getEstado();
-            if (estado != null){
-                throw new ProposalStateAlreadyDefineException("The current proposal already has state");
             }
             
             proposta.setEstado(validar);
             proposta.setObservacao(observacao);//This can be null
             
             em.merge(proposta);
-        } catch (EntityDoesNotExistsException e) {
+        }catch (EntityDoesNotExistsException e) {
             throw e;
-        } catch (ProposalStateAlreadyDefineException e){
-            throw e;
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw new EJBException(e.getMessage());
         }        
     }

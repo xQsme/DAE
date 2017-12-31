@@ -16,20 +16,24 @@ public class DocumentDTO implements Serializable {
     private String desiredName;
     
     private String mimeType;
+    
+    private boolean ata;
+    
 
     public DocumentDTO() {
         
     }
 
-    public DocumentDTO(int id, String filepath, String desiredName, String mimeType) {
+    public DocumentDTO(int id, String filepath, String desiredName, String mimeType, boolean ata) {
         this.id = id;
         this.filepath = filepath;
         this.desiredName = desiredName;
         this.mimeType = mimeType;
+        this.ata=ata;
     }
     
-    public DocumentDTO(String filepath, String desiredName, String mimeType) {
-        this(-1, filepath, desiredName, mimeType);
+    public DocumentDTO(String filepath, String desiredName, String mimeType, boolean ata) {
+        this(-1, filepath, desiredName, mimeType, ata);
     }
 
     public int getId() {
@@ -63,4 +67,14 @@ public class DocumentDTO implements Serializable {
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }    
+
+    public boolean isAta() {
+        return ata;
+    }
+
+    public void setAta(boolean ata) {
+        this.ata = ata;
+    }
+    
+    
 }

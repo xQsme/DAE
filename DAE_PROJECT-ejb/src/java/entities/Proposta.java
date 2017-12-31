@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import static jdk.nashorn.internal.parser.TokenType.ENUM;
@@ -92,8 +93,6 @@ public class Proposta implements Serializable {
     
     @OneToMany(mappedBy = "proposta")
     private List<Document> documentos;
-    
-    
 
     public String getObservacao() {
         return observacao;
