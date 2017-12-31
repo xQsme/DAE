@@ -50,6 +50,9 @@ and open the template in the editor.
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <h:outputText
+                rendered="${empty adminManager.allInstitutions}"
+                value="Não há instituições"/>
             <br/>
             <h:link value="Criar instituicao" outcome="create"/>
             <br/>

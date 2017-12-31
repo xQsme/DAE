@@ -9,38 +9,18 @@ import dtos.DocumentDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import dtos.TeacherDTO;
-import dtos.UserDTO;
-import ejbs.InstituicaoBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
-import ejbs.TeacherBean;
-import entities.Proponente;
 import ejbs.StudentBean;
-import ejbs.UserBean;
-import entities.Proposta;
-import entities.Student;
-import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
-import exceptions.MyConstraintViolationException;
-import exceptions.UserAlreadyHasAppliedException;
-import exceptions.StudentCandidaturasFullException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
 
 /**
  *
@@ -67,12 +47,17 @@ public class GuestManager implements Serializable {
     }
     
     public Collection<PropostaDTO> getAllPropostas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            return propostaBean.getAllPropostas();
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() == 2){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
         }
+        return propostas;
     }
     
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){

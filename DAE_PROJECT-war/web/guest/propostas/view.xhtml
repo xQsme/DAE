@@ -54,6 +54,9 @@ and open the template in the editor.
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <h:outputText
+                rendered="${empty guestManager.allPropostas}"
+                value="Não há propostas"/>
             <br/>
             <h:link value="Return" outcome="/guest/index"/>
         </ui:define>

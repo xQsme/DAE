@@ -53,6 +53,9 @@
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <h:outputText
+                rendered="${empty studentManager.allPropostas}"
+                value="Não há propostas"/>
             <br/>
             <h:messages globalOnly="true" />
             <br/>

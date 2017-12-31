@@ -54,6 +54,9 @@ and open the template in the editor.
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <h:outputText
+                rendered="${empty teacherManager.allPropostas}"
+                value="Não há propostas"/>
             <br/>
             <h:link value="Criar proposta" outcome="create"/>
             <br/>

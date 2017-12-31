@@ -52,6 +52,9 @@
                     </p:column>
                 </p:dataTable>
             </h:form>
+            <h:outputText
+                rendered="${empty adminManager.allStudents}"
+                value="Não há estudantes"/>
             <br/>
             <h:link value="Criar estudante" outcome="create"/>
             <br/>
