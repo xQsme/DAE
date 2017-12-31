@@ -18,6 +18,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -35,8 +36,8 @@ public class Student extends User  {
     @ManyToMany(mappedBy = "guidedStudents")
     private List<Teacher> guidingTeachers;
     
-    //@Column
-    //private Proposta projetoMestrado;
+    @OneToMany(mappedBy = "student")
+    private List<Documento> documentos;
 
     public Student() {
         candidaturas = new LinkedList<>();
@@ -79,5 +80,23 @@ public class Student extends User  {
     
     public void removeGuidingTeacher(Teacher teacher) {
         guidingTeachers.remove(teacher);
-    }  
+    }
+
+    public List<Documento> getDocumentos() {
+        return documentos;
+    }
+
+    public void setDocumentos(List<Documento> documentos) {
+        this.documentos = documentos;
+    }
+
+    public void addDocumento(Documento documento) {
+        documentos.add(documento);
+    }
+
+    public void removeDocumento(Documento documento) {
+        documentos.remove(documento);
+    }
+    
+    
 }

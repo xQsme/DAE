@@ -26,15 +26,19 @@ public class PropostaDTO  implements Serializable{
     private Estado estado;
 
     public final void setEstado(Integer estado) {//Must be Integer because it supports null
-        switch(estado){
-            case -1:this.estado=Estado.Não_Aceite; 
-                    break;
-            case 0: this.estado=Estado.Pendente; 
-                    break;
-            case 1: this.estado=Estado.Aceite; 
-                    break;
-            case 2: this.estado=Estado.Finalizado; 
-                    break;
+        if(estado != null){
+            switch(estado){
+                case -1:this.estado=Estado.Não_Aceite; 
+                        break;
+                case 0: this.estado=Estado.Pendente; 
+                        break;
+                case 1: this.estado=Estado.Aceite; 
+                        break;
+                case 2: this.estado=Estado.Finalizado; 
+                        break;
+            }
+        }else{
+            this.estado=Estado.Pendente; 
         }
     }
     
