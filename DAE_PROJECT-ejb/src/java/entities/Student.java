@@ -32,15 +32,21 @@ public class Student extends User  {
     @ManyToMany(mappedBy = "candidatos")
     private List<Proposta> candidaturas;
     
+    @ManyToMany(mappedBy = "guidedStudents")
+    private List<Teacher> guidingTeachers;
+    
     //@Column
     //private Proposta projetoMestrado;
 
     public Student() {
+        candidaturas = new LinkedList<>();
+        guidingTeachers = new LinkedList<>();
     }
    
    public Student(String username, String password, String name, String email) {
         super(username, password, name, email, GROUP.Student);
         candidaturas = new LinkedList<>();
+        guidingTeachers = new LinkedList<>();
     }
     
    public List<Proposta> getCandidaturas() {
@@ -57,5 +63,21 @@ public class Student extends User  {
     
     public void removeCandidatura(Proposta candidatura) {
         candidaturas.remove(candidatura);
+    } 
+    
+    public List<Teacher> getGuidingTeachers() {
+        return guidingTeachers;
+    }
+
+    public void setGuidingTeachers(List<Teacher> guidingTeachers) {
+        this.guidingTeachers = guidingTeachers;
+    }
+
+    public void addGuidingTeacher(Teacher teacher) {
+        guidingTeachers.add(teacher);
     }    
+    
+    public void removeGuidingTeacher(Teacher teacher) {
+        guidingTeachers.remove(teacher);
+    }  
 }

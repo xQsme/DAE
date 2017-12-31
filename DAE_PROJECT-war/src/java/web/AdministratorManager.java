@@ -23,6 +23,7 @@ import entities.MembroCCP;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.TeacherAlreadyAssignedException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -502,5 +503,16 @@ public class AdministratorManager implements Serializable {
             ("<br><strong>Observação:</strong> "+ currentProposta.getObservacao())+".": "<br><br>Não deixou Observação.";
         
         return msg;
+    }
+    
+    public String addGuidingTeacher (){
+        try {
+            membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
+            newTeacher.reset();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "/admin/students/view.xhtml?faces-redirect=true";
     }
 }
