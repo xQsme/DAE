@@ -44,7 +44,7 @@ public class ProponenteBean extends Bean<Proponente> {
             Proposta proposta = em.find(Proposta.class, code);
             
             if (proposta == null) {
-                throw new EntityDoesNotExistsException("Student does not exists.");
+                throw new EntityDoesNotExistsException("Proposta does not exists.");
             }
 
             return toDTOs(proposta.getProponentes(), ProponenteDTO.class);

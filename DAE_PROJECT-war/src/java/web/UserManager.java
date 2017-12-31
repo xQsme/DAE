@@ -53,6 +53,10 @@ public class UserManager implements Serializable {
         return "error?faces-redirect=true";
     }
     
+    public String redirectGuest(){
+        return "/faces/guest/index.xhtml?faces-redirect=true";
+    }
+    
     
 
     public String login() {

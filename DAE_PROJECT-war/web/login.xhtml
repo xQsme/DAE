@@ -14,7 +14,8 @@ and open the template in the editor.
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    xmlns:b="http://butterfaces.org/components">>
     <ui:composition template="templates/skeleton.xhtml">
         <ui:define name="title">
             Login
@@ -31,6 +32,12 @@ and open the template in the editor.
                     </h:panelGrid>
                 </h:form>
             </c:if>
-        </ui:define>
+            <h:form>
+            <b:commandLink value="Enter as Guest"
+                           styleClass="btn btn-default"
+                           action="#{userManager.redirectGuest()}">
+            </b:commandLink>
+            </h:form>    
+       </ui:define>
     </ui:composition>
 </html>

@@ -358,6 +358,7 @@ public class AdministratorManager implements Serializable {
             String message = buildMessage(username);
              
             List<String> recipients= new LinkedList<String>();
+        
             for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                 recipients.add(proponente.getEmail());
             }            

@@ -3,103 +3,115 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    xmlns:b="http://butterfaces.org/components"
+    xmlns:p="http://primefaces.org/ui">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
             Validate ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <c:if test="#{empty administratorManager.currentProposta.estado}">
-            <h:form>                  
-                <h:panelGrid columns="3">
+            <c:if test="#{empty administratorManager.currentProposta.boolEstado}">
+            <h:form>                       
+                <b:labeledContainer  id="titulo"
+                        label="Título:">
+                    #{administratorManager.currentProposta.titulo}
+                </b:labeledContainer> 
 
-                    <h:outputLabel for="titulo" value="Título: " />
-                    <h:outputLabel 
-                        id="titulo"
-                        value="#{administratorManager.currentProposta.titulo}" />
-                    <h:message for="titulo" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="tipo" value="Tipo de Trabalho: " />
-                    <h:outputLabel 
-                        id="tipo"
-                        value="#{administratorManager.currentProposta.tipoDeTrabalho}" />
-                    <h:message for="tipo" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="resumo" value="Resumo: " />
-                    <h:outputLabel 
-                        id="resumo"            
-                        value="#{administratorManager.currentProposta.resumo}" />
-                    <h:message for="resumo" errorStyle="color: red" />
+                <b:labeledContainer id="tipo"
+                        label="Tipo de Trabalho:">
+                    #{administratorManager.currentProposta.tipoDeTrabalho}
+                </b:labeledContainer>
 
-                    <h:outputLabel for="plano" value="Plano de Trabalhos: " />
-                    <h:outputLabel 
-                        id="plano"                        
-                        value="#{administratorManager.currentProposta.planoDeTrabalhos}" />
-                    <h:message for="plano" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="local" value="Local: " />
-                    <h:outputLabel
-                        id="local"                         
-                        value="#{administratorManager.currentProposta.local}" />
-                    <h:message for="local" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="orcamento" value="Orcamento: " />
-                    <h:outputLabel
-                        id="orcamento"                            
-                        value="#{administratorManager.currentProposta.orcamento}" />
-                    <h:message for="orcamento" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="apoios" value="Apoios: " />
-                    <h:outputLabel
-                        id="apoios"                     
-                        value="#{administratorManager.currentProposta.apoios}" />
-                    <h:message for="apoios" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="estado" value="Estado: " />
-                    <h:selectOneMenu
-                        id="estado"
-                        value="#{administratorManager.currentProposta.estado}" >
-                        <f:selectItems
-                            value="#{administratorManager.allPropostaEstados}"
-                            var="estado"
-                            itemValue="#{estado}"
-                            itemLabel="#{estado}" />
-                    </h:selectOneMenu>
-                    <h:message for="estado" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="observacao" value="Observação: " />
-                    <h:inputText 
-                        id="observacao"
-                        size="100"
-                        required="false"                        
-                        value="#{administratorManager.currentProposta.observacao}" />
-                    <h:message for="observacao" errorStyle="color: red" />
-                    
-                    <br></br>
+                <b:labeledContainer id="resumo"
+                        label="Resumo:">
+                    #{administratorManager.currentProposta.resumo}
+                </b:labeledContainer>  
+                
+                
+                <b:labeledContainer id="proponenetes"
+                                    label="Proponentes:">              
+                    <b:repeat value="${administratorManager.currentPropostaProponentes}"
+                                              var="innerValue">
+                                       <li>#{innerValue.name}</li>
+                                    </b:repeat>
+                </b:labeledContainer>
+                
+                <b:labeledContainer id="objetivos"
+                                    label="Objetivos:">              
+                                    <b:repeat value="${administratorManager.currentProposta.objetivos}"
+                                              var="innerValue">
+                                       <li>#{innerValue}</li>
+                                    </b:repeat>
+                </b:labeledContainer>
+               
 
-                    <br></br>
+                <b:labeledContainer id="plano"
+                        label="Plano de Trabalhos:">
+                    #{administratorManager.currentProposta.planoDeTrabalhos}
+                </b:labeledContainer>
+
+
+                <b:labeledContainer id="local"
+                        label="Local:">
+                    #{administratorManager.currentProposta.local}
+                </b:labeledContainer>
+
+                <b:labeledContainer id="orcamento"
+                        label="Orcamento:">
+                            #{administratorManager.currentProposta.orcamento}
+                </b:labeledContainer>
+                       
+
+                <b:labeledContainer id="apoios"
+                        label="Apoios:">
+                    #{administratorManager.currentProposta.apoios}
+                </b:labeledContainer>
+               
                    
-       
-                    <h:commandButton
-                        id="submit"
-                        value="Validar"
-                        onclick="if (! confirm('Tem a certeza?')) return false"
-                        action="#{administratorManager.validateProposta(userManager.username)}" />
-                    <h:message for="submit" style="color: red"/>    
-                </h:panelGrid>  
+                <b:treeBox id="estado"
+                    label="Estado:"
+                    value="#{administratorManager.currentProposta.estado}"
+                    values="#{administratorManager.allPropostaEstados}"
+                    styleClass=""
+                    readonly="false"
+                    disabled="false"
+                    inputTextProperty="null"
+                    required="true"
+                    autoFocus="false"
+                    showClearButton="true"
+                    rendered="true">
+                    <b:tooltip/>
+                </b:treeBox>
 
-            </h:form>
-            <h:messages errorStyle="color: red" />        
+
+                <b:textArea 
+                    label="Observação:"
+                    placeholder="Minha breve observação"
+                    id="observacao"                       
+                    value="#{administratorManager.currentProposta.observacao}"
+                    required="false"
+                    rendered="true"/>
+                
+                <p:growl id="message" showDetail="true" />
+ 
+                <p:commandButton styleClass="btn btn-primary" value="Validar" actionListener="#{dialogView.destroyWorld}" update="message">
+                        <p:confirm header="Confirmation" message="Esta operação não podera ser anulada.\nTem a certeza que pertende realizar esta operação?" icon="ui-icon-alert" />
+                </p:commandButton>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" action="#{administratorManager.validateProposta(userManager.username)}"  type="submit" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+               
+ 
+              </h:form>  
             </c:if>
-            <c:if test="#{not empty administratorManager.currentProposta.estado}">
-                <p>Proposta com o Titulo: #{administratorManager.currentProposta.titulo} ja validada</p>
+            <c:if test="#{not empty administratorManager.currentProposta.boolEstado}">
+                <p>Proposta com o Titulo: #{administratorManager.currentProposta.titulo} ja foi validada</p>
             </c:if>
             <h:link value="Return" outcome="view"/>
-            
         </ui:define>
     </ui:composition>
 </html>
