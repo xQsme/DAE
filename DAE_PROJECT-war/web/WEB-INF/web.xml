@@ -35,7 +35,10 @@
         <web-resource-collection>
             <web-resource-name>Student Services</web-resource-name>
             <description/>
+            <url-pattern>/webapi/students/findStudent/*</url-pattern>
+            <url-pattern>/webapi/students/addDocumento/*</url-pattern>
             <url-pattern>/webapi/propostas/addDocument/*</url-pattern>
+            <url-pattern>/webapi/propostas/atualizarDocumento/*/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

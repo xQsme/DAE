@@ -18,7 +18,6 @@ import exceptions.StudentAlreadyHasAProposalAssignedException;
 import exceptions.UserAlreadyHasAppliedException;
 import exceptions.StudentCandidaturasFullException;
 import exceptions.Utils;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -29,7 +28,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -183,7 +184,6 @@ public class StudentBean extends Bean<Student> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("findStudent/{username}")
     public StudentDTO findStudent(@PathParam("username") String username) throws EntityDoesNotExistsException {
-        System.out.println("GET");
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
@@ -243,7 +243,11 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public void addDocument(String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
+    @PUT
+    @RolesAllowed({"Student"})
+    @Path("/addDocumento/{code}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void addDocumento(String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
