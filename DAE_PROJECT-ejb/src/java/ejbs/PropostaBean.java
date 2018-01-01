@@ -67,8 +67,6 @@ public class PropostaBean extends Bean<Proposta> {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
-<<<<<<< HEAD
-<<<<<<< HEAD
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :toPropostaDTOcollection(getAll())){
