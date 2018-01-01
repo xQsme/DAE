@@ -23,6 +23,8 @@ import entities.MembroCCP;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
+import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -552,7 +554,8 @@ public class AdministratorManager implements Serializable {
         try {
             membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
             newTeacher.reset();
-        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException e) {
+        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException | NullPointerException | 
+                ProposalWasNotSubmittedByAnInstitutionException | StudentHasNoProposalException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
