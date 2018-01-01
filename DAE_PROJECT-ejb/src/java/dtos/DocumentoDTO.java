@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Document")
+@XmlRootElement(name = "Documento")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DocumentoDTO implements Serializable {
     

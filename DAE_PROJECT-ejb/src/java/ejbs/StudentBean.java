@@ -173,7 +173,7 @@ public class StudentBean extends Bean<Student> {
     public Collection<PropostaDTO> getCandidaturas(String username) {
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
-            return PropostaBean.toPropostaDTOcollection(query.getResultList());
+            return toDTOs(query.getResultList(), PropostaDTO.class);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         } 
@@ -245,9 +245,9 @@ public class StudentBean extends Bean<Student> {
 
     @PUT
     @RolesAllowed({"Student"})
-    @Path("/addDocumento/{code}")
+    @Path("/addDocumento/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void addDocumento(String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
+    public void addDocumento(@PathParam("username") String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
