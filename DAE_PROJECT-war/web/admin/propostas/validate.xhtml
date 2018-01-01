@@ -105,7 +105,7 @@
               </h:form>  
             </c:if>
             <c:if test="#{administratorManager.currentProposta.intEstado!=0}">
-                <p>Proposta com o Titulo: #{administratorManager.currentProposta.titulo} ja foi validada</p>
+                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi validada!</p>
             </c:if>
             <h:link value="Return" outcome="view"/>
         </ui:define>

@@ -3,10 +3,12 @@ package entities;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -93,6 +95,9 @@ public class Proposta implements Serializable {
     
     @OneToMany(mappedBy = "proposta")
     private List<Document> documentos;
+    
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "proposal")
+    private Student student;
 
     public String getObservacao() {
         return observacao;
@@ -315,5 +320,13 @@ public class Proposta implements Serializable {
     
     public void removeDocument(Document document) {
         this.documentos.remove(document);
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

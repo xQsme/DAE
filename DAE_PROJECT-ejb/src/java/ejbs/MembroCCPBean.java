@@ -5,13 +5,19 @@
  */
 package ejbs;
 
+import dtos.MembroCCPDTO;
+import dtos.TeacherDTO;
+import entities.Instituicao;
 import entities.MembroCCP;
+import entities.Proponente;
 import entities.Proposta;
 import entities.Student;
 import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
+import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -94,7 +100,7 @@ public class MembroCCPBean{
         }        
     }
     
-    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException {
+    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
         try {
             Teacher teacher = em.find(Teacher.class, teacherUsername);
             if (teacher == null) {
@@ -110,13 +116,33 @@ public class MembroCCPBean{
                     throw new TeacherAlreadyAssignedException("This Teacher is already guiding this Student.");
                 }
             }
+            if(student.getProposal() == null){
+                throw new StudentHasNoProposalException("This Student doesn't have a Proposal yet");
+            }
+            if (student.getProposal().getProponentes() == null || student.getProposal().getProponentes().size() == 0){
+                throw new NullPointerException("This Proposal has no proponent");
+            }
             
+            Boolean proposalSubmittedByInstitution = false;
+            for(Proponente prop : student.getProposal().getProponentes()){
+                if (em.find(Instituicao.class, prop.getUsername()) != null){
+                    proposalSubmittedByInstitution = true;
+                }
+            }
+            if (! proposalSubmittedByInstitution) {
+                throw new ProposalWasNotSubmittedByAnInstitutionException("Esta Proposta não foi submetida por uma instituição");
+
+            }
             
             teacher.addGuidedStudent(student);
             student.addGuidingTeacher(teacher);
+            
+            em.merge(teacher);
+            em.merge(student);
 
 
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | NullPointerException | ProposalWasNotSubmittedByAnInstitutionException |
+                StudentHasNoProposalException | TeacherAlreadyAssignedException e) {
             throw e;
         } catch (Exception e) {
             if (e != null) {

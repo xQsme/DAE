@@ -5,6 +5,7 @@
  */
 package web;
 
+import exceptions.CannotFinalizeException;
 import auxiliar.Estado;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
@@ -18,6 +19,7 @@ import ejbs.InstituicaoBean;
 import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
+import static ejbs.PropostaBean.toPropostaDTOcollection;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
 import entities.MembroCCP;
@@ -25,6 +27,8 @@ import entities.Student;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
+import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -34,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -211,12 +216,17 @@ public class AdministratorManager implements Serializable {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            return propostaBean.getAllPropostas();
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() < 2){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            throw new EJBException(e.getMessage());
         }
+        return propostas;
     }
     
     public Collection<PropostaDTO> getAllAccepted() {
@@ -513,7 +523,37 @@ public class AdministratorManager implements Serializable {
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
+<<<<<<< HEAD
    
+=======
+    public Collection<PropostaDTO> getAllProvas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() > 1){
+                    propostas.add(p);
+                }
+            }
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return propostas;
+    }
+    
+    public Collection<PropostaDTO> getAllFinalizado() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() == 3){
+                    propostas.add(p);
+                }
+            }
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return propostas;
+    }
+>>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
     
     
     public UIComponent getComponent() {
@@ -633,14 +673,28 @@ public class AdministratorManager implements Serializable {
         try {
             membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
             newTeacher.reset();
-        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException e) {
+        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException | NullPointerException | 
+                ProposalWasNotSubmittedByAnInstitutionException | StudentHasNoProposalException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
     
-        public String finalizarDocumento() {
+    public String finalizar(){
+        try {
+            if(currentProposta.getIntEstado() != 2){
+                throw new CannotFinalizeException();
+            }
+        }
+        catch (CannotFinalizeException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "finalize";
+    }
+    
+    public String finalizarDocumento() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
             /*System.out.println(client.target(URILookup.getBaseAPI())
@@ -690,5 +744,27 @@ public class AdministratorManager implements Serializable {
         }
     }
         
-        
+    public Collection<PropostaDTO> getAllAvailableProposals() {
+        try {
+            return propostaBean.getAllAvailable();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public String setProposalStudent(){
+        try {
+            logger.info("proposta -> " + newProposta.getCode());
+            logger.info("username -> " + currentStudent.getUsername());
+            studentBean.setProposta(currentStudent.getUsername(), newProposta.getCode());
+            
+            newProposta.setCode(0);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "/admin/students/view.xhtml?faces-redirect=true";
+    }
 }

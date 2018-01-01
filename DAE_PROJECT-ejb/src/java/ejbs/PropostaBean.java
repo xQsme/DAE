@@ -14,6 +14,7 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
+<<<<<<< HEAD
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :toPropostaDTOcollection(getAll())){
@@ -119,6 +121,9 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
         return propostas;
+=======
+        return toPropostaDTOcollection(getAll());
+>>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
     }
     
     public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {
@@ -404,29 +409,12 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    /*@PUT
+    @PUT
     @RolesAllowed({"Student"})
     @Path("/addDocument/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         System.out.println("PUT");
-        try {
-            Proposta proposta = em.find(Proposta.class, code);
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
-            }
-
-            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta);
-            em.persist(document);
-            proposta.addDocument(document);
-
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }*/
-    public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -443,8 +431,30 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    /*public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
 
-    public void atualizarDocumento(int code, int id, DocumentDTO doc) throws EntityDoesNotExistsException {
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, false);
+            em.persist(document);
+            proposta.addDocument(document);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }*/
+
+    @PUT
+    @RolesAllowed({"Student"})
+    @Path("/atualizarDocument/{code}/{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void atualizarDocumento(@PathParam("code") int code, @PathParam("id") int id, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -515,10 +525,20 @@ public class PropostaBean extends Bean<Proposta> {
             Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, true);
             em.persist(document);
             proposta.addDocument(document);
-            proposta.setEstado(2);
+            proposta.setEstado(3);
 
         } catch (EntityDoesNotExistsException e) {
             throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public Collection<PropostaDTO> getAllAvailable() {
+        try {
+            Query query = em.createQuery("SELECT p FROM Proposta p where p.estado = 1", Proposta.class);
+            LinkedList<PropostaDTO> propostas = (LinkedList<PropostaDTO>) toPropostaDTOcollection(query.getResultList());
+            return propostas;            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

@@ -21,8 +21,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/teachers")
 public class TeacherBean extends Bean<Teacher> {
 
     @PersistenceContext
@@ -81,6 +86,9 @@ public class TeacherBean extends Bean<Teacher> {
         }
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("all")
     public Collection<TeacherDTO> getAllTeachers() {
         try {
             return getAll(TeacherDTO.class);
@@ -88,6 +96,7 @@ public class TeacherBean extends Bean<Teacher> {
             throw new EJBException(e.getMessage());
         }
     }
+    
     
     @Override
     protected Collection<Teacher> getAll() {
