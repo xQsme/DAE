@@ -66,45 +66,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
-                if(p.getIntEstado() < 2){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
-    
-    public Collection<PropostaDTO> getAllProvas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
-                if(p.getIntEstado() == 2){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
-    
-    public Collection<PropostaDTO> getAllFinalizado() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
-                if(p.getIntEstado() == 3){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
+        return toPropostaDTOcollection(getAll());
     }
     
     public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {
@@ -452,7 +414,7 @@ public class PropostaBean extends Bean<Proposta> {
             Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, true);
             em.persist(document);
             proposta.addDocument(document);
-            proposta.setEstado(2);
+            proposta.setEstado(3);
 
         } catch (EntityDoesNotExistsException e) {
             throw e;

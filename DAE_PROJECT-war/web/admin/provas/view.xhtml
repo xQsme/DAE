@@ -38,7 +38,7 @@
                         <span>
                             <h:commandLink 
                                 value="Finalizar"
-                                action="finalize">
+                                action="${administratorManager.finalizar()}">
                                 <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
@@ -69,6 +69,8 @@
             <h:outputText
                 rendered="${empty administratorManager.allProvas}"
                 value="Não há provas"/>
+            <br/>
+            <h:messages globalOnly="true" />
             <br/>
             <h:link value="Return" outcome="/admin/index"/>
         </ui:define>

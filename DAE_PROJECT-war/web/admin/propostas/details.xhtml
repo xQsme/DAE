@@ -148,16 +148,7 @@
                         </span>
                     </h:column>
                 </h:dataTable>
-
             </p:panelGrid>
-            <br/>
-            <c:if test="${administratorManager.currentProposta.intEstado == 1}">
-                <h:commandLink 
-                    value="Finalizar Proposta" 
-                    action="finalize">
-                    <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${administratorManager.currentProposta.code}"></f:setPropertyActionListener>
-                </h:commandLink>
-            </c:if>
         </h:form>
         <br/>
         <h:messages errorStyle="color: red" />    

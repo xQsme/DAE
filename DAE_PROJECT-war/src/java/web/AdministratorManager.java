@@ -5,6 +5,7 @@
  */
 package web;
 
+import exceptions.CannotFinalizeException;
 import auxiliar.Estado;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
@@ -17,6 +18,7 @@ import ejbs.InstituicaoBean;
 import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
+import static ejbs.PropostaBean.toPropostaDTOcollection;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
 import entities.MembroCCP;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -162,12 +165,17 @@ public class AdministratorManager implements Serializable {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            return propostaBean.getAllPropostas();
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() < 2){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            throw new EJBException(e.getMessage());
         }
+        return propostas;
     }
     
     public InstituicaoDTO getCurrentInstituicao() {
@@ -404,21 +412,31 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<PropostaDTO> getAllProvas() {
-        try{
-            return propostaBean.getAllProvas();
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() > 1){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            throw new EJBException(e.getMessage());
         }
+        return propostas;
     }
     
     public Collection<PropostaDTO> getAllFinalizado() {
-        try{
-            return propostaBean.getAllFinalizado();
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p : propostaBean.getAllPropostas()){
+                if(p.getIntEstado() == 3){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            throw new EJBException(e.getMessage());
         }
+        return propostas;
     }
     
     
@@ -559,7 +577,20 @@ public class AdministratorManager implements Serializable {
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
     
-        public String finalizarDocumento() {
+    public String finalizar(){
+        try {
+            if(currentProposta.getIntEstado() != 2){
+                throw new CannotFinalizeException();
+            }
+        }
+        catch (CannotFinalizeException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "finalize";
+    }
+    
+    public String finalizarDocumento() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
             /*System.out.println(client.target(URILookup.getBaseAPI())
