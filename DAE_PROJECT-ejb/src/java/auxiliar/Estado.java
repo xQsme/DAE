@@ -14,7 +14,7 @@ import java.util.List;
  * @author Yvtq8
  */
 public enum Estado {
-    Não_Aceite, Pendente , Aceite, Finalizado;
+    Não_Aceite, Pendente , Aceite, Finalizado, Prova;
 
     public static Collection<String> getVerificationStates() {
         LinkedList<String> array = new LinkedList<>();

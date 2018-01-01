@@ -34,7 +34,9 @@ public class PropostaDTO  implements Serializable{
                         break;
                 case 1: this.estado=Estado.Aceite; 
                         break;
-                case 2: this.estado=Estado.Finalizado; 
+                case 2: this.estado=Estado.Prova; 
+                        break;
+                case 3: this.estado=Estado.Finalizado;
                         break;
             }
         }else{
@@ -49,6 +51,8 @@ public class PropostaDTO  implements Serializable{
             case "Pendente": this.estado=Estado.Pendente; 
                     break;
             case "Aceite": this.estado=Estado.Aceite; 
+                    break;
+            case "Prova": this.estado=Estado.Prova;
                     break;
             case "Finalizado": this.estado=Estado.Finalizado; 
                     break;
@@ -204,8 +208,10 @@ public class PropostaDTO  implements Serializable{
             case Pendente: return 0;
                            
             case Aceite: return 1;
+            
+            case Prova: return 2;
                          
-            case Finalizado: return 2;
+            case Finalizado: return 3;
             
             default: return null;
         }
