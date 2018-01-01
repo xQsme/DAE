@@ -68,7 +68,6 @@ public class PropostaBean extends Bean<Proposta> {
 
     public Collection<PropostaDTO> getAllPropostas() {
 <<<<<<< HEAD
-<<<<<<< HEAD
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :toPropostaDTOcollection(getAll())){
@@ -122,6 +121,9 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
         return propostas;
+=======
+        return toPropostaDTOcollection(getAll());
+>>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
     }
     
     public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {
