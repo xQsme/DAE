@@ -9,6 +9,7 @@ import exceptions.CannotFinalizeException;
 import auxiliar.Estado;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
+import dtos.MembroCCPDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
@@ -22,6 +23,7 @@ import static ejbs.PropostaBean.toPropostaDTOcollection;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
 import entities.MembroCCP;
+import entities.Student;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -34,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
@@ -41,6 +44,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.mail.internet.AddressException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
 /**
  *
@@ -52,6 +57,12 @@ public class AdministratorManager implements Serializable {
     
     @ManagedProperty(value = "#{uploadManager}")
     private UploadManager uploadManager;
+    
+    @ManagedProperty(value="#{userManager}")
+    private UserManager userManager;
+    
+    @ManagedProperty(value="#{emailManager}")
+    private EmailManager emailManager;
     
     @EJB
     private InstituicaoBean instituicaoBean;
@@ -65,8 +76,6 @@ public class AdministratorManager implements Serializable {
     private ProponenteBean proponenteBean;
     @EJB
     private StudentBean studentBean;
-    @EJB
-    private EmailBean emailBean;
     
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
     
@@ -86,12 +95,52 @@ public class AdministratorManager implements Serializable {
     private StudentDTO newStudent;
     
     private UIComponent component;
+    private Client client;
+    private MembroCCP loggedMembroCCP;
     
     public AdministratorManager() {
         newStudent = new StudentDTO();
         newInstituicao = new InstituicaoDTO();
         newTeacher = new TeacherDTO();
         newProposta = new PropostaDTO();
+        client = ClientBuilder.newClient();
+    }
+    
+  
+    @PostConstruct
+    public void Init(){
+        setUpMembroCCP();
+    }
+    
+    private void setUpMembroCCP() {
+        logger.info(userManager.toString());
+        String username = userManager.getUsername();
+        logger.info(username);
+        loggedMembroCCP = membroCCPBean.find(username );
+    }
+    
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    public EmailManager getEmailManager() {
+        return emailManager;
+    }
+
+    public void setEmailManager(EmailManager emailManager) {
+        this.emailManager = emailManager;
+    }
+    
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
     
     public Collection<InstituicaoDTO> getAllInstitutions() {
@@ -178,6 +227,32 @@ public class AdministratorManager implements Serializable {
             throw new EJBException(e.getMessage());
         }
         return propostas;
+    }
+    
+    public Collection<PropostaDTO> getAllAccepted() {
+        try {
+            return propostaBean.getAllAccepted();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+     public Collection<PropostaDTO> getAllProvas() {
+        try{
+            return propostaBean.getAllProvas();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public Collection<PropostaDTO> getAllFinalizado() {
+        try{
+            return propostaBean.getAllFinalizado();
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
     
     public InstituicaoDTO getCurrentInstituicao() {
@@ -302,7 +377,26 @@ public class AdministratorManager implements Serializable {
     }
     
     public void removeProposta(){ 
-        try {
+        try {        
+            if (currentProposta.getIntEstado() > 0 ){
+                List<String> recipients= new LinkedList<String>();
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                    recipients.add(proponente.getEmail());
+                }
+                
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                    recipients.add(proponente.getEmail());
+                } 
+                
+                if(currentProposta.getIntEstado()==2){
+                    for(Student candidatos: currentProposta.getCandidatos()) {
+                        recipients.add(candidatos.getEmail());
+                    }
+                }
+                
+                if(currentProposta.getIntEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getIntEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+            }
             propostaBean.remove(currentProposta.getCode());
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -362,7 +456,7 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateProposta() {
-        try {
+        try {    
             propostaBean.update(
                     currentProposta.getCode(),
                     currentProposta.getTitulo(),
@@ -372,6 +466,7 @@ public class AdministratorManager implements Serializable {
                     currentProposta.getLocal(),
                     currentProposta.getOrcamento(),
                     currentProposta.getApoios());
+           
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
@@ -382,25 +477,61 @@ public class AdministratorManager implements Serializable {
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
-    public String validateProposta(String username) throws AddressException, Exception {
+    public String updateProva() {
+        try {
+            //Checks what changed
+            List<String> alterations=propostaBean.getAlterations(currentProposta.getCode(), currentProposta.getTitulo(),               
+                    currentProposta.getTipoDeTrabalho(), currentProposta.getResumo(),
+                    currentProposta.getPlanoDeTrabalhos(),currentProposta.getLocal(),
+                    currentProposta.getOrcamento(), currentProposta.getApoios());
+            
+            propostaBean.update(
+                    currentProposta.getCode(),
+                    currentProposta.getTitulo(),
+                    currentProposta.getTipoDeTrabalho(),
+                    currentProposta.getResumo(),
+                    currentProposta.getPlanoDeTrabalhos(),
+                    currentProposta.getLocal(),
+                    currentProposta.getOrcamento(),
+                    currentProposta.getApoios());
+            
+            if (currentProposta.getIntEstado() == 2 ){
+                List<String> recipients= new LinkedList<String>();
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                    recipients.add(proponente.getEmail());
+                } 
+               
+                for(Student candidatos: currentProposta.getCandidatos()) {
+                    recipients.add(candidatos.getEmail());
+                }
+   
+                emailManager.updateProva(loggedMembroCCP, currentProposta, alterations, recipients);        
+            }
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/provas/view.xhtml?faces-redirect=true";
+    }
+    
+    public String validateProposta() throws AddressException, Exception {
         try {
             propostaBean.addValidacao(
                     currentProposta.getCode(),
                     currentProposta.getIntEstado(),
                     currentProposta.getObservacao());
             
-            MembroCCP membro=membroCCPBean.find(username);
-         
-            String titulo = currentProposta.getTitulo();
-            String message = buildMessage(username);
-             
-            List<String> recipients= new LinkedList<String>();
-        
-            for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
-                recipients.add(proponente.getEmail());
-            }            
-            
-            emailBean.send(membro.getEmail(), membro.getPassword(), membro.getEmail(), titulo, message, recipients);
+            if (currentProposta.getIntEstado() == 1 ){
+                List<String> recipients= new LinkedList<String>();
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                    recipients.add(proponente.getEmail());
+                } 
+              
+                emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
+            }
             
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -412,35 +543,7 @@ public class AdministratorManager implements Serializable {
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
-    
-    public Collection<PropostaDTO> getAllProvas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() > 1){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
-    
-    public Collection<PropostaDTO> getAllFinalizado() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() == 3){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
-    
+        
     
     public UIComponent getComponent() {
         return component;
@@ -554,19 +657,6 @@ public class AdministratorManager implements Serializable {
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
 
-    private String buildMessage(String username) {
-        String msg = "<strong>A proposta:</strong> "+currentProposta.getTitulo()
-                    +".<br><br><strong>Com descricao:</strong> "+ currentProposta.getResumo()+"."
-                    +".<br><br><strong>Foi avaliada por:</strong> "+ username+".";
-                  
-        if (currentProposta.getIntEstado()==1) msg+= "<br><br>Sendo esta <strong>" + currentProposta.getEstado() +"</strong>."; 
-        else if (currentProposta.getIntEstado()==-1) msg+= "<br><br>Sendo esta infelizmente <strong>"+ currentProposta.getEstado() +"</strong>.";
-            
-        msg+= (currentProposta.getObservacao()!=null && !currentProposta.getObservacao().isEmpty())?
-            ("<br><strong>Observação:</strong> "+ currentProposta.getObservacao())+".": "<br><br>Não deixou Observação.";
-        
-        return msg;
-    }
     
     public String addGuidingTeacher (){
         try {

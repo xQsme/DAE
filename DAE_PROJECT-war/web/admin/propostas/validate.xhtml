@@ -12,7 +12,8 @@
             Validate ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <c:if test="#{administratorManager.currentProposta.intEstado==0}">
+            <c:if test="#{administratorManager.currentProposta.intEstado==0 and
+                   not empty administratorManager.currentPropostaProponentes}">
                 <h:form>                       
                 <b:labeledContainer  id="titulo"
                         label="Título:">
@@ -99,11 +100,16 @@
                     styleClass="btn btn-primary"
                     value="Validar"
                     onclick="if (! confirm('Tem a certeza?')) return false"
-                    action="#{administratorManager.validateProposta(userManager.username)}" />
+                    action="#{administratorManager.validateProposta()}" />
 
  
               </h:form>  
             </c:if>
+            
+            <c:if test="#{empty administratorManager.currentPropostaProponentes}">
+                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" não tem proponentes!</p>
+            </c:if>
+            
             <c:if test="#{administratorManager.currentProposta.intEstado!=0}">
                 <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi validada!</p>
             </c:if>

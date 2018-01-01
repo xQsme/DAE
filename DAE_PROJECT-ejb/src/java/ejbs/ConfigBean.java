@@ -56,17 +56,19 @@ public class ConfigBean {
             studentBean.addCandidaturaStudent(1, "2151159");
             
             studentBean.addCandidaturaStudent(4, "2151163");
+            studentBean.addCandidaturaStudent(4, "2151474");
             
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");
             teacherBean.addPropostaTeacher(1, "teacherNick3");
             teacherBean.addPropostaTeacher(4, "teacherNick3");
+            teacherBean.addPropostaTeacher(4, "teacherNick2");
             
             instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao Pedro", "2151163@my.ipleiria.pt", "Associação");
             instituicaoBean.create("InstituicaoNick2", "secret", "Instituicao João", "2151474@my.ipleiria.pt", TipoDeInstituicao.Empresa.toString());
             instituicaoBean.create("InstituicaoNick3", "secret", "Instituicao Gonçalo", "2151159@my.ipleiria.pt", TipoDeInstituicao.Pública.toString());
 
-            instituicaoBean.addPropostaInstituicao(3, "InstituicaoNick1");
+            instituicaoBean.addPropostaInstituicao(3, "InstituicaoNick2");
 
             propostaBean.addAreaCientifica(1, "Informática");
             propostaBean.addAreaCientifica(1, "Saúde");
@@ -93,6 +95,7 @@ public class ConfigBean {
             
             //Adding a menbroCCP
             membroCCPBean.create("membroCCP", "secret", "membroCCP", "menbroCPPdae@gmail.com");
+            membroCCPBean.create("membroCCP2", "secret", "membroCCP", "menbroCPPdae@gmail.com");
             membroCCPBean.validarProposta("membroCCP", 1, -1, "Because i Can muahahaha");
             membroCCPBean.validarProposta("membroCCP", 2, 1);
             membroCCPBean.validarProposta("membroCCP", 4, 2);
