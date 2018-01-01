@@ -25,6 +25,8 @@ import entities.MembroCCP;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
+import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -570,7 +572,8 @@ public class AdministratorManager implements Serializable {
         try {
             membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
             newTeacher.reset();
-        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException e) {
+        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException | NullPointerException | 
+                ProposalWasNotSubmittedByAnInstitutionException | StudentHasNoProposalException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
@@ -640,5 +643,27 @@ public class AdministratorManager implements Serializable {
         }
     }
         
-        
+    public Collection<PropostaDTO> getAllAvailableProposals() {
+        try {
+            return propostaBean.getAllAvailable();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public String setProposalStudent(){
+        try {
+            logger.info("proposta -> " + newProposta.getCode());
+            logger.info("username -> " + currentStudent.getUsername());
+            studentBean.setProposta(currentStudent.getUsername(), newProposta.getCode());
+            
+            newProposta.setCode(0);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "/admin/students/view.xhtml?faces-redirect=true";
+    }
 }

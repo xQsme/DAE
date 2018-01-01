@@ -15,6 +15,9 @@ import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
+import exceptions.ProposalAlreadyAsignedException;
+import exceptions.ProposalNotAcceptedException;
+import exceptions.StudentAlreadyHasAProposalAssignedException;
 import exceptions.UserAlreadyHasAppliedException;
 import exceptions.StudentCandidaturasFullException;
 import exceptions.Utils;
@@ -187,8 +190,41 @@ public class StudentBean extends Bean<Student> {
     public void removeCandidatura(String username, int code) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public void setProposta(String username, int propostaCode) throws EntityDoesNotExistsException, ProposalAlreadyAsignedException, 
+            ProposalNotAcceptedException, StudentAlreadyHasAProposalAssignedException {
+        try {
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with that username.");
+            }
+            if(proposta.getEstado() != 1){
+                throw new ProposalNotAcceptedException("The proposal has not been accepted yet.");
+            }
+            if (proposta.getStudent() != null) {
+                throw new ProposalAlreadyAsignedException("The proposal has already been assigned!");
+            }
+            if (student.getProposal() != null) {
+                throw new StudentAlreadyHasAProposalAssignedException("The student already has a Proposal Assigned!");
+            }
+            proposta.setStudent(student);
+            student.setProposal(proposta);
 
-        public Collection<DocumentDTO> getDocuments(String username) throws EntityDoesNotExistsException {
+            em.merge(student);
+            em.merge(proposta);
+            
+        } catch (EntityDoesNotExistsException | ProposalAlreadyAsignedException | ProposalNotAcceptedException | StudentAlreadyHasAProposalAssignedException | NullPointerException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public Collection<DocumentDTO> getDocuments(String username) throws EntityDoesNotExistsException {
         try {
             List<Document> docs = em.createNamedQuery("getDocumentsOfUser", Document.class).setParameter("username", username).getResultList();
             return toDTOs(docs, DocumentDTO.class);
