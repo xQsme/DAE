@@ -95,6 +95,7 @@ public class ConfigBean {
             
             //Adding a menbroCCP
             membroCCPBean.create("membroCCP", "secret", "membroCCP", "menbroCPPdae@gmail.com");
+            membroCCPBean.create("membroCCP2", "secret", "membroCCP", "menbroCPPdae@gmail.com");
             membroCCPBean.validarProposta("membroCCP", 1, -1, "Because i Can muahahaha");
             membroCCPBean.validarProposta("membroCCP", 2, 1);
             membroCCPBean.validarProposta("membroCCP", 4, 2);

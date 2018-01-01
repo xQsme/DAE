@@ -48,6 +48,13 @@
                         ${p.name}
                     </h:column>
                 </h:dataTable>
+                
+                <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+                <h:dataTable id="candidatos"  rendered="${not empty administratorManager.currentPropostaCandidatos}" value="${administratorManager.currentPropostaCandidatos}" var="c">			
+                    <h:column>
+                        ${c.name}
+                    </h:column>
+                </h:dataTable>
 
                 <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
                 <h:dataTable id="objetivos"  rendered="${not empty administratorManager.currentProposta.objetivos}" value="${administratorManager.currentProposta.objetivos}" var="o">			
