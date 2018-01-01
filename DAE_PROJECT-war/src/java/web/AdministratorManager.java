@@ -223,6 +223,7 @@ public class AdministratorManager implements Serializable {
                     propostas.add(p);
                 }
             }
+<<<<<<< HEAD
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -250,10 +251,12 @@ public class AdministratorManager implements Serializable {
     public Collection<PropostaDTO> getAllFinalizado() {
         try{
             return propostaBean.getAllFinalizado();
+=======
+>>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            throw new EJBException(e.getMessage());
         }
+        return propostas;
     }
     
     public InstituicaoDTO getCurrentInstituicao() {
