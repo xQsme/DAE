@@ -67,12 +67,45 @@ public class PropostaBean extends Bean<Proposta> {
     }
 
     public Collection<PropostaDTO> getAllPropostas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            //return getAll(PropostaDTO.class);
-            return toPropostaDTOcollection(getAll());
+            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+                if(p.getIntEstado() < 2){
+                    propostas.add(p);
+                }
+            }
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+        return propostas;
+    }
+    
+    public Collection<PropostaDTO> getAllProvas() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+                if(p.getIntEstado() == 2){
+                    propostas.add(p);
+                }
+            }
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return propostas;
+    }
+    
+    public Collection<PropostaDTO> getAllFinalizado() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+                if(p.getIntEstado() == 3){
+                    propostas.add(p);
+                }
+            }
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return propostas;
     }
     
     public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {

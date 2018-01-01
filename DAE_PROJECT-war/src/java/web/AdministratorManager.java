@@ -404,17 +404,21 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<PropostaDTO> getAllProvas() {
-        LinkedList<PropostaDTO> provas = new LinkedList<>();
-        try {
-            for(PropostaDTO prova : propostaBean.getAllPropostas()){
-                if(prova.getIntEstado()==1){
-                    provas.add(prova);
-                }
-            }
+        try{
+            return propostaBean.getAllProvas();
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Aconteceu um erro em obter os dados das Provas", logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
         }
-        return provas;
+    }
+    
+    public Collection<PropostaDTO> getAllFinalizado() {
+        try{
+            return propostaBean.getAllFinalizado();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
     }
     
     
@@ -523,7 +527,7 @@ public class AdministratorManager implements Serializable {
         } catch (EntityAlreadyExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
             return null;
-        } catch (Exception e) {
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
         }
@@ -548,7 +552,7 @@ public class AdministratorManager implements Serializable {
         try {
             membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
             newTeacher.reset();
-        } catch (Exception e) {
+        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
@@ -558,16 +562,13 @@ public class AdministratorManager implements Serializable {
         public String finalizarDocumento() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
-            System.out.println("Document created");
             /*System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(document)));*/
             propostaBean.finalizarDocumento(currentProposta.getCode(), document);
-            System.out.println("Document finalized");
-
-        } catch (Exception e) {
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }

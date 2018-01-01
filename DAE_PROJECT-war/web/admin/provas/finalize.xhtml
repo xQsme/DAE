@@ -13,10 +13,8 @@
             <p:fileUpload value="#{uploadManager.file}" mode="simple" />
             <p:commandButton value="Submit" ajax="false" actionListener="#{uploadManager.upload}" action="#{administratorManager.finalizarDocumento}"/>
         </h:form>
-
-        <h:link value="return" outcome="view" />
-
-        
+        <h:link value="return" outcome="view" class="btn btn-primary"/>
+        <br/> 
         <h:messages errorClass="error" />
 
     </h:body>
