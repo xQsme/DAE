@@ -9,6 +9,7 @@ import entities.UserGroup.GROUP;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,8 +17,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -34,6 +37,10 @@ public class Student extends User  {
     
     @ManyToMany(mappedBy = "guidedStudents")
     private List<Teacher> guidingTeachers;
+    
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName="CODE")
+    private Proposta proposal; 
     
     //@Column
     //private Proposta projetoMestrado;
@@ -80,4 +87,12 @@ public class Student extends User  {
     public void removeGuidingTeacher(Teacher teacher) {
         guidingTeachers.remove(teacher);
     }  
+
+    public Proposta getProposal() {
+        return proposal;
+    }
+
+    public void setProposal(Proposta proposal) {
+        this.proposal = proposal;
+    }
 }

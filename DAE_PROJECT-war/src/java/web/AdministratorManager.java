@@ -585,5 +585,27 @@ public class AdministratorManager implements Serializable {
         this.currentDocumento = currentDocumento;
     }
         
-        
+    public Collection<PropostaDTO> getAllAvailableProposals() {
+        try {
+            return propostaBean.getAllAvailable();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public String setProposalStudent(){
+        try {
+            logger.info("proposta -> " + newProposta.getCode());
+            logger.info("username -> " + currentStudent.getUsername());
+            studentBean.setProposta(currentStudent.getUsername(), newProposta.getCode());
+            
+            newProposta.setCode(0);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }
+        return "/admin/students/view.xhtml?faces-redirect=true";
+    }
 }

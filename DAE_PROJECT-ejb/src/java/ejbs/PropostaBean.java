@@ -14,6 +14,7 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -423,6 +424,16 @@ public class PropostaBean extends Bean<Proposta> {
 
         } catch (EntityDoesNotExistsException e) {
             throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public Collection<PropostaDTO> getAllAvailable() {
+        try {
+            Query query = em.createQuery("SELECT p FROM Proposta p where p.estado = 1", Proposta.class);
+            LinkedList<PropostaDTO> propostas = (LinkedList<PropostaDTO>) toPropostaDTOcollection(query.getResultList());
+            return propostas;            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
