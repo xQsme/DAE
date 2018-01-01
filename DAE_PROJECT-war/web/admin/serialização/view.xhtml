@@ -12,7 +12,7 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.allProvas}" value="${administratorManager.allProvas}" var="p">			
+                <p:dataTable rendered="${not empty administratorManager.allPropostas}" value="${administratorManager.allPropostas}" var="p">			
                     <p:column>
                         <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
@@ -38,8 +38,8 @@
                         <c:if test="${userManager.isUserRole('MembroCCP')}" >
                             <span>
                                 <h:commandLink 
-                                    value="Finalizar"
-                                    action="/admin/propostas/finalize">
+                                    value="Validar"
+                                    action="/admin/propostas/validate">
                                     <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                                 </h:commandLink>
                             </span>
