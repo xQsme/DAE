@@ -5,8 +5,12 @@
  */
 package web;
 
+import exceptions.NoDocumentsException;
+import exceptions.AlreadyAppliedToProposalException;
+import exceptions.CannotApplyToProposalException;
 import exceptions.ProposalStateDoesNotAllowException;
 import dtos.DocumentDTO;
+import dtos.DocumentoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
@@ -14,6 +18,8 @@ import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.StudentBean;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.StudentCandidaturasFullException;
+import exceptions.UserAlreadyHasAppliedException;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
@@ -58,6 +64,7 @@ public class StudentManager implements Serializable {
     private StudentDTO student;
     private List<DocumentDTO> documents;
     private DocumentDTO document;
+    private DocumentoDTO documento;
     private PropostaDTO currentProposta;
     private DocumentDTO currentDocumento;
     
@@ -117,13 +124,18 @@ public class StudentManager implements Serializable {
     
     public void candidatar(){
         try {
-            if(currentProposta.getIntEstado()!=0){
+            if(studentBean.getDocuments(student.getUsername()).isEmpty()){
+                throw new NoDocumentsException();
+            }else if(studentBean.getCandidaturas(student.getUsername()).contains(currentProposta)){
+                throw new AlreadyAppliedToProposalException();
+            }else if(studentBean.getCandidaturas(student.getUsername()).size() >= 5){
+                throw new CannotApplyToProposalException();
+            }else if(currentProposta.getIntEstado()!=1){
                 throw new ProposalStateDoesNotAllowException();
-            }else{
-                studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
             }
+            studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
         }
-        catch (Exception e) {
+        catch (AlreadyAppliedToProposalException | CannotApplyToProposalException | EntityDoesNotExistsException | NoDocumentsException | ProposalStateDoesNotAllowException | StudentCandidaturasFullException | UserAlreadyHasAppliedException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         }
     }
@@ -239,6 +251,15 @@ public class StudentManager implements Serializable {
         return documents;
     }
     
+    public Collection<DocumentDTO> getUserDocumentos(){
+        try {
+            return studentBean.getDocuments(student.getUsername());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
     public DocumentDTO getCurrentPropostaAta(){
         try {
             for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
@@ -298,5 +319,31 @@ public class StudentManager implements Serializable {
         return "details?faces-redirect=true";
     }
     
+    public void uploadUserDocument() {
+        try {
+            documento = new DocumentoDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
+
+            /*System.out.println(client.target(URILookup.getBaseAPI())
+                    .path("/propostas/addDocument")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(document)));*/
+            studentBean.addDocument(student.getUsername(), documento);
+
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    public String removerUserDocumento(){
+        try{
+            studentBean.removerDocumento(student.getUsername(), currentDocumento.getId());
+            File f = new File(currentDocumento.getFilepath());
+            f.delete();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return "details?faces-redirect=true";
+    }
     
 }

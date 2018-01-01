@@ -20,7 +20,6 @@ import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -57,6 +56,7 @@ public class InstituicaoManager implements Serializable {
     private PropostaDTO currentProposta;
     private DocumentDTO currentDocumento;
     private PropostaDTO newProposta;
+    private StudentDTO currentStudent;
     
     private UIComponent component;
     
@@ -287,5 +287,24 @@ public class InstituicaoManager implements Serializable {
         }
         return documents;
     }
+    
+    public Collection<DocumentDTO> getStudentDocumentos(){
+        try {
+            return studentBean.getDocuments(currentStudent.getUsername());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+
+    public StudentDTO getCurrentStudent() {
+        return currentStudent;
+    }
+
+    public void setCurrentStudent(StudentDTO currentStudent) {
+        this.currentStudent = currentStudent;
+    }
+    
+    
     
 }

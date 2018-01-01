@@ -7,14 +7,12 @@ package exceptions;
 
 /**
  *
- * @author Yvtq8
+ * @author The Law
  */
-public class ProposalStateAlreadyDefineException extends Exception {
+public class AlreadyAppliedToProposalException extends Exception {
 
-    public ProposalStateAlreadyDefineException() {
+    public AlreadyAppliedToProposalException() {
+        super("Já está candidatado a esta proposta.");
     }
-
-    public ProposalStateAlreadyDefineException(String msg) {
-        super(msg);
-    }
+    
 }

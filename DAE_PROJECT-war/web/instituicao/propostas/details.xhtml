@@ -61,6 +61,13 @@ and open the template in the editor.
                     <h:dataTable id="candidatos" rendered="${not empty  instituicaoManager.currentPropostaCandidatos}" value="${ instituicaoManager.currentPropostaCandidatos}" var="c">			
                         <h:column>
                             ${c.name}
+                            <span>
+                                <h:commandLink
+                                        value="Details"
+                                        action="/instituicao/students/details">
+                                        <f:setPropertyActionListener target="${instituicaoManager.currentStudent}" value="${c}"></f:setPropertyActionListener>
+                                </h:commandLink>
+                            </span>
                         </h:column>
                     </h:dataTable>
 

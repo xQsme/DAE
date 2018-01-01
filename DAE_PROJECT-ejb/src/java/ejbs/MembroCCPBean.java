@@ -5,8 +5,6 @@
  */
 package ejbs;
 
-import dtos.MembroCCPDTO;
-import dtos.TeacherDTO;
 import entities.MembroCCP;
 import entities.Proposta;
 import entities.Student;
@@ -14,9 +12,7 @@ import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
-import exceptions.ProposalStateAlreadyDefineException;
 import exceptions.TeacherAlreadyAssignedException;
-import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -65,13 +61,13 @@ public class MembroCCPBean{
     
     //In case the Menber doesnt leave a comment
     public void validarProposta(String username, int propostaCode, Integer validar) 
-            throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
+            throws EntityDoesNotExistsException{
               validarProposta(username, propostaCode, validar, null);
     }
     
     //In case the menber intends to leave a comment
     public void validarProposta(String username, int propostaCode, Integer validar, String observacao) 
-            throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
+            throws EntityDoesNotExistsException{
         try {      
             MembroCCP membroCCP = em.find(MembroCCP.class, username);
             if (membroCCP == null) {

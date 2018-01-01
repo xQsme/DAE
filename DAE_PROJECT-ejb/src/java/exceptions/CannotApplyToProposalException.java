@@ -9,10 +9,10 @@ package exceptions;
  *
  * @author The Law
  */
-public class ProposalStateDoesNotAllowException extends Exception {
+public class CannotApplyToProposalException extends Exception {
 
-    public ProposalStateDoesNotAllowException() {
-        super("A proposta não foi aceite.");
+    public CannotApplyToProposalException() {
+        super("Já está candidatado a 5 propostas.");
     }
     
 }
