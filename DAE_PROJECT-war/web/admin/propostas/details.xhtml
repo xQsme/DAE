@@ -53,6 +53,13 @@
                 <h:dataTable id="candidatos"  rendered="${not empty administratorManager.currentPropostaCandidatos}" value="${administratorManager.currentPropostaCandidatos}" var="c">			
                     <h:column>
                         ${c.name}
+                        <span>
+                            <h:commandLink
+                                    value="Details"
+                                    action="/admin/students/details">
+                                    <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${c}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
                     </h:column>
                 </h:dataTable>
 
@@ -99,20 +106,20 @@
 
 
                 <h:outputLabel for="estado" value="Estado: "
-                               rendered="${not empty teacherManager.currentProposta.estado}"/>
+                               rendered="${not empty administratorManager.currentProposta.estado}"/>
                 <h:outputText 
                     id="estado"
-                    rendered="${not empty teacherManager.currentProposta.estado}"
-                    value="#{teacherManager.currentProposta.estado}"/>
+                    rendered="${not empty administratorManager.currentProposta.estado}"
+                    value="#{administratorManager.currentProposta.estado}"/>
 
                 <h:outputLabel for="observacao" value="Observacao: " 
-                               rendered="${not empty teacherManager.currentProposta.estado and 
-                                           not empty teacherManager.currentProposta.observacao}" />
+                               rendered="${not empty administratorManager.currentProposta.estado and 
+                                           not empty administratorManager.currentProposta.observacao}" />
                 <h:outputText 
                     id="observacao"
-                    rendered="${not empty teacherManager.currentProposta.estado and
-                                not empty teacherManager.currentProposta.observacao}"
-                    value="#{teacherManager.currentProposta.observacao}"/>
+                    rendered="${not empty administratorManager.currentProposta.estado and
+                                not empty administratorManager.currentProposta.observacao}"
+                    value="#{administratorManager.currentProposta.observacao}"/>
 
                 <h:outputLabel rendered="${not empty administratorManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
                 <h:dataTable id="documentos" rendered="${not empty administratorManager.currentPropostaDocumentos}" value="${administratorManager.currentPropostaDocumentos}" var="d">			

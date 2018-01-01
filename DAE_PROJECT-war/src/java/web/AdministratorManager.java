@@ -598,6 +598,15 @@ public class AdministratorManager implements Serializable {
     public void setCurrentDocumento(DocumentDTO currentDocumento) {
         this.currentDocumento = currentDocumento;
     }
+    
+    public Collection<DocumentDTO> getStudentDocumentos(){
+        try {
+            return studentBean.getDocuments(currentStudent.getUsername());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
         
         
 }
