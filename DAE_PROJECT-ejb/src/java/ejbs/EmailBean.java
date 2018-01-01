@@ -24,7 +24,7 @@ public class EmailBean {
     private String mailhost = "smtp.gmail.com";
     //private String mailhost= "mail.ipleiria.pt"; 
     
-    public synchronized void send(String userEmail, String password , String sender, String subject, 
+    public synchronized void send(String userEmail, String password, String subject, 
             String body, List<String> recipients) throws AddressException, MessagingException 
     {
         
@@ -46,7 +46,7 @@ public class EmailBean {
         });
         
         MimeMessage message = new MimeMessage(session);
-        message.setSender(new InternetAddress(sender));
+        message.setSender(new InternetAddress(userEmail));
         message.setSubject(subject);
         message.setContent(body, "text/html; charset=utf-8");
         

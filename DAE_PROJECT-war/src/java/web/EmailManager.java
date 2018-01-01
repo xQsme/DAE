@@ -10,9 +10,16 @@ package web;
  *
  * @author Yvtq8
  */
+import dtos.PropostaDTO;
+import ejbs.EmailBean;
+import ejbs.PropostaBean;
+import entities.MembroCCP;
+import entities.Proposta;
+import java.io.Serializable;
 import java.security.Security;
 import java.util.List;
 import java.util.Properties;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.mail.Message;
@@ -26,47 +33,52 @@ import javax.mail.internet.MimeMessage;
 
 @ManagedBean
 @SessionScoped
-@Deprecated
-public class EmailManager {
+public class EmailManager implements Serializable{
     
-    //@Resource(name="mail/gmail") //I did not use to not cause problems to all
-    //private Session session;    //This session is based on the glashfish version
+    @EJB
+    private EmailBean email;
     
-    private String mailhost = "smtp.gmail.com";
-    //private String mailhost= "mail.ipleiria.pt"; 
-    
-    public synchronized void send(String userEmail, String password , String sender, String subject, 
-            String body, List<String> recipients) throws AddressException, MessagingException 
-    {
-        
-        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-
-        Properties props = new Properties();
-        props.setProperty("mail.transport.protocol", "smtp");
-        props.setProperty("mail.host", mailhost);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.starttls.enable", true);
-        props.setProperty("mail.smtp.quitwait", "false");
-
-        Session session = Session.getInstance(props,
-                   new javax.mail.Authenticator() 
-        {
-              protected PasswordAuthentication getPasswordAuthentication()
-              { return new PasswordAuthentication(userEmail,password);}     
-        });
-        
-        MimeMessage message = new MimeMessage(session);
-        message.setSender(new InternetAddress(sender));
-        message.setSubject(subject);
-        message.setContent(body, "text/html; charset=utf-8");
-        
-
-        for(String recipient:recipients){
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-        }
-     
-        Transport.send(message);        
+    public void removeProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+        String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
+                    +".<br><br><strong>Foi removida por:</strong> "+ memberCCP.getName()+".";
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Remoção da Proposta "+proposta.getTitulo(), msg, recipients);               
     }
-     
+    
+    public void removeProva(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+        String msg = "<strong>A prova:</strong> "+proposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
+                    +".<br><br><strong>Foi removida por:</strong> "+ memberCCP.getName()+".";
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Remoção da Prova "+proposta.getTitulo(), msg, recipients);               
+    }
+    
+    
+    public void updateProva(MembroCCP memberCCP, PropostaDTO proposta, List<String> alterations, List<String> recipients) throws MessagingException{
+        String msg = "<strong>A prova:</strong> "+proposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
+                    +".<br><br><strong>Foi atualizada por:</strong> "+ memberCCP.getName()+".";
+                            
+                    if (alterations!=null){
+                        msg+="<br><br><strong>Com as seguintes alteracoes:</strong>";
+                        for(String alteration: alterations){
+                            msg+="<br>"+alteration;
+                        }
+                    } 
+        
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Alteração da Prova "+proposta.getTitulo(), msg, recipients);               
+    }
+    
+    public void validateProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+        String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
+                    +".<br><br><strong>Foi avaliada por:</strong> "+ memberCCP.getName()+".";
+                  
+        if (proposta.getIntEstado()==1) msg+= "<br><br>Sendo esta <strong>" + proposta.getEstado() +"</strong>."; 
+        else if (proposta.getIntEstado()==-1) msg+= "<br><br>Sendo esta infelizmente <strong>"+ proposta.getEstado() +"</strong>.";
+            
+        msg+= (proposta.getObservacao()!=null && !proposta.getObservacao().isEmpty())?
+            ("<br><strong>Observação:</strong> "+ proposta.getObservacao())+".": "<br><br>Não deixou Observação.";
+        
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Proposta foi Validada "+proposta.getTitulo(), msg, recipients);               
+    }     
 }

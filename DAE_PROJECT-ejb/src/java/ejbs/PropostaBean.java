@@ -79,6 +79,20 @@ public class PropostaBean extends Bean<Proposta> {
         return propostas;
     }
     
+    public Collection<PropostaDTO> getAllAccepted() {
+        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+        try {
+            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+                if(p.getIntEstado() == 1){
+                    propostas.add(p);
+                }
+            }
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return propostas;
+    }
+    
     public Collection<PropostaDTO> getAllProvas() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
@@ -263,6 +277,55 @@ public class PropostaBean extends Bean<Proposta> {
         tipos.add(-1);
         tipos.add(1);
         return tipos;
+    }
+    
+    public List<String> getAlterations(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios) 
+            throws EntityDoesNotExistsException, MyConstraintViolationException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            
+            Proposta newProposta = new Proposta();
+            newProposta.setTitulo(titulo);
+            newProposta.setTipoDeTrabalho(tipoDeTrabalho);
+            newProposta.setResumo(resumo);
+            newProposta.setPlanoDeTrabalhos(planoDeTrabalhos);
+            newProposta.setLocal(local);
+            newProposta.setOrcamento(orcamento);
+            newProposta.setApoios(apoios);
+            
+            LinkedList<String> alteracoes= new LinkedList();
+            if (!newProposta.getTitulo().equals(proposta.getTitulo()))
+                alteracoes.add("Titulo: "+newProposta.getTitulo());
+            
+            if (!newProposta.getTipoDeTrabalho().equals(proposta.getTipoDeTrabalho()))
+                alteracoes.add("Tipo De Trabalho: "+newProposta.getTipoDeTrabalho());
+            
+            if (!newProposta.getResumo().equals(proposta.getResumo()))
+                alteracoes.add("Resumo: "+newProposta.getResumo());
+            
+            if (!newProposta.getPlanoDeTrabalhos().equals(proposta.getPlanoDeTrabalhos()))
+                alteracoes.add("Plano de Trabalhos: "+newProposta.getPlanoDeTrabalhos());
+            
+            if (!newProposta.getLocal().equals(proposta.getLocal()))
+                alteracoes.add("Local: "+newProposta.getLocal());
+            
+            if (!newProposta.getOrcamento().equals(proposta.getOrcamento()))
+                alteracoes.add("Orcamento: "+newProposta.getOrcamento());
+            
+            if (!newProposta.getApoios().equals(proposta.getApoios())) 
+                alteracoes.add("Apoios: "+newProposta.getApoios());
+            
+            return alteracoes;
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
     
     public void update(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios) 

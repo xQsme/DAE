@@ -56,11 +56,13 @@ public class ConfigBean {
             studentBean.addCandidaturaStudent(1, "2151159");
             
             studentBean.addCandidaturaStudent(4, "2151163");
+            studentBean.addCandidaturaStudent(4, "2151474");
             
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");
             teacherBean.addPropostaTeacher(1, "teacherNick3");
             teacherBean.addPropostaTeacher(4, "teacherNick3");
+            teacherBean.addPropostaTeacher(4, "teacherNick2");
             
             instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao Pedro", "2151163@my.ipleiria.pt", "Associação");
             instituicaoBean.create("InstituicaoNick2", "secret", "Instituicao João", "2151474@my.ipleiria.pt", TipoDeInstituicao.Empresa.toString());
