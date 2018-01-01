@@ -16,11 +16,9 @@ import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
-import exceptions.ProposalStateAlreadyDefineException;
 import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
 import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
-import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -69,13 +67,13 @@ public class MembroCCPBean{
     
     //In case the Menber doesnt leave a comment
     public void validarProposta(String username, int propostaCode, Integer validar) 
-            throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
+            throws EntityDoesNotExistsException{
               validarProposta(username, propostaCode, validar, null);
     }
     
     //In case the menber intends to leave a comment
     public void validarProposta(String username, int propostaCode, Integer validar, String observacao) 
-            throws EntityDoesNotExistsException, ProposalStateAlreadyDefineException{
+            throws EntityDoesNotExistsException{
         try {      
             MembroCCP membroCCP = em.find(MembroCCP.class, username);
             if (membroCCP == null) {
@@ -102,7 +100,7 @@ public class MembroCCPBean{
         }        
     }
     
-    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException {
+    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
         try {
             Teacher teacher = em.find(Teacher.class, teacherUsername);
             if (teacher == null) {
@@ -143,7 +141,8 @@ public class MembroCCPBean{
             em.merge(student);
 
 
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | NullPointerException | ProposalWasNotSubmittedByAnInstitutionException |
+                StudentHasNoProposalException | TeacherAlreadyAssignedException e) {
             throw e;
         } catch (Exception e) {
             if (e != null) {

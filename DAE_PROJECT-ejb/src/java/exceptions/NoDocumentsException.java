@@ -9,10 +9,10 @@ package exceptions;
  *
  * @author The Law
  */
-public class ProposalStateDoesNotAllowException extends Exception {
+public class NoDocumentsException extends Exception {
 
-    public ProposalStateDoesNotAllowException() {
-        super("A proposta não foi aceite.");
+    public NoDocumentsException() {
+        super("Para se candidatar tem primeiro de fazer upload de documentos.");
     }
     
 }

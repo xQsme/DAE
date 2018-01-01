@@ -30,6 +30,13 @@
                         <f:facet name="header">Actions</f:facet>
                         <span>
                             <h:commandLink
+                                value="Details"
+                                action="details">
+                                <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${s}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                        <span>
+                            <h:commandLink
                                 value="Update"
                                 action="update">
                                 <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${s}"></f:setPropertyActionListener>

@@ -1,8 +1,12 @@
 package ejbs;
 
+import dtos.DocumentDTO;
+import dtos.DocumentoDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
+import entities.Document;
+import entities.Documento;
 import entities.Proposta;
 import entities.Student;
 import entities.Teacher;
@@ -218,5 +222,44 @@ public class StudentBean extends Bean<Student> {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+
+    public Collection<DocumentDTO> getDocuments(String username) throws EntityDoesNotExistsException {
+        try {
+            List<Document> docs = em.createNamedQuery("getDocumentsOfUser", Document.class).setParameter("username", username).getResultList();
+            return toDTOs(docs, DocumentDTO.class);
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public void addDocument(String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("Não existe estudante com o username \"" + username + "\".");
+            }
+            Documento documento = new Documento(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), student);
+            em.persist(documento);
+            student.addDocumento(documento);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public void removerDocumento(String username, int id) throws EntityDoesNotExistsException {
+        Student student = em.find(Student.class, username);
+        if(student == null){
+            throw new EntityDoesNotExistsException("O estudante com username \"" + username + "\" nao existe.");
+        }
+        Documento documento = em.find(Documento.class, id);
+        if(documento == null){
+            throw new EntityDoesNotExistsException("O documento dom id " + id + " nao existe.");
+        }
+        student.removeDocumento(documento);
+        em.remove(documento);
     }
 }

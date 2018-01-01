@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -42,8 +43,9 @@ public class Student extends User  {
     @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName="CODE")
     private Proposta proposal; 
     
-    //@Column
-    //private Proposta projetoMestrado;
+    @OneToMany(mappedBy = "student")
+    private List<Documento> documentos;
+
 
     public Student() {
         candidaturas = new LinkedList<>();
@@ -94,5 +96,22 @@ public class Student extends User  {
 
     public void setProposal(Proposta proposal) {
         this.proposal = proposal;
+    }
+    
+
+    public List<Documento> getDocumentos() {
+        return documentos;
+    }
+
+    public void setDocumentos(List<Documento> documentos) {
+        this.documentos = documentos;
+    }
+
+    public void addDocumento(Documento documento) {
+        documentos.add(documento);
+    }
+
+    public void removeDocumento(Documento documento) {
+        documentos.remove(documento);
     }
 }
