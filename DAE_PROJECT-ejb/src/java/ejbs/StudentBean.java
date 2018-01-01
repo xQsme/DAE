@@ -26,14 +26,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.GET;
+import static javax.ws.rs.HttpMethod.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/students")
 public class StudentBean extends Bean<Student> {
     
     private static final Logger logger = Logger.getLogger("ejb.StudentBean");
@@ -177,7 +185,11 @@ public class StudentBean extends Bean<Student> {
         } 
     }
 
-    public StudentDTO getStudent(String username) {
+    @GET
+    @RolesAllowed({"Student"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("findStudent/{username}")
+    public StudentDTO findStudent(@PathParam("username") String username) {
         try {
             Query query = em.createQuery("SELECT s FROM Student s where s.username = '" + username + "'", Student.class);
             ArrayList<StudentDTO> estudantes = (ArrayList<StudentDTO>) toDTOs(query.getResultList(), StudentDTO.class);

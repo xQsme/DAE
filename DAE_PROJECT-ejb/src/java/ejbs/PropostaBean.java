@@ -304,29 +304,12 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    /*@PUT
+    @PUT
     @RolesAllowed({"Student"})
     @Path("/addDocument/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         System.out.println("PUT");
-        try {
-            Proposta proposta = em.find(Proposta.class, code);
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
-            }
-
-            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta);
-            em.persist(document);
-            proposta.addDocument(document);
-
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }*/
-    public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -343,8 +326,30 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    /*public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+        try {
+            Proposta proposta = em.find(Proposta.class, code);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
+            }
 
-    public void atualizarDocumento(int code, int id, DocumentDTO doc) throws EntityDoesNotExistsException {
+            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, false);
+            em.persist(document);
+            proposta.addDocument(document);
+
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }*/
+
+    @PUT
+    @RolesAllowed({"Student"})
+    @Path("/atualizarDocument/{code}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void atualizarDocumento(@PathParam("code") int code, int id, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
