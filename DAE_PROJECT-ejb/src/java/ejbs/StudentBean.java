@@ -4,14 +4,11 @@ import dtos.DocumentDTO;
 import dtos.DocumentoDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import dtos.TeacherDTO;
 import entities.Document;
 import entities.Documento;
 import entities.Proposta;
 import entities.Student;
-import entities.Teacher;
 import entities.User;
-import exceptions.BibliografiaIsFullException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -175,9 +172,7 @@ public class StudentBean extends Bean<Student> {
     public Collection<PropostaDTO> getCandidaturas(String username) {
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
-            List<Proposta> candidaturas = query.getResultList();
             return PropostaBean.toPropostaDTOcollection(query.getResultList());
-            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         } 
@@ -187,14 +182,19 @@ public class StudentBean extends Bean<Student> {
     @RolesAllowed({"Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("findStudent/{username}")
-    public StudentDTO findStudent(@PathParam("username") String username) {
+    public StudentDTO findStudent(@PathParam("username") String username) throws EntityDoesNotExistsException {
+        System.out.println("GET");
         try {
-            Query query = em.createQuery("SELECT s FROM Student s where s.username = '" + username + "'", Student.class);
-            ArrayList<StudentDTO> estudantes = (ArrayList<StudentDTO>) toDTOs(query.getResultList(), StudentDTO.class);
-            return estudantes.get(0);            
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no user with such username.");
+            }
+            return toDTO(student, StudentDTO.class);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
-        } 
+        }
     }
 
     public void removeCandidatura(String username, int code) {

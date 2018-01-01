@@ -77,10 +77,12 @@ public class StudentManager implements Serializable {
     
     public StudentManager() {
         client = ClientBuilder.newClient();
+        System.out.println("construct");
     }
     
     @PostConstruct
     public void Init(){
+        System.out.println("init");
         feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
         client.register(feature);
         setUpStudent();
@@ -183,6 +185,7 @@ public class StudentManager implements Serializable {
 
     private void setUpStudent() {
         try {
+            System.out.println("TRY");
             student = client.target(URILookup.getBaseAPI())
                     .path("/students/findStudent")
                     .path(userManager.getUsername())
@@ -190,6 +193,7 @@ public class StudentManager implements Serializable {
                     .get(StudentDTO.class);
 
         } catch (Exception e) {
+            System.out.println("ERRO");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
@@ -309,6 +313,7 @@ public class StudentManager implements Serializable {
             System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/atualizarDocument")
                     .path(currentProposta.getCode()+"")
+                    .path(currentDocumento.getId()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(document)));
             //propostaBean.atualizarDocumento(currentProposta.getCode(), currentDocumento.getId(), document);

@@ -347,9 +347,9 @@ public class PropostaBean extends Bean<Proposta> {
 
     @PUT
     @RolesAllowed({"Student"})
-    @Path("/atualizarDocument/{code}")
+    @Path("/atualizarDocument/{code}/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void atualizarDocumento(@PathParam("code") int code, int id, DocumentDTO doc) throws EntityDoesNotExistsException {
+    public void atualizarDocumento(@PathParam("code") int code, @PathParam("id") int id, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
