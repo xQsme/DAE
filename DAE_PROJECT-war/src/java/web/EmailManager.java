@@ -12,24 +12,14 @@ package web;
  */
 import dtos.PropostaDTO;
 import ejbs.EmailBean;
-import ejbs.PropostaBean;
 import entities.MembroCCP;
-import entities.Proposta;
 import java.io.Serializable;
-import java.security.Security;
 import java.util.List;
-import java.util.Properties;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
 
 @ManagedBean
 @SessionScoped
@@ -79,6 +69,6 @@ public class EmailManager implements Serializable{
         msg+= (proposta.getObservacao()!=null && !proposta.getObservacao().isEmpty())?
             ("<br><strong>Observação:</strong> "+ proposta.getObservacao())+".": "<br><br>Não deixou Observação.";
         
-        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Proposta foi Validada "+proposta.getTitulo(), msg, recipients);               
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Validação da Proposta "+proposta.getTitulo(), msg, recipients);               
     }     
 }

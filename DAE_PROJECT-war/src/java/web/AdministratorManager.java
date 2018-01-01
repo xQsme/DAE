@@ -456,8 +456,30 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateProposta() {
+        try {    
+            propostaBean.update(
+                    currentProposta.getCode(),
+                    currentProposta.getTitulo(),
+                    currentProposta.getTipoDeTrabalho(),
+                    currentProposta.getResumo(),
+                    currentProposta.getPlanoDeTrabalhos(),
+                    currentProposta.getLocal(),
+                    currentProposta.getOrcamento(),
+                    currentProposta.getApoios());
+           
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+        return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }
+    
+    public String updateProva() {
         try {
-            //Checks what change
+            //Checks what changed
             List<String> alterations=propostaBean.getAlterations(currentProposta.getCode(), currentProposta.getTitulo(),               
                     currentProposta.getTipoDeTrabalho(), currentProposta.getResumo(),
                     currentProposta.getPlanoDeTrabalhos(),currentProposta.getLocal(),
@@ -492,7 +514,7 @@ public class AdministratorManager implements Serializable {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
-        return "/admin/propostas/view.xhtml?faces-redirect=true";
+        return "/admin/provas/view.xhtml?faces-redirect=true";
     }
     
     public String validateProposta() throws AddressException, Exception {
