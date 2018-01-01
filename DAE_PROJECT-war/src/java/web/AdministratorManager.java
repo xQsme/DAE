@@ -223,7 +223,6 @@ public class AdministratorManager implements Serializable {
                     propostas.add(p);
                 }
             }
-<<<<<<< HEAD
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -251,12 +250,9 @@ public class AdministratorManager implements Serializable {
     public Collection<PropostaDTO> getAllFinalizado() {
         try{
             return propostaBean.getAllFinalizado();
-=======
->>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
-        return propostas;
     }
     
     public InstituicaoDTO getCurrentInstituicao() {
@@ -525,39 +521,7 @@ public class AdministratorManager implements Serializable {
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
-    
-<<<<<<< HEAD
-   
-=======
-    public Collection<PropostaDTO> getAllProvas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() > 1){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
-    
-    public Collection<PropostaDTO> getAllFinalizado() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() == 3){
-                    propostas.add(p);
-                }
-            }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostas;
-    }
->>>>>>> 64ae284ebb57484fd8a6b9625dd29d7363722493
-    
+        
     
     public UIComponent getComponent() {
         return component;
