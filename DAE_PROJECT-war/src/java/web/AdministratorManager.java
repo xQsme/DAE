@@ -569,6 +569,7 @@ public class AdministratorManager implements Serializable {
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
+    //Not full implmented yet
     public String serializarProposta() throws AddressException, Exception {
         try {
             

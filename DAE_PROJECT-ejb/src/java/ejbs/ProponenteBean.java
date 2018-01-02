@@ -45,7 +45,6 @@ public class ProponenteBean extends Bean<Proponente> {
         return em.createNamedQuery("getAllProponentes").getResultList();
     }
     
-<<<<<<< HEAD
     @GET
     @PermitAll
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -65,9 +64,7 @@ public class ProponenteBean extends Bean<Proponente> {
             throw new EJBException(e.getMessage());
         }
     }
-    
-=======
->>>>>>> f623e188adb12695826fca45f890b839d4bf78d9
+
     public ProponenteDTO getProponente(String username) {
         try {
             Query query = em.createQuery("SELECT p FROM Proponente p where p.username = '" + username + "'", Proponente.class);
