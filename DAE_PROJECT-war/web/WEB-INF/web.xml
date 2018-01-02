@@ -4,7 +4,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
-        <context-param>
+    <context-param>
         <param-name>SERVER_DOCUMENTS_FOLDER</param-name>
         <param-value>D:/DAE_UPLOADS/</param-value>
     </context-param>
@@ -76,6 +76,11 @@
             <web-resource-name>Admin Pages</web-resource-name>
             <description/>
             <url-pattern>/faces/admin/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Admin Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/teachers/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

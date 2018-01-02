@@ -15,14 +15,20 @@ import exceptions.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -46,8 +52,37 @@ public class TeacherBean extends Bean<Teacher> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    @POST
+    @RolesAllowed({"MembroCCP"})
+    @Path("create")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void createRest(TeacherDTO newTeacher)
+            throws EntityAlreadyExistsException {
+        try {
+            if (em.find(User.class, newTeacher.getUsername()) != null) {
+                throw new EntityAlreadyExistsException("A user with that username already exists.");
+            }
+            em.persist(new Teacher(newTeacher.getUsername(), newTeacher.getPassword(), newTeacher.getName(), 
+                    newTeacher.getEmail(), newTeacher.getOffice()));
+        } catch (EntityAlreadyExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
 
-    public void update(String username, String name, String email, String office)
+    @PUT
+    @RolesAllowed({"MembroCCP"})
+    @Path("update/{username}/{password}/{name}/{email}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void update(
+            @PathParam("username") String username,
+            @PathParam("password") String password,
+            @PathParam("name") String name,
+            @PathParam("email") String email,
+            String office)
+
             throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Teacher teacher = em.find(Teacher.class, username);
@@ -67,7 +102,11 @@ public class TeacherBean extends Bean<Teacher> {
         }
     }
     
-    public void remove(String username) throws EntityDoesNotExistsException {
+    @DELETE
+    @RolesAllowed({"MembroCCP"})
+    @Path("remove/{username}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void remove(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {
@@ -87,6 +126,7 @@ public class TeacherBean extends Bean<Teacher> {
     }
 
     @GET
+    @RolesAllowed({"MembroCCP"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
     public Collection<TeacherDTO> getAllTeachers() {

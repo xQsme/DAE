@@ -45,6 +45,11 @@ import javax.faces.component.UIComponent;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import util.URILookup;
 
 /**
  *
@@ -97,6 +102,8 @@ public class AdministratorManager implements Serializable {
     private Client client;
     private MembroCCP loggedMembroCCP;
     
+    private HttpAuthenticationFeature feature;
+    
     public AdministratorManager() {
         newStudent = new StudentDTO();
         newInstituicao = new InstituicaoDTO();
@@ -108,6 +115,8 @@ public class AdministratorManager implements Serializable {
   
     @PostConstruct
     public void Init(){
+        feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
+        client.register(feature);
         setUpMembroCCP();
     }
     
@@ -153,7 +162,12 @@ public class AdministratorManager implements Serializable {
     
     public Collection<TeacherDTO> getAllTeachers() {
         try {
-            return teacherBean.getAllTeachers();
+            List<TeacherDTO> returnedTeachers = client.target(URILookup.getBaseAPI())
+                .path("/teachers/all")
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<TeacherDTO>>() {
+                });
+            return returnedTeachers;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -357,11 +371,14 @@ public class AdministratorManager implements Serializable {
     
     public void removeTeacher(){ 
         try {
-            teacherBean.remove(currentTeacher.getUsername());
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/remove")
+                .path(currentTeacher.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .delete();
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), logger);
         }
     }
     
@@ -422,16 +439,16 @@ public class AdministratorManager implements Serializable {
     
     public String updateTeacher() {
         try {
-            teacherBean.update(currentTeacher.getUsername(),
-                    currentTeacher.getName(),
-                    currentTeacher.getEmail(),
-                    currentTeacher.getOffice());
-
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/update")
+                .path(currentTeacher.getUsername())
+                .path(currentTeacher.getPassword())
+                .path(currentTeacher.getName())
+                .path(currentTeacher.getEmail())
+                .request(MediaType.APPLICATION_XML)
+                .put(Entity.xml((currentTeacher.getOffice())));
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " +e.toString() , logger);
             return null;
         }
         return "/admin/teachers/view.xhtml?faces-redirect=true";
@@ -626,18 +643,15 @@ public class AdministratorManager implements Serializable {
     public String createTeacher() {
         
         try {
-            teacherBean.create(
-                    newTeacher.getUsername(),
-                    newTeacher.getPassword(),
-                    newTeacher.getName(),
-                    newTeacher.getEmail(),
-                    newTeacher.getOffice());
+            TeacherDTO teacher = new TeacherDTO(newTeacher.getUsername(), newTeacher.getPassword(), newTeacher.getName(),newTeacher.getEmail(),newTeacher.getOffice());
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/create")
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(teacher));
+                //.put(Entity.xml((newTeacher.getUsername())));
             newTeacher.reset();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-            return null;
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString() , component, logger);
             return null;
         }
         return "/admin/teachers/view.xhtml?faces-redirect=true";
