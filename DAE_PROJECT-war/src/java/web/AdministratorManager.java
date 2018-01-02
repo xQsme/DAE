@@ -239,7 +239,7 @@ public class AdministratorManager implements Serializable {
     //Not yet Rest
     public Collection<PropostaDTO> getAllPropostas() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        try {
+        /*try {
             for(PropostaDTO p : propostaBean.getAllPropostas()){
                 if(p.getIntEstado() < 2){
                     propostas.add(p);
@@ -247,7 +247,7 @@ public class AdministratorManager implements Serializable {
             }
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
-        }
+        }*/
         return propostas;
     }
     
@@ -354,12 +354,13 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<String> getAllTiposTrabalho() {
-        try {
+        /*try {
             return PropostaBean.getAllTiposTrabalhos();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
+        return null;
     }
     
     public Collection<String> getAllPropostaEstados() {
@@ -402,7 +403,7 @@ public class AdministratorManager implements Serializable {
     }
     
     public void removeProposta(){ 
-        try {        
+        /*try {        
             if (currentProposta.getIntEstado() > 0 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
@@ -427,7 +428,7 @@ public class AdministratorManager implements Serializable {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
+        }*/
     }
     
     public String updateStudent() {
@@ -447,6 +448,7 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateTeacher() {
+        /*
         try {
             teacherBean.update(currentTeacher.getUsername(),
                     currentTeacher.getName(),
@@ -459,7 +461,7 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
         return "/admin/teachers/view.xhtml?faces-redirect=true";
     }
     
@@ -481,7 +483,7 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateProposta() {
-        try {    
+        /*try {    
             propostaBean.update(
                     currentProposta.getCode(),
                     currentProposta.getTitulo(),
@@ -498,12 +500,12 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
     public String updateProva() {
-        try {
+        /*try {
             //Checks what changed
             List<String> alterations=propostaBean.getAlterations(currentProposta.getCode(), currentProposta.getTitulo(),               
                     currentProposta.getTipoDeTrabalho(), currentProposta.getResumo(),
@@ -538,12 +540,12 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
         return "/admin/provas/view.xhtml?faces-redirect=true";
     }
     
     public String validateProposta() throws AddressException, Exception {
-        try {
+        /*try {
             propostaBean.addValidacao(
                     currentProposta.getCode(),
                     currentProposta.getIntEstado(),
@@ -564,21 +566,21 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
     //Not full implmented yet
     public String serializarProposta() throws AddressException, Exception {
-        try {
+        /*try {
             
-            /*propostaBean.addSerialição(
+            propostaBean.addSerialição(
                     currentProposta.getCode(),
                     currentProposta.getCandidatos();
                     );*/
 
-            if (currentProposta.getIntEstado() == 2 ){
+            /*if (currentProposta.getIntEstado() == 2 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -588,7 +590,7 @@ public class AdministratorManager implements Serializable {
                     recipients.add(candidatos.getEmail());
                 }
 
-                emailManager.serializeProposta(loggedMembroCCP, currentProposta, recipients);        
+                emailManager.serializeProposta(loggedMembroCCP, currentProposta, recipients);     
             }
 
         } catch (EntityDoesNotExistsException e) {
@@ -598,7 +600,7 @@ public class AdministratorManager implements Serializable {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
-
+        */   
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }    
     
@@ -728,7 +730,7 @@ public class AdministratorManager implements Serializable {
     }
     
     public String finalizar(){
-        try {
+        /*try {
             if(currentProposta.getIntEstado() != 2){
                 throw new CannotFinalizeException();
             }
@@ -736,7 +738,7 @@ public class AdministratorManager implements Serializable {
         catch (CannotFinalizeException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
-        }
+        }*/
         return "finalize";
     }
     
@@ -782,12 +784,13 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<DocumentDTO> getStudentDocumentos(){
-        try {
+        /*try {
             return studentBean.getDocuments(currentStudent.getUsername());
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
+        return null;
     }
         
     public Collection<PropostaDTO> getAllAvailableProposals() {

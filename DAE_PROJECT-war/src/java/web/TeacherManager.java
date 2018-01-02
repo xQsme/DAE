@@ -120,12 +120,13 @@ public class TeacherManager implements Serializable {
     }
     
     public Collection<String> getAllTiposTrabalho() {
-        try {
+        /*try {
             return propostaBean.getAllTiposTrabalhos();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
+        return null;
     }
     
     public void removerProposta(){
@@ -228,7 +229,7 @@ public class TeacherManager implements Serializable {
     }
     
     public String updateProposta() {
-        try {
+        /*try {
             propostaBean.update(
                     currentProposta.getCode(),
                     currentProposta.getTitulo(),
@@ -244,7 +245,7 @@ public class TeacherManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
         return "/teacher/propostas/mine.xhtml?faces-redirect=true";
     }
     
@@ -314,12 +315,13 @@ public class TeacherManager implements Serializable {
     }
     
     public Collection<DocumentDTO> getStudentDocumentos(){
-        try {
+        /*try {
             return studentBean.getDocuments(currentStudent.getUsername());
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
+        }*/
+        return null;
     }
 
     public StudentDTO getCurrentStudent() {
