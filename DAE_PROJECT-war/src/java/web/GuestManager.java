@@ -16,11 +16,18 @@ import exceptions.EntityDoesNotExistsException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import util.URILookup;
 
 /**
  *
@@ -43,21 +50,34 @@ public class GuestManager implements Serializable {
     
     private UIComponent component;
     
-    public GuestManager() {
-    }
+    private Client client;
+    
+    @PostConstruct
+    public void Init(){}
     
     public Collection<PropostaDTO> getAllPropostas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
+         List<PropostaDTO> propostas= new LinkedList<>();
         try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getEstado() == 3){
-                    propostas.add(p);
-                }
-            }
+            propostas = client.target(URILookup.getBaseAPI())
+                   .path("/propostas")
+                   .request(MediaType.APPLICATION_XML)
+                   .get(new GenericType<List<PropostaDTO>>() {});
+            
+                    /*for(PropostaDTO p : propostas){
+                        //if(p.getEstado() == 3){
+                            propostas.add(p);
+                        //}
+                    }*/
+                    /*for(PropostaDTO p : propostaBean.getAllPropostas()){
+                        propostas.add(p);
+                        /*if(p.getEstado() == 3){
+                            propostas.add(p);
+                        }
+                    }*/
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
-        return propostas;
+        return propostas; 
     }
     
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){

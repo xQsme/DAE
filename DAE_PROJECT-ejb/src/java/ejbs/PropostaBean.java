@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.control.SortEvent;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -41,13 +42,12 @@ import javax.ws.rs.core.MediaType;
 
 @Stateless
 @ManagedBean
-@SessionScoped
+@ViewScoped
 @Path("/propostas")
 public class PropostaBean extends Bean<Proposta> {
 
     @POST
     @RolesAllowed({"Instituicao"})
-    @Path("")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Proposta create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
         
@@ -102,10 +102,9 @@ public class PropostaBean extends Bean<Proposta> {
         } 
     }
 
-
-    @RolesAllowed({"Student", "Teacher", "Instituicao"})
+    @GET
+    @PermitAll
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("")
     public Collection<PropostaDTO> getAllPropostas() {
         try {
             return getAll(PropostaDTO.class);
