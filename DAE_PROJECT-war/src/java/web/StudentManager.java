@@ -94,7 +94,7 @@ public class StudentManager implements Serializable {
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<PropostaDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
             return null;
         }
     }
@@ -141,7 +141,7 @@ public class StudentManager implements Serializable {
                 throw new AlreadyAppliedToProposalException();
             }else if(studentBean.getCandidaturas(student.getUsername()).size() >= 5){
                 throw new CannotApplyToProposalException();
-            }else if(currentProposta.getIntEstado()!=1){
+            }else if(currentProposta.getEstado()!=1){
                 throw new ProposalStateDoesNotAllowException();
             }
             studentBean.addCandidaturaStudent(currentProposta.getCode(), student.getUsername());
@@ -186,14 +186,18 @@ public class StudentManager implements Serializable {
     }
 
     private void setUpStudent() {
+        logger.info("setting up student");
         try {
             student = client.target(URILookup.getBaseAPI())
                     .path("/students/findStudent")
                     .path(userManager.getUsername())
                     .request(MediaType.APPLICATION_XML)
                     .get(StudentDTO.class);
+            logger.info("student set up");
+            logger.info(student.getUsername());
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
         }
     }
 

@@ -218,7 +218,7 @@ public class AdministratorManager implements Serializable {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() < 2){
+                if(p.getEstado() < 2){
                     propostas.add(p);
                 }
             }
@@ -377,7 +377,7 @@ public class AdministratorManager implements Serializable {
     
     public void removeProposta(){ 
         try {        
-            if (currentProposta.getIntEstado() > 0 ){
+            if (currentProposta.getEstado() > 0 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -387,14 +387,14 @@ public class AdministratorManager implements Serializable {
                     recipients.add(proponente.getEmail());
                 } 
                 
-                if(currentProposta.getIntEstado()==2){
+                if(currentProposta.getEstado()==2){
                     for(Student candidatos: currentProposta.getCandidatos()) {
                         recipients.add(candidatos.getEmail());
                     }
                 }
                 
-                if(currentProposta.getIntEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
-                if(currentProposta.getIntEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
             }
             propostaBean.remove(currentProposta.getCode());
         } catch (EntityDoesNotExistsException ex) {
@@ -494,7 +494,7 @@ public class AdministratorManager implements Serializable {
                     currentProposta.getOrcamento(),
                     currentProposta.getApoios());
             
-            if (currentProposta.getIntEstado() == 2 ){
+            if (currentProposta.getEstado() == 2 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -520,10 +520,10 @@ public class AdministratorManager implements Serializable {
         try {
             propostaBean.addValidacao(
                     currentProposta.getCode(),
-                    currentProposta.getIntEstado(),
+                    currentProposta.getEstado(),
                     currentProposta.getObservacao());
             
-            if (currentProposta.getIntEstado() == 1 ){
+            if (currentProposta.getEstado() == 1 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -551,7 +551,7 @@ public class AdministratorManager implements Serializable {
                     currentProposta.getCandidatos();
                     );*/
 
-            if (currentProposta.getIntEstado() == 2 ){
+            if (currentProposta.getEstado() == 2 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -702,7 +702,7 @@ public class AdministratorManager implements Serializable {
     
     public String finalizar(){
         try {
-            if(currentProposta.getIntEstado() != 2){
+            if(currentProposta.getEstado() != 2){
                 throw new CannotFinalizeException();
             }
         }

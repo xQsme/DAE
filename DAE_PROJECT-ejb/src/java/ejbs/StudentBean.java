@@ -187,7 +187,7 @@ public class StudentBean extends Bean<Student> {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
-                throw new EntityDoesNotExistsException("There is no user with such username.");
+                throw new EntityDoesNotExistsException("There is no user with such username. " + username );
             }
             return toDTO(student, StudentDTO.class);
         } catch (EntityDoesNotExistsException e) {

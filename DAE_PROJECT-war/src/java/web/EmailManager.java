@@ -63,8 +63,8 @@ public class EmailManager implements Serializable{
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi avaliada por:</strong> "+ memberCCP.getName()+".";
                   
-        if (proposta.getIntEstado()==1) msg+= "<br><br>Sendo esta <strong>" + proposta.getEstado() +"</strong>."; 
-        else if (proposta.getIntEstado()==-1) msg+= "<br><br>Sendo esta infelizmente <strong>"+ proposta.getEstado() +"</strong>.";
+        if (proposta.getEstado()==1) msg+= "<br><br>Sendo esta <strong>" + proposta.getEstado() +"</strong>."; 
+        else if (proposta.getEstado()==-1) msg+= "<br><br>Sendo esta infelizmente <strong>"+ proposta.getEstado() +"</strong>.";
             
         msg+= (proposta.getObservacao()!=null && !proposta.getObservacao().isEmpty())?
             ("<br><strong>Observação:</strong> "+ proposta.getObservacao())+".": "<br><br>Não deixou Observação.";

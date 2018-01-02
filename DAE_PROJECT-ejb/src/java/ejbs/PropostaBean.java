@@ -90,7 +90,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 1){
+                if(p.getEstado() == 1){
                     propostas.add(p);
                 }
             }
@@ -104,7 +104,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 2){
+                if(p.getEstado() == 2){
                     propostas.add(p);
                 }
             }
@@ -118,7 +118,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 3){
+                if(p.getEstado() == 3){
                     propostas.add(p);
                 }
             }

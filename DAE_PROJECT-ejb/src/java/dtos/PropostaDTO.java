@@ -26,8 +26,9 @@ public class PropostaDTO  implements Serializable{
     private String orcamento;
     private String apoios;
     private String observacao;
-    private Estado estado;
+    private int estado;
 
+    /*
     public final void setEstado(Integer estado) {//Must be Integer because it supports null
         if(estado != null){
             switch(estado){
@@ -64,6 +65,71 @@ public class PropostaDTO  implements Serializable{
 
     public void setEnumEstado(Estado estado){
         this.estado=estado;
+    }
+    
+        public String getEstado(){
+        return estado.name().equals("Não_Aceite") ? "Não Aceite" : estado.name() ;
+    }
+        
+    public String getStringEstado(){
+        return estado.name();
+    }
+    
+    public Integer getIntEstado(){
+        switch(estado){
+            case Não_Aceite: return -1;
+                             
+            case Pendente: return 0;
+                           
+            case Aceite: return 1;
+            
+            case Prova: return 2;
+                         
+            case Finalizado: return 3;
+            
+            default: return null;
+        }
+    }
+    */
+
+
+    public int getEstado() {
+        return estado;
+    }
+    
+    public String getStringEstado(){
+        switch(estado){
+            case -1: return "Não Aceite";
+                             
+            case 0: return "Pendente";
+                           
+            case 1: return "Aceite";
+            
+            case 2: return "Prova";
+                         
+            case 3: return "Finalizado";
+            
+            default: return "";
+        }
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+    
+    public final void setStringEstado(String estado) {//Must be Integer because it supports null
+        switch(estado){
+            case "Não Aceite":this.estado=-1; 
+                    break;
+            case "Pendente": this.estado=0; 
+                    break;
+            case "Aceite": this.estado=1; 
+                    break;
+            case "Prova": this.estado=2;
+                    break;
+            case "Finalizado": this.estado=3; 
+                    break;
+        }
     }
     
     public void setObservacao(String observacao) {
@@ -196,30 +262,6 @@ public class PropostaDTO  implements Serializable{
         this.apoios = apoios;
     }
     
-    public String getEstado(){
-        return estado.name().equals("Não_Aceite") ? "Não Aceite" : estado.name() ;
-    }
-        
-    public String getStringEstado(){
-        return estado.name();
-    }
-    
-    public Integer getIntEstado(){
-        switch(estado){
-            case Não_Aceite: return -1;
-                             
-            case Pendente: return 0;
-                           
-            case Aceite: return 1;
-            
-            case Prova: return 2;
-                         
-            case Finalizado: return 3;
-            
-            default: return null;
-        }
-    }
-    
     
     public String getObservacao(){
         return observacao;
@@ -239,7 +281,7 @@ public class PropostaDTO  implements Serializable{
         setRequisitos(null);
         setOrcamento(null);
         setApoios(null);
-        setEstado(null);
+        setEstado(-2);
         setObservacao(null);
     }
 

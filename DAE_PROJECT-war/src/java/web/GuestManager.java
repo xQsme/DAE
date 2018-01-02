@@ -50,7 +50,7 @@ public class GuestManager implements Serializable {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() == 3){
+                if(p.getEstado() == 3){
                     propostas.add(p);
                 }
             }
