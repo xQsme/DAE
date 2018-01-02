@@ -12,6 +12,7 @@ import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
+import entities.Proposta;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -31,6 +32,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import util.URILookup;
 
@@ -241,10 +243,12 @@ public class InstituicaoManager implements Serializable {
     
     public String createProposta() {
         try {
-            client.target(URILookup.getBaseAPI())
+            Response response = client.target(URILookup.getBaseAPI())
                 .path("/propostas")
                 .request(MediaType.APPLICATION_XML)
                 .post(Entity.xml(newProposta));
+            
+            newProposta.setCode(response.readEntity(Proposta.class).getCode());
             client.target(URILookup.getBaseAPI())
                 .path("/instituicoes/propostas")
                 .path(instituicao.getUsername())

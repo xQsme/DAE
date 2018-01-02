@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/proponenete")
 public class ProponenteBean extends Bean<Proponente> {
 
-    public Collection<ProponenteDTO> getAllInstitutions() {
+    public Collection<ProponenteDTO> getAlProponentes() {
         try {
             return getAll(ProponenteDTO.class);
         } catch (Exception e) {

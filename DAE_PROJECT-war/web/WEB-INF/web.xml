@@ -88,6 +88,10 @@
             <!--<url-pattern>/webapi/propostas</url-pattern>-->
             <url-pattern>/webapi/teachers/remove/proposal/*</url-pattern>
             <url-pattern>/webapi/teachers/*</url-pattern>
+            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
+            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/propostas/documents/*</url-pattern>
+            <url-pattern>/webapi/students/documentos/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
