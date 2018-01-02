@@ -170,7 +170,11 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public Collection<PropostaDTO> getCandidaturas(String username) {
+    @GET
+    @RolesAllowed({"Admin, Student"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("getCandidaturas/{username}")
+    public Collection<PropostaDTO> getCandidaturas(@PathParam("username") String username) {
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
             return toDTOs(query.getResultList(), PropostaDTO.class);
