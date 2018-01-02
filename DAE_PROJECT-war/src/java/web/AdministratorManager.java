@@ -238,17 +238,22 @@ public class AdministratorManager implements Serializable {
 
     //Not yet Rest
     public Collection<PropostaDTO> getAllPropostas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
-        /*try {
-            for(PropostaDTO p : propostaBean.getAllPropostas()){
-                if(p.getIntEstado() < 2){
-                    propostas.add(p);
+        List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
+        try {
+            Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                                                .path("/propostas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {});         
+            for(PropostaDTO p : propostas){
+                System.out.println(p.getTitulo());
+                if(p.getEstado()>=-1 && p.getEstado()<2){
+                    propostasEmAndamento.add(p);
                 }
             }
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
-        }*/
-        return propostas;
+        }
+        return propostasEmAndamento;
     }
     
     public Collection<PropostaDTO> getAllAccepted() {

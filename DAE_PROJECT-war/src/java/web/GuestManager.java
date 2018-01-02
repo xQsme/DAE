@@ -59,38 +59,22 @@ public class GuestManager implements Serializable {
     };
     
     public Collection<PropostaDTO> getAllPropostas() {
-        Collection<PropostaDTO> propostas;
+        Collection<PropostaDTO> propostasFinalizadas= new LinkedList<>();
         try {
-            System.out.println("1");
-            client.target(URILookup.getBaseAPI())
-                   .path("/propostas")
-                   .request(MediaType.APPLICATION_XML)
-                   .get(new GenericType<List<PropostaDTO>>() {});
-             System.out.println("2");
-                propostas = client.target(URILookup.getBaseAPI())
-                   .path("/propostas")
-                   .request(MediaType.APPLICATION_XML)
-                   .get(new GenericType<List<PropostaDTO>>() {});
-           
-                    for(PropostaDTO p : propostas){
-                        System.out.println(p.getTitulo());
-                        //if(p.getEstado() == 3){
-                            //propostas.add(p);
-                        //}
-                    }
-            System.out.println("3");        
-                    /*for(PropostaDTO p : propostaBean.getAllPropostas()){
-                        propostas.add(p);
-                        /*if(p.getEstado() == 3){
-                            propostas.add(p);
-                        }
-                    }*/
-            return propostas;
+            Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                                                .path("/propostas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {});         
+            for(PropostaDTO p : propostas){
+                System.out.println(p.getTitulo());
+                if(p.getEstado() == 3){
+                    propostasFinalizadas.add(p);
+                }
+            }
         } catch (Exception e) {
-            System.out.println("ola");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
-        return null; 
+        return propostasFinalizadas; 
     }
     
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){

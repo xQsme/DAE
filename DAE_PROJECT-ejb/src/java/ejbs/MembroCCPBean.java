@@ -75,7 +75,7 @@ public class MembroCCPBean{
     //In case the menber intends to leave a comment
     public void validarProposta(String username, int propostaCode, Integer validar, String observacao) 
             throws EntityDoesNotExistsException{
-        /*try {      
+        try {      
             MembroCCP membroCCP = em.find(MembroCCP.class, username);
             if (membroCCP == null) {
                 throw new EntityDoesNotExistsException("There is no MemberCCP with that username.");
@@ -86,7 +86,7 @@ public class MembroCCPBean{
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             
-            if (validar< -1 || validar > 2){
+            if (validar< -1 || validar > 3){
                 throw new NullPointerException("Invalid State Parameter");
             }
             
@@ -98,7 +98,7 @@ public class MembroCCPBean{
             throw e;
         }catch (Exception e) {
             throw new EJBException(e.getMessage());
-        }*/        
+        }       
     }
     
     public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
