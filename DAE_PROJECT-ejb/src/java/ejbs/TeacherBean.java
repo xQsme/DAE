@@ -3,6 +3,7 @@ package ejbs;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
+import entities.Instituicao;
 import entities.Proposta;
 import entities.Student;
 import entities.Teacher;
@@ -204,25 +205,19 @@ public class TeacherBean extends Bean<Teacher> {
     }
     
     @POST
-    @RolesAllowed({"MembroCCP", "Teacher"})
-    @Path("add/proposal/{propostaCode}")
+    @RolesAllowed({"Teacher"})
+    @Path("propostas/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void addPropostaTeacherRest(@PathParam("propostaCode") String propostaCode, String username) throws EntityDoesNotExistsException {
-        
+    public void addPropostaTeacherRest(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException {
         try {
-            int propostaCodeInt = Integer.valueOf(propostaCode);
-            Proposta proposta = em.find(Proposta.class, propostaCodeInt);
+            int propostaCode = prop.getCode();
+            Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
             Teacher teacher = em.find(Teacher.class, username);
             if (teacher == null) {
-                throw new EntityDoesNotExistsException("There is no teacher with that username.");
-            }
-            for(Proposta p : teacher.getPropostas()){
-                if (p.getCode() == propostaCodeInt) {
-                    throw new UserAlreadyHasAppliedException("O professor ja está aplicado a essa Proposta!");
-                }
+                throw new EntityDoesNotExistsException("There is no institution with that username.");
             }
             proposta.addProponente(teacher);
             teacher.addProposta(proposta);

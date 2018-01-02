@@ -37,7 +37,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Stateless
 @ManagedBean
@@ -46,10 +49,10 @@ import javax.ws.rs.core.MediaType;
 public class PropostaBean extends Bean<Proposta> {
 
     @POST
-    @RolesAllowed({"Instituicao"})
+    @RolesAllowed({"Instituicao", "Teacher"})
     @Path("")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Proposta create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public Response create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
         
         try { 
             Proposta proposta = new Proposta(
@@ -61,7 +64,9 @@ public class PropostaBean extends Bean<Proposta> {
                     prop.getOrcamento(), 
                     prop.getApoios());
             em.persist(proposta);
-            return proposta;
+            
+            return Response.status(201).entity(new GenericEntity<Proposta>(proposta) {}).
+                    type(MediaType.APPLICATION_XML_TYPE).build();
         
         }catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            
@@ -102,7 +107,7 @@ public class PropostaBean extends Bean<Proposta> {
         } 
     }
 
-
+    @GET
     @RolesAllowed({"Student", "Teacher", "Instituicao"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("")
@@ -332,7 +337,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @PUT
-    @RolesAllowed({"Student"})
+    @RolesAllowed({"Student", "Teacher", "Instituicao"})
     @Path("{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void update(@PathParam("code") int code, PropostaDTO prop) 
@@ -360,7 +365,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher"})
     @Path("proponentes/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) throws EntityDoesNotExistsException {
@@ -389,7 +394,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher"})
     @Path("documents/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<DocumentDTO> getDocuments(@PathParam("code") int code) throws EntityDoesNotExistsException {
@@ -511,7 +516,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("students/{code}")
     public Collection<StudentDTO> getCandidatos(@PathParam("code") int code) throws EntityDoesNotExistsException {

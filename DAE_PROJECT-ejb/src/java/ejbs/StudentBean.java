@@ -272,7 +272,7 @@ public class StudentBean extends Bean<Student> {
     }
 
     @GET
-    @RolesAllowed({"Student", "Instituicao"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("documentos/{username}")
     public Collection<DocumentoDTO> getDocumentos(@PathParam("username") String username) throws EntityDoesNotExistsException {

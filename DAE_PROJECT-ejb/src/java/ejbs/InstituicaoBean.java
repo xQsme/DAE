@@ -103,7 +103,7 @@ public class InstituicaoBean extends Bean<Instituicao> {
     }
 
     @POST
-    @RolesAllowed({"Student"})
+    @RolesAllowed({"Instituicao"})
     @Path("propostas/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void addPropostaInstituicao(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException {

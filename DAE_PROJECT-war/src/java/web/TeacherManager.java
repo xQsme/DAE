@@ -5,7 +5,9 @@
  */
 package web;
 
+import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
+import dtos.DocumentoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
@@ -14,6 +16,7 @@ import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
+import entities.Proposta;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -34,6 +37,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import util.URILookup;
 
@@ -121,7 +125,11 @@ public class TeacherManager implements Serializable {
     
     public Collection<String> getAllTiposTrabalho() {
         try {
-            return propostaBean.getAllTiposTrabalhos();
+            LinkedList<String> tiposTrabalho = new LinkedList<>();
+            tiposTrabalho.add(TipoDeTrabalho.Dissertação.toString());
+            tiposTrabalho.add(TipoDeTrabalho.Estágio.toString());
+            tiposTrabalho.add(TipoDeTrabalho.Projeto.toString());
+            return tiposTrabalho;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -140,10 +148,10 @@ public class TeacherManager implements Serializable {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), logger);
         }
     }
-    
+    /*
     public void adicionarProposta(){
         try {
-            teacherBean.addPropostaTeacher(currentProposta.getCode(), teacher.getUsername());
+            //teacherBean.addPropostaTeacher(currentProposta.getCode(), teacher.getUsername());
             
             client.target(URILookup.getBaseAPI())
                 .path("/teachers/add/proposal")
@@ -154,11 +162,15 @@ public class TeacherManager implements Serializable {
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         }
-    }
+    }*/
 
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
-            return proponenteBean.getPropostaProponentes(currentProposta.getCode());
+            return client.target(URILookup.getBaseAPI())
+                .path("/propostas/proponentes")
+                .path(Integer.toString(currentProposta.getCode()))
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<ProponenteDTO>>() {});
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -167,8 +179,13 @@ public class TeacherManager implements Serializable {
     
     public Collection<StudentDTO> getCurrentPropostaCandidatos(){
         try {
-            return studentBean.getPropostaCandidatos(currentProposta.getCode());
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/students")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<StudentDTO>>() {});
         } catch (Exception e) {
+            System.out.println("ERROR GETTING STUDENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -229,18 +246,11 @@ public class TeacherManager implements Serializable {
     
     public String updateProposta() {
         try {
-            propostaBean.update(
-                    currentProposta.getCode(),
-                    currentProposta.getTitulo(),
-                    currentProposta.getTipoDeTrabalho(),
-                    currentProposta.getResumo(),
-                    currentProposta.getPlanoDeTrabalhos(),
-                    currentProposta.getLocal(),
-                    currentProposta.getOrcamento(),
-                    currentProposta.getApoios());
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+            client.target(URILookup.getBaseAPI())
+                    .path("/propostas")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(currentProposta));
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -248,27 +258,35 @@ public class TeacherManager implements Serializable {
         return "/teacher/propostas/mine.xhtml?faces-redirect=true";
     }
     
+    
     public String createProposta() {
-        int code = propostaBean.getNextCode();
-        logger.info("" + code);
         try {
-            propostaBean.create(
-                    code,
-                    newProposta.getTitulo(),
-                    newProposta.getTipoDeTrabalho(), 
-                    newProposta.getResumo(),
-                    newProposta.getPlanoDeTrabalhos(), 
-                    newProposta.getLocal(), 
-                    newProposta.getOrcamento(), 
-                    newProposta.getApoios());
-            teacherBean.addPropostaTeacher(code, teacher.getUsername());
+            logger.info(newProposta.getCode() + "");
+            Response response = client.target(URILookup.getBaseAPI())
+                .path("/propostas")
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(newProposta));
+            
+            Proposta p = new Proposta();
+            if (response.hasEntity()) {
+                logger.info("has entity");
+                p = response.readEntity(Proposta.class);
+                logger.info(response.readEntity(Proposta.class) +  "");
+            }
+            logger.info("has no entity");
+            /*Object o = 
+            logger.info(o.toString());
+            
+            
+            */
+            newProposta.setCode(p.getCode());
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/propostas")
+                .path(teacher.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(newProposta));
             newProposta.reset();
-            //teacher.addProposta(new PropostaDTO (p.getCode(), p.getTitulo(), p.getTipoDeTrabalho(), p.getAreasCientificas(), p.getResumo(), p.getProponentes().) );
-            setUpTeacher();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
-            return null;
-        } catch (Exception e) {
+        }catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
         }
@@ -277,51 +295,58 @@ public class TeacherManager implements Serializable {
     
     public void removeProposta(){ 
         try {
-            propostaBean.remove(currentProposta.getCode());
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/remove/proposal")
+                .path(teacher.getUsername())
+                .path(currentProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .delete();
             setUpTeacher();
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e, logger);
         }
-    }
-    
-        public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
-        LinkedList<DocumentDTO> documents = new LinkedList<>();
-        try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
-                if(!d.isAta()){
-                    documents.add(d);
-                }
-            }
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return documents;
     }
     
     public DocumentDTO getCurrentPropostaAta(){
         try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+            for(DocumentDTO d : getCurrentPropostaDocumentos()){
                 if(d.isAta()){
                     return d;
                 }
             }
-        } catch (EntityDoesNotExistsException e) {
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
     
-    public Collection<DocumentDTO> getStudentDocumentos(){
+    public List<DocumentDTO> getCurrentPropostaDocumentos(){
         try {
-            return studentBean.getDocuments(currentStudent.getUsername());
-        } catch (EntityDoesNotExistsException e) {
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/documents")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<DocumentDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPOSTA DOCUMENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            return new LinkedList<>();
         }
     }
-
+    
+    public List<DocumentoDTO> getStudentDocumentos(){
+        try {
+            return client.target(URILookup.getBaseAPI())
+                .path("/students/documentos")
+                .path(currentStudent.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<DocumentoDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING STUDENT DOCUMENTS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return new LinkedList<>();
+        }
+    }
     public StudentDTO getCurrentStudent() {
         return currentStudent;
     }
