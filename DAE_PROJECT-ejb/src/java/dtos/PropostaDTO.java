@@ -1,11 +1,15 @@
 package dtos;
 
 import auxiliar.Estado;
-import entities.Proponente;
 import entities.Student;
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "Proposta")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PropostaDTO  implements Serializable{
 
     private int code;

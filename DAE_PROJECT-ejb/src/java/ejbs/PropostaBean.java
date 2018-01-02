@@ -28,10 +28,12 @@ import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Stateless
@@ -72,24 +74,22 @@ public class PropostaBean extends Bean<Proposta> {
         } 
     }
 
+    @GET
+    @RolesAllowed({"Student"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("allPropostas")
     public Collection<PropostaDTO> getAllPropostas() {
-        LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
-                if(p.getIntEstado() < 2){
-                    propostas.add(p);
-                }
-            }
+            return getAll(PropostaDTO.class);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
-        return propostas;
     }
     
     public Collection<PropostaDTO> getAllAccepted() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+            for(PropostaDTO p :getAll(PropostaDTO.class)){
                 if(p.getIntEstado() == 1){
                     propostas.add(p);
                 }
@@ -103,7 +103,7 @@ public class PropostaBean extends Bean<Proposta> {
     public Collection<PropostaDTO> getAllProvas() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+            for(PropostaDTO p :getAll(PropostaDTO.class)){
                 if(p.getIntEstado() == 2){
                     propostas.add(p);
                 }
@@ -117,7 +117,7 @@ public class PropostaBean extends Bean<Proposta> {
     public Collection<PropostaDTO> getAllFinalizado() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
-            for(PropostaDTO p :toPropostaDTOcollection(getAll())){
+            for(PropostaDTO p :getAll(PropostaDTO.class)){
                 if(p.getIntEstado() == 3){
                     propostas.add(p);
                 }
@@ -126,30 +126,6 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
         return propostas;
-    }
-    
-    public static Collection<PropostaDTO> toPropostaDTOcollection(Collection<Proposta> propostas) {
-        LinkedList<PropostaDTO> dtos = new LinkedList<>();
-        for(Proposta p : propostas){
-            dtos.add(new PropostaDTO(
-                p.getCode(),
-                p.getTitulo(),
-                p.getTipoDeTrabalho(),
-                p.getAreasCientificas(),
-                p.getResumo(),
-                p.getCandidatos(),
-                p.getObjetivos(),
-                p.getBibliografia(),
-                p.getPlanoDeTrabalhos(),
-                p.getLocal(),
-                p.getRequisitos(),
-                p.getOrcamento(),
-                p.getApoios(),
-                p.getEstado(),
-                p.getObservacao()   
-            ));
-        }
-        return dtos;
     }
     
     @Override
@@ -531,16 +507,6 @@ public class PropostaBean extends Bean<Proposta> {
 
         } catch (EntityDoesNotExistsException e) {
             throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-
-    public Collection<PropostaDTO> getAllAvailable() {
-        try {
-            Query query = em.createQuery("SELECT p FROM Proposta p where p.estado = 1", Proposta.class);
-            LinkedList<PropostaDTO> propostas = (LinkedList<PropostaDTO>) toPropostaDTOcollection(query.getResultList());
-            return propostas;            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

@@ -5,15 +5,17 @@
  */
 package dtos;
 
-import entities.Proposta;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author The Law
  */
+@XmlRootElement(name = "Proponente")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ProponenteDTO extends UserDTO implements Serializable {
     
     public ProponenteDTO() {

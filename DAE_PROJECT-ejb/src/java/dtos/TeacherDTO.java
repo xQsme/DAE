@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Student")
+@XmlRootElement(name = "Teacher")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TeacherDTO extends ProponenteDTO implements Serializable {
     

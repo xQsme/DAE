@@ -5,10 +5,13 @@
  */
 package dtos;
 
-import entities.Proposta;
 import java.io.Serializable;
-import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "MembroCCP")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MembroCCPDTO extends UserDTO implements Serializable {
     
     public MembroCCPDTO() {

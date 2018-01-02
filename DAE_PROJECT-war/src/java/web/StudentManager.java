@@ -36,6 +36,7 @@ import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import util.URILookup;
@@ -77,20 +78,21 @@ public class StudentManager implements Serializable {
     
     public StudentManager() {
         client = ClientBuilder.newClient();
-        System.out.println("construct");
     }
     
     @PostConstruct
     public void Init(){
-        System.out.println("init");
         feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
         client.register(feature);
         setUpStudent();
     }
     
-    public Collection<PropostaDTO> getAllPropostas() {
+    public List<PropostaDTO> getAllPropostas() {
         try {
-            return propostaBean.getAllPropostas();
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/allPropostas")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<PropostaDTO>>() {});
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -185,15 +187,12 @@ public class StudentManager implements Serializable {
 
     private void setUpStudent() {
         try {
-            System.out.println("TRY");
             student = client.target(URILookup.getBaseAPI())
                     .path("/students/findStudent")
                     .path(userManager.getUsername())
                     .request(MediaType.APPLICATION_XML)
                     .get(StudentDTO.class);
-
         } catch (Exception e) {
-            System.out.println("ERRO");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
@@ -299,8 +298,6 @@ public class StudentManager implements Serializable {
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(document)));
-            //propostaBean.addDocument(currentProposta.getCode(), document);
-
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -316,8 +313,6 @@ public class StudentManager implements Serializable {
                     .path(currentDocumento.getId()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(document)));
-            //propostaBean.atualizarDocumento(currentProposta.getCode(), currentDocumento.getId(), document);
-
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -340,14 +335,11 @@ public class StudentManager implements Serializable {
     public void uploadUserDocument() {
         try {
             documento = new DocumentoDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
-
-            /*System.out.println(client.target(URILookup.getBaseAPI())
-                    .path("/propostas/addDocument")
+            System.out.println(client.target(URILookup.getBaseAPI())
+                    .path("/students/addDocumento")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document)));*/
-            studentBean.addDocument(student.getUsername(), documento);
-
+                    .put(Entity.xml(document)));
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }

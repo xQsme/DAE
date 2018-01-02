@@ -19,7 +19,6 @@ import ejbs.InstituicaoBean;
 import ejbs.MembroCCPBean;
 import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
-import static ejbs.PropostaBean.toPropostaDTOcollection;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
 import entities.MembroCCP;
@@ -766,7 +765,7 @@ public class AdministratorManager implements Serializable {
         
     public Collection<PropostaDTO> getAllAvailableProposals() {
         try {
-            return propostaBean.getAllAvailable();
+            return propostaBean.getAllAccepted();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
