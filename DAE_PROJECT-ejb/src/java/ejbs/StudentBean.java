@@ -203,18 +203,11 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    @GET
-<<<<<<< HEAD
+
     @RolesAllowed({"Admin, Student"})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("getCandidaturas/{username}")
-    public Collection<PropostaDTO> getCandidaturas(@PathParam("username") String username) {
-=======
-    @RolesAllowed({"Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("propostas/{username}")
     public Collection<PropostaDTO> getPropostas(@PathParam("username") String username) {
->>>>>>> f623e188adb12695826fca45f890b839d4bf78d9
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
             return toDTOs(query.getResultList(), PropostaDTO.class);
