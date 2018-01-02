@@ -120,14 +120,11 @@
         </auth-constraint>
     </security-constraint>
     
-    
-    
     <security-constraint>
         <display-name>ServicesForAll</display-name>
         <web-resource-collection>  
             <web-resource-name>Services For All</web-resource-name>
-            <description/>
-            <url-pattern>/*</url-pattern>
+            <url-pattern>/webapi/propostas/*</url-pattern>
                 <http-method>GET</http-method>
                 <http-method>POST</http-method>          
         </web-resource-collection>

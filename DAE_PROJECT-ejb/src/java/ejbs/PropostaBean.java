@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.control.SortEvent;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -44,7 +45,7 @@ import javax.ws.rs.core.Response;
 
 @Stateless
 @ManagedBean
-@SessionScoped
+@ViewScoped
 @Path("/propostas")
 public class PropostaBean extends Bean<Proposta> {
 
@@ -108,9 +109,8 @@ public class PropostaBean extends Bean<Proposta> {
     }
 
     @GET
-    @RolesAllowed({"Student", "Teacher", "Instituicao"})
+    @PermitAll
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("")
     public Collection<PropostaDTO> getAllPropostas() {
         try {
             return getAll(PropostaDTO.class);
