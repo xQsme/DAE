@@ -12,41 +12,46 @@
             Perfil de ${administratorManager.currentStudent.username}
         </ui:define>
         <ui:define name="main">
-            <p:panelGrid columns="2">
+            <c:if test="#{not empty administratorManager.currentStudent}">
+                <p:panelGrid columns="2">
 
-                <h:outputLabel for="username" value="Username: " />
-                <h:outputText 
-                    id="username"
-                    value="#{administratorManager.currentStudent.username}"/>
+                    <h:outputLabel for="username" value="Username: " />
+                    <h:outputText 
+                        id="username"
+                        value="#{administratorManager.currentStudent.username}"/>
 
-                <h:outputLabel for="name" value="name: " />
-                <h:outputText 
-                    id="name"
-                    value="#{administratorManager.currentStudent.name}"/>
+                    <h:outputLabel for="name" value="name: " />
+                    <h:outputText 
+                        id="name"
+                        value="#{administratorManager.currentStudent.name}"/>
 
-                <h:outputLabel for="email" value="E-mail: " />
-                <h:outputText 
-                    id="email"
-                    value="#{administratorManager.currentStudent.email}"/>
+                    <h:outputLabel for="email" value="E-mail: " />
+                    <h:outputText 
+                        id="email"
+                        value="#{administratorManager.currentStudent.email}"/>
 
-                <h:outputLabel rendered="${not empty administratorManager.studentDocumentos}" for="documentos" value="Documentos:"/>
-                <h:dataTable id="documentos" rendered="${not empty administratorManager.studentDocumentos}" value="${administratorManager.studentDocumentos}" var="d">			
-                    <h:column>
-                        ${d.desiredName}
-                    </h:column>
-                    <h:column>
-                        <span>
-                            <h:form>
-                                <h:commandLink
-                                    value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
-                                </h:commandLink>
-                            </h:form>
-                        </span>
-                    </h:column>
-                </h:dataTable>
-            </p:panelGrid>
+                    <h:outputLabel rendered="${not empty administratorManager.studentDocumentos}" for="documentos" value="Documentos:"/>
+                    <h:dataTable id="documentos" rendered="${not empty administratorManager.studentDocumentos}" value="${administratorManager.studentDocumentos}" var="d">			
+                        <h:column>
+                            ${d.desiredName}
+                        </h:column>
+                        <h:column>
+                            <span>
+                                <h:form>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </h:form>
+                            </span>
+                        </h:column>
+                    </h:dataTable>
+                </p:panelGrid>
+            </c:if>
+            <c:if test="#{empty administratorManager.currentStudent}">
+                <p>Não foi selecionado um utilizador.</p>
+            </c:if>
             <br/>
             <h:messages errorStyle="color: red" />    
             <br/>

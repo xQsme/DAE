@@ -13,8 +13,8 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty studentManager.candidaturas}" 
-                             value="${studentManager.candidaturas}" var="p">			
+                <p:dataTable rendered="${not empty studentManager.studentPropostas}" 
+                             value="${studentManager.studentPropostas}" var="p">			
                     <p:column>
                         <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
@@ -53,6 +53,9 @@
                         </span>
                     </p:column>
                 </p:dataTable>
+                <c:if test="${empty studentManager.studentPropostas}">
+                    <p> O estudante ${studentManager.student.username} não tem candidaturas.</p>
+                </c:if>
             </h:form>
             <br/>
             <h:link value="Return" outcome="/student/index"/>

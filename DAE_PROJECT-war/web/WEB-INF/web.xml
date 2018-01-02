@@ -4,7 +4,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
-        <context-param>
+    <context-param>
         <param-name>SERVER_DOCUMENTS_FOLDER</param-name>
         <param-value>D:/DAE_UPLOADS/</param-value>
     </context-param>
@@ -35,11 +35,19 @@
         <web-resource-collection>
             <web-resource-name>Student Services</web-resource-name>
             <description/>
-            <url-pattern>/webapi/students/findStudent/*</url-pattern>
+            <url-pattern>/webapi/students/*</url-pattern>
+            <url-pattern>/webapi/students/documentos/*</url-pattern>
+            <url-pattern>/webapi/students/propostas/*</url-pattern>
+            <url-pattern>/webapi/students/proposta/*/*</url-pattern>
             <url-pattern>/webapi/students/addDocumento/*</url-pattern>
-            <url-pattern>/webapi/propostas/allPropostas</url-pattern>
+            <url-pattern>/webapi/students/deleteDocumento/*/*</url-pattern>
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
+            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/propostas/documents/*</url-pattern>
             <url-pattern>/webapi/propostas/addDocument/*</url-pattern>
-            <url-pattern>/webapi/propostas/atualizarDocumento/*/*</url-pattern>
+            <url-pattern>/webapi/propostas/atualizarDocument/*/*</url-pattern>
+            <url-pattern>/webapi/propostas/deleteDocument/*/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
@@ -53,6 +61,14 @@
             <description/>
             <url-pattern>/faces/teacher/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Teacher Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/teachers/add/proposal/*</url-pattern>
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/teachers/remove/proposal/*</url-pattern>
+            <url-pattern>/webapi/teachers/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>Teacher</role-name>
@@ -65,6 +81,18 @@
             <description/>
             <url-pattern>/faces/instituicao/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Instituicao Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/students/documentos/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/*</url-pattern>
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/propostas/documents/*</url-pattern>
+            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
+            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/propostas/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/removerProposta/*/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>Instituicao</role-name>
@@ -76,6 +104,11 @@
             <web-resource-name>Admin Pages</web-resource-name>
             <description/>
             <url-pattern>/faces/admin/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Admin Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/teachers/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

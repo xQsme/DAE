@@ -2,6 +2,7 @@ package ejbs;
 
 import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
+import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import entities.Document;
@@ -28,8 +29,10 @@ import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import static javax.ws.rs.HttpMethod.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -42,6 +45,31 @@ import javax.ws.rs.core.MediaType;
 @Path("/propostas")
 public class PropostaBean extends Bean<Proposta> {
 
+    @POST
+    @RolesAllowed({"Instituicao"})
+    @Path("")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Proposta create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
+        
+        try { 
+            Proposta proposta = new Proposta(
+                    prop.getTitulo(), 
+                    prop.getTipoDeTrabalho(), 
+                    prop.getResumo(), 
+                    prop.getPlanoDeTrabalhos(),
+                    prop.getLocal(),
+                    prop.getOrcamento(), 
+                    prop.getApoios());
+            em.persist(proposta);
+            return proposta;
+        
+        }catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
     public Proposta create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
         throws EntityAlreadyExistsException, EntityDoesNotExistsException, MyConstraintViolationException {
         
@@ -50,7 +78,7 @@ public class PropostaBean extends Bean<Proposta> {
                 throw new EntityAlreadyExistsException("A proposal with that code already exists.");
             }
             
-            Proposta proposta = new Proposta(code, titulo, tipoDeTrabalho, resumo, planoDeTrabalho, local, orcamento, apoios);
+            Proposta proposta = new Proposta(titulo, tipoDeTrabalho, resumo, planoDeTrabalho, local, orcamento, apoios);
             em.persist(proposta);
             return proposta;
         
@@ -74,10 +102,10 @@ public class PropostaBean extends Bean<Proposta> {
         } 
     }
 
-    @GET
-    @RolesAllowed({"Student"})
+
+    @RolesAllowed({"Student", "Teacher", "Instituicao"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("allPropostas")
+    @Path("")
     public Collection<PropostaDTO> getAllPropostas() {
         try {
             return getAll(PropostaDTO.class);
@@ -90,7 +118,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 1){
+                if(p.getEstado() == 1){
                     propostas.add(p);
                 }
             }
@@ -104,7 +132,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 2){
+                if(p.getEstado() == 2){
                     propostas.add(p);
                 }
             }
@@ -118,7 +146,7 @@ public class PropostaBean extends Bean<Proposta> {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
             for(PropostaDTO p :getAll(PropostaDTO.class)){
-                if(p.getIntEstado() == 3){
+                if(p.getEstado() == 3){
                     propostas.add(p);
                 }
             }
@@ -247,14 +275,6 @@ public class PropostaBean extends Bean<Proposta> {
         addObservacao(propostaCode, observacao);
     }
     
-    public static Collection<String> getAllTiposTrabalhos() {
-        LinkedList<String> tipos = new LinkedList<>();
-        tipos.add(TipoDeTrabalho.Dissertação.toString());
-        tipos.add(TipoDeTrabalho.Estágio.toString());
-        tipos.add(TipoDeTrabalho.Projeto.toString());
-        return tipos;
-    }
-    
     public static Collection<Integer> getAllPropostaEstados() {
         LinkedList<Integer> tipos = new LinkedList<>();
         tipos.add(-1);
@@ -311,20 +331,24 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    public void update(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios) 
+    @PUT
+    @RolesAllowed({"Student"})
+    @Path("{code}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void update(@PathParam("code") int code, PropostaDTO prop) 
             throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
-            proposta.setTitulo(titulo);
-            proposta.setTipoDeTrabalho(tipoDeTrabalho);
-            proposta.setResumo(resumo);
-            proposta.setPlanoDeTrabalhos(planoDeTrabalhos);
-            proposta.setLocal(local);
-            proposta.setOrcamento(orcamento);
-            proposta.setApoios(apoios);
+            proposta.setTitulo(prop.getTitulo());
+            proposta.setTipoDeTrabalho(prop.getTipoDeTrabalho());
+            proposta.setResumo(prop.getResumo());
+            proposta.setPlanoDeTrabalhos(prop.getPlanoDeTrabalhos());
+            proposta.setLocal(prop.getLocal());
+            proposta.setOrcamento(prop.getOrcamento());
+            proposta.setApoios(prop.getApoios());
             em.merge(proposta);
         } catch (EntityDoesNotExistsException e) {
             throw e;
@@ -335,39 +359,25 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-/*
-    public Collection<PropostaDTO> getStudentSubjects(String username) throws EntityDoesNotExistsException {
+    @GET
+    @RolesAllowed({"Student", "Instituicao"})
+    @Path("proponentes/{code}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) throws EntityDoesNotExistsException {
         try {
-            Student student = em.find(Student.class, username);
+            Proposta proposta = em.find(Proposta.class, code);
             
-            if (student == null) {
-                throw new EntityDoesNotExistsException("Student does not exists.");
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("Proposta does not exist.");
             }
 
-            return toDTOs(student.getSubjects(), PropostaDTO.class);
+            return toDTOs(proposta.getProponentes(), ProponenteDTO.class);
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-
-    public Collection<PropostaDTO> getCourseSubjects(int courseCode) throws EntityDoesNotExistsException {
-        try {
-            Course course = em.find(Course.class, courseCode);
-            
-            if (course == null) {
-                throw new EntityDoesNotExistsException("Course does not exists.");
-            }
-            
-            return toDTOs(course.getSubjects(), PropostaDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-*/
 
     public DocumentDTO getDocument(int documentId) throws EntityDoesNotExistsException {
         Document doc = em.find(Document.class, documentId);
@@ -378,7 +388,11 @@ public class PropostaBean extends Bean<Proposta> {
         return toDTO(doc, DocumentDTO.class);
     }
     
-    public Collection<DocumentDTO> getDocuments(int code) throws EntityDoesNotExistsException {
+    @GET
+    @RolesAllowed({"Student", "Instituicao"})
+    @Path("documents/{code}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Collection<DocumentDTO> getDocuments(@PathParam("code") int code) throws EntityDoesNotExistsException {
         try {
             List<Document> docs = em.createNamedQuery("getDocumentsOfProposta", Document.class).setParameter("code", code).getResultList();
             return toDTOs(docs, DocumentDTO.class);
@@ -387,12 +401,11 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    @PUT
+    @POST
     @RolesAllowed({"Student"})
-    @Path("/addDocument/{code}")
+    @Path("addDocument/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
-        System.out.println("PUT");
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -409,28 +422,10 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
-    
-    /*public void addDocument(int code, DocumentDTO doc) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, code);
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
-            }
-
-            Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, false);
-            em.persist(document);
-            proposta.addDocument(document);
-
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }*/
 
     @PUT
     @RolesAllowed({"Student"})
-    @Path("/atualizarDocument/{code}/{id}")
+    @Path("atualizarDocument/{code}/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void atualizarDocumento(@PathParam("code") int code, @PathParam("id") int id, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
@@ -458,7 +453,10 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
 
-    public void removerDocumento(int code, int id) throws EntityDoesNotExistsException {
+    @DELETE
+    @RolesAllowed({"Student"})
+    @Path("deleteDocument/{code}/{id}")
+    public void removerDocumento(@PathParam("code") int code, @PathParam("id") int id) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -511,4 +509,18 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    @GET
+    @RolesAllowed({"Student", "Instituicao"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("students/{code}")
+    public Collection<StudentDTO> getCandidatos(@PathParam("code") int code) throws EntityDoesNotExistsException {
+        Proposta proposta = em.find(Proposta.class, code);
+        if(proposta == null){
+            throw new EntityDoesNotExistsException("Proposta com codigo " + code + " não existe.");
+        }
+        return toDTOs(proposta.getCandidatos(), StudentDTO.class);
+    }
+    
+    
 }

@@ -6,93 +6,97 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
     xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
             Update ${teacherManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <h:form>                  
-                <h:panelGrid columns="3">
+            <c:if test="#{not empty teacherManager.currentProposta}">
+                <h:form>                  
+                    <h:panelGrid columns="3">
 
-                    <h:outputLabel for="titulo" value="Título: " />
-                    <h:inputText 
-                        id="titulo"
-                        size="50"
-                        required="true"
-                        requiredMessage="Error: titulo cannot be empty."                            
-                        value="#{teacherManager.currentProposta.titulo}" />
-                    <h:message for="titulo" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="tipo" value="Tipo de Trabalho: " />
-                    <h:selectOneMenu
-                        id="tipo"
-                        value="#{teacherManager.currentProposta.tipoDeTrabalho}" >
-                        <f:selectItems
-                            value="#{teacherManager.allTiposTrabalho}"
-                            var="tipo"
-                            itemValue="#{tipo}"
-                            itemLabel="#{tipo}" />
-                    </h:selectOneMenu>
-                    <h:message for="tipo" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="resumo" value="Resumo: " />
-                    <h:inputText 
-                        id="resumo"
-                        size="100"
-                        required="true"
-                        requiredMessage="Error: Resumo cannot be empty."                            
-                        value="#{teacherManager.currentProposta.resumo}" />
-                    <h:message for="resumo" errorStyle="color: red" />
+                        <h:outputLabel for="titulo" value="Título: " />
+                        <h:inputText 
+                            id="titulo"
+                            size="50"
+                            required="true"
+                            requiredMessage="Error: titulo cannot be empty."                            
+                            value="#{teacherManager.currentProposta.titulo}" />
+                        <h:message for="titulo" errorStyle="color: red" />
 
-                    <h:outputLabel for="plano" value="Plano de Trabalhos: " />
-                    <h:inputText 
-                        id="plano"
-                        size="100"
-                        required="true"
-                        requiredMessage="Error: Plano cannot be empty."                            
-                        value="#{teacherManager.currentProposta.planoDeTrabalhos}" />
-                    <h:message for="plano" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="local" value="Local: " />
-                    <h:inputText 
-                        id="local"
-                        size="100"
-                        required="true"
-                        requiredMessage="Error: Local cannot be empty."                            
-                        value="#{teacherManager.currentProposta.local}" />
-                    <h:message for="local" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="orcamento" value="Orcamento: " />
-                    <h:inputText 
-                        id="orcamento"
-                        size="100"
-                        required="true"
-                        requiredMessage="Error: Orcamento cannot be empty."                            
-                        value="#{teacherManager.currentProposta.orcamento}" />
-                    <h:message for="orcamento" errorStyle="color: red" />
-                    
-                    <h:outputLabel for="apoios" value="Apoios: " />
-                    <h:inputText 
-                        id="apoios"
-                        size="100"
-                        required="false"                        
-                        value="#{teacherManager.currentProposta.apoios}" />
-                    <h:message for="apoios" errorStyle="color: red" />
-                    
-                    <br></br>
+                        <h:outputLabel for="tipo" value="Tipo de Trabalho: " />
+                        <h:selectOneMenu
+                            id="tipo"
+                            value="#{teacherManager.currentProposta.tipoDeTrabalho}" >
+                            <f:selectItems
+                                value="#{teacherManager.allTiposTrabalho}"
+                                var="tipo"
+                                itemValue="#{tipo}"
+                                itemLabel="#{tipo}" />
+                        </h:selectOneMenu>
+                        <h:message for="tipo" errorStyle="color: red" />
 
-                    <br></br>
+                        <h:outputLabel for="resumo" value="Resumo: " />
+                        <h:inputText 
+                            id="resumo"
+                            size="100"
+                            required="true"
+                            requiredMessage="Error: Resumo cannot be empty."                            
+                            value="#{teacherManager.currentProposta.resumo}" />
+                        <h:message for="resumo" errorStyle="color: red" />
 
-                    <h:commandButton
-                        id="submit"
-                        value="Update"
-                        action="#{teacherManager.updateProposta()}" />
-                    <h:message for="submit" style="color: red"/>
-                </h:panelGrid>  
+                        <h:outputLabel for="plano" value="Plano de Trabalhos: " />
+                        <h:inputText 
+                            id="plano"
+                            size="100"
+                            required="true"
+                            requiredMessage="Error: Plano cannot be empty."                            
+                            value="#{teacherManager.currentProposta.planoDeTrabalhos}" />
+                        <h:message for="plano" errorStyle="color: red" />
 
-            </h:form>
+                        <h:outputLabel for="local" value="Local: " />
+                        <h:inputText 
+                            id="local"
+                            size="100"
+                            required="true"
+                            requiredMessage="Error: Local cannot be empty."                            
+                            value="#{teacherManager.currentProposta.local}" />
+                        <h:message for="local" errorStyle="color: red" />
 
+                        <h:outputLabel for="orcamento" value="Orcamento: " />
+                        <h:inputText 
+                            id="orcamento"
+                            size="100"
+                            required="true"
+                            requiredMessage="Error: Orcamento cannot be empty."                            
+                            value="#{teacherManager.currentProposta.orcamento}" />
+                        <h:message for="orcamento" errorStyle="color: red" />
+
+                        <h:outputLabel for="apoios" value="Apoios: " />
+                        <h:inputText 
+                            id="apoios"
+                            size="100"
+                            required="false"                        
+                            value="#{teacherManager.currentProposta.apoios}" />
+                        <h:message for="apoios" errorStyle="color: red" />
+
+                        <br></br>
+
+                        <br></br>
+
+                        <h:commandButton
+                            id="submit"
+                            value="Update"
+                            action="#{teacherManager.updateProposta()}" />
+                        <h:message for="submit" style="color: red"/>
+                    </h:panelGrid>  
+                </h:form>
+            </c:if>
+            <c:if test="#{empty teacherManager.currentProposta}">
+                <p>Não foi selecionada uma proposta.</p>
+            </c:if>
             <h:messages errorStyle="color: red" />        
             <br/>
             <h:link value="Return" outcome="view"/>

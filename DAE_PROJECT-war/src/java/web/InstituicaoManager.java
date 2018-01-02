@@ -5,29 +5,34 @@
  */
 package web;
 
+import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
+import dtos.DocumentoDTO;
 import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import ejbs.InstituicaoBean;
-import ejbs.ProponenteBean;
-import ejbs.PropostaBean;
-import ejbs.StudentBean;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import util.URILookup;
 
 /**
  *
@@ -37,14 +42,8 @@ import javax.faces.component.UIComponent;
 @SessionScoped
 public class InstituicaoManager implements Serializable {
     
-    @EJB
-    private ProponenteBean proponenteBean;
-    @EJB
-    private PropostaBean propostaBean;
-    @EJB
-    private InstituicaoBean instituicaoBean;
-    @EJB
-    private StudentBean studentBean;
+    private Client client;
+    private HttpAuthenticationFeature feature;
     
     @ManagedProperty(value="#{userManager}") // this references the @ManagedBean
     private UserManager userManager;
@@ -62,29 +61,41 @@ public class InstituicaoManager implements Serializable {
     
     public InstituicaoManager() {
         newProposta = new PropostaDTO();
+        client = ClientBuilder.newClient();
     }
     
     @PostConstruct
     public void Init(){
+        feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
+        client.register(feature);
         setUpInstituicao();
     }
     
-    public Collection<PropostaDTO> getAllPropostas() {
+    public List<PropostaDTO> getAllPropostas() {
         try {
-            return propostaBean.getAllPropostas();
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<PropostaDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            System.out.println("ERROR GETTING PROPOSTAS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
-    public Collection<PropostaDTO> getInstituicaoPropostas() {
-        try{
-            return instituicaoBean.getInstituicaoPropostas(instituicao.getUsername());
-        }
-        catch(Exception e){
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+    
+    public List<PropostaDTO> getInstituicaoPropostas() {
+        try {
+            return client.target(URILookup.getBaseAPI())
+                    .path("/instituicoes/propostas")
+                    .path(instituicao.getUsername())
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<PropostaDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING INSTITUTION PROPOSTAS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
@@ -99,33 +110,33 @@ public class InstituicaoManager implements Serializable {
     }
     
     public Collection<String> getAllTiposTrabalho() {
-        try {
-            return propostaBean.getAllTiposTrabalhos();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
+        LinkedList<String> tipos = new LinkedList<>();
+        tipos.add(TipoDeTrabalho.Dissertação.toString());
+        tipos.add(TipoDeTrabalho.Estágio.toString());
+        tipos.add(TipoDeTrabalho.Projeto.toString());
+        return tipos;
     }
-    
+
     public void removerProposta(){
         try {
-            instituicaoBean.removePropostaInstituicao(currentProposta.getCode(), instituicao.getUsername());
-            for(PropostaDTO p : getInstituicaoPropostas()){
-                if (p.getCode() == currentProposta.getCode()) {
-                    instituicaoBean.removePropostaInstituicao(p.getCode(), instituicao.getUsername());                    
-                }
-            }
-
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
+            client.target(URILookup.getBaseAPI())
+                    .path("/instituicoes/removerProposta")
+                    .path(instituicao.getUsername())
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .delete();
+        }catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
     
     public void adicionarProposta(){
         try {
-            instituicaoBean.addPropostaInstituicao(currentProposta.getCode(), instituicao.getUsername());
+            client.target(URILookup.getBaseAPI())
+                .path("/instituicoes/propostas")
+                .path(instituicao.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(currentProposta));
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -134,8 +145,13 @@ public class InstituicaoManager implements Serializable {
 
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
-            return proponenteBean.getPropostaProponentes(currentProposta.getCode());
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/proponentes")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<ProponenteDTO>>() {});
         } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPONENTES");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -143,8 +159,13 @@ public class InstituicaoManager implements Serializable {
     
     public Collection<StudentDTO> getCurrentPropostaCandidatos(){
         try {
-            return studentBean.getPropostaCandidatos(currentProposta.getCode());
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/students")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<StudentDTO>>() {});
         } catch (Exception e) {
+            System.out.println("ERROR GETTING STUDENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -175,18 +196,15 @@ public class InstituicaoManager implements Serializable {
     }
 
     private void setUpInstituicao() {
-        logger.info(userManager.toString());
-        String username = userManager.getUsername();
-        logger.info(username);
-        instituicao = instituicaoBean.getInstituicao( username );
-        logger.info(instituicao.toString());
-                /*
-        ProponenteDTO proponente  = proponenteBean.getProponente(username );
-        logger.info(proponente.toString());
-        logger.info(" " + proponente.getPropostas().size());
-
-        proponente.s
-        teacher.set*/
+        try {
+            instituicao = client.target(URILookup.getBaseAPI())
+                    .path("/instituicoes")
+                    .path(userManager.getUsername())
+                    .request(MediaType.APPLICATION_XML)
+                    .get(InstituicaoDTO.class);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+        }
     }
 
     public UserManager getUserManager() {
@@ -209,18 +227,11 @@ public class InstituicaoManager implements Serializable {
     
     public String updateProposta() {
         try {
-            propostaBean.update(
-                    currentProposta.getCode(),
-                    currentProposta.getTitulo(),
-                    currentProposta.getTipoDeTrabalho(),
-                    currentProposta.getResumo(),
-                    currentProposta.getPlanoDeTrabalhos(),
-                    currentProposta.getLocal(),
-                    currentProposta.getOrcamento(),
-                    currentProposta.getApoios());
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+            client.target(URILookup.getBaseAPI())
+                    .path("/propostas")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(currentProposta));
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -229,41 +240,22 @@ public class InstituicaoManager implements Serializable {
     }
     
     public String createProposta() {
-        int code = propostaBean.getNextCode();
-        logger.info("" + code);
         try {
-            propostaBean.create(
-                    code,
-                    newProposta.getTitulo(),
-                    newProposta.getTipoDeTrabalho(), 
-                    newProposta.getResumo(),
-                    newProposta.getPlanoDeTrabalhos(), 
-                    newProposta.getLocal(), 
-                    newProposta.getOrcamento(), 
-                    newProposta.getApoios());
-            instituicaoBean.addPropostaInstituicao(code, instituicao.getUsername());
+            client.target(URILookup.getBaseAPI())
+                .path("/propostas")
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(newProposta));
+            client.target(URILookup.getBaseAPI())
+                .path("/instituicoes/propostas")
+                .path(instituicao.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(newProposta));
             newProposta.reset();
-            //teacher.addProposta(new PropostaDTO (p.getCode(), p.getTitulo(), p.getTipoDeTrabalho(), p.getAreasCientificas(), p.getResumo(), p.getProponentes().) );
-            setUpInstituicao();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
-            return null;
-        } catch (Exception e) {
+        }catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
         }
         return "/instituicao/propostas/mine.xhtml?faces-redirect=true";
-    }
-    
-    public void removeProposta(){ 
-        try {
-            propostaBean.remove(currentProposta.getCode());
-            setUpInstituicao();
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
     }
 
     public DocumentDTO getCurrentDocumento() {
@@ -274,26 +266,31 @@ public class InstituicaoManager implements Serializable {
         this.currentDocumento = currentDocumento;
     }
     
-    public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
-        LinkedList<DocumentDTO> documents = new LinkedList<>();
+    public List<DocumentDTO> getCurrentPropostaDocumentos(){
         try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
-                if(!d.isAta()){
-                    documents.add(d);
-                }
-            }
-        } catch (EntityDoesNotExistsException e) {
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/documents")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<DocumentDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPOSTA DOCUMENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return new LinkedList<>();
         }
-        return documents;
     }
     
-    public Collection<DocumentDTO> getStudentDocumentos(){
+    public List<DocumentoDTO> getStudentDocumentos(){
         try {
-            return studentBean.getDocuments(currentStudent.getUsername());
-        } catch (EntityDoesNotExistsException e) {
+            return client.target(URILookup.getBaseAPI())
+                .path("/students/documentos")
+                .path(currentStudent.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<DocumentoDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING STUDENT DOCUMENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            return new LinkedList<>();
         }
     }
 

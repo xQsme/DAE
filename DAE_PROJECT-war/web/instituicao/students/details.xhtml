@@ -12,41 +12,46 @@
             Perfil de ${instituicaoManager.currentStudent.username}
         </ui:define>
         <ui:define name="main">
-            <h:form>
-                <p:panelGrid columns="2">
+            <c:if test="#{not empty instituicaoManager.currentStudent}">
+                <h:form>
+                    <p:panelGrid columns="2">
 
-                    <h:outputLabel for="username" value="Username: " />
-                    <h:outputText 
-                        id="username"
-                        value="#{instituicaoManager.currentStudent.username}"/>
-                    
-                    <h:outputLabel for="name" value="name: " />
-                    <h:outputText 
-                        id="name"
-                        value="#{instituicaoManager.currentStudent.name}"/>
-                    
-                    <h:outputLabel for="email" value="E-mail: " />
-                    <h:outputText 
-                        id="email"
-                        value="#{instituicaoManager.currentStudent.email}"/>
+                        <h:outputLabel for="username" value="Username: " />
+                        <h:outputText 
+                            id="username"
+                            value="#{instituicaoManager.currentStudent.username}"/>
 
-                    <h:outputLabel rendered="${not empty instituicaoManager.studentDocumentos}" for="documentos" value="Documentos:"/>
-                    <h:dataTable id="documentos" rendered="${not empty instituicaoManager.studentDocumentos}" value="${instituicaoManager.studentDocumentos}" var="d">			
-                        <h:column>
-                            ${d.desiredName}
-                        </h:column>
-                        <h:column>
-                            <span>
-                                <h:commandLink
-                                    value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
-                                </h:commandLink>
-                            </span>
-                        </h:column>
-                    </h:dataTable>
-                </p:panelGrid>
-            </h:form>
+                        <h:outputLabel for="name" value="name: " />
+                        <h:outputText 
+                            id="name"
+                            value="#{instituicaoManager.currentStudent.name}"/>
+
+                        <h:outputLabel for="email" value="E-mail: " />
+                        <h:outputText 
+                            id="email"
+                            value="#{instituicaoManager.currentStudent.email}"/>
+
+                        <h:outputLabel rendered="${not empty instituicaoManager.studentDocumentos}" for="documentos" value="Documentos:"/>
+                        <h:dataTable id="documentos" rendered="${not empty instituicaoManager.studentDocumentos}" value="${instituicaoManager.studentDocumentos}" var="d">			
+                            <h:column>
+                                ${d.desiredName}
+                            </h:column>
+                            <h:column>
+                                <span>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
+                    </p:panelGrid>
+                </h:form>
+            </c:if>
+            <c:if test="#{empty instituicaoManager.currentStudent}">
+                <p>Não foi selecionado um estudante.</p>
+            </c:if>
             <br/>
             <h:messages errorStyle="color: red" />    
             <br/>

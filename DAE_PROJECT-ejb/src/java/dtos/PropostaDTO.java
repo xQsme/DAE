@@ -17,7 +17,6 @@ public class PropostaDTO  implements Serializable{
     private String tipoDeTrabalho;
     private List<String> areasCientificas;
     private String resumo;
-    private List<Student> candidatos;
     private List<String> objetivos;
     private List<String> bibliografia;
     private String planoDeTrabalhos;
@@ -26,61 +25,45 @@ public class PropostaDTO  implements Serializable{
     private String orcamento;
     private String apoios;
     private String observacao;
-    private Estado estado;
+    private int estado;
 
-    public final void setEstado(Integer estado) {//Must be Integer because it supports null
-        if(estado != null){
-            switch(estado){
-                case -1:this.estado=Estado.Não_Aceite; 
-                        break;
-                case 0: this.estado=Estado.Pendente; 
-                        break;
-                case 1: this.estado=Estado.Aceite; 
-                        break;
-                case 2: this.estado=Estado.Prova; 
-                        break;
-                case 3: this.estado=Estado.Finalizado;
-                        break;
-            }
-        }else{
-            this.estado=Estado.Pendente; 
-        }
+    public int getEstado() {
+        return estado;
     }
     
-    public final void setStringEstado(String estado) {//Must be Integer because it supports null
+    public String getStringEstado(){
         switch(estado){
-            case "Não_Aceite":this.estado=Estado.Não_Aceite; 
-                    break;
-            case "Pendente": this.estado=Estado.Pendente; 
-                    break;
-            case "Aceite": this.estado=Estado.Aceite; 
-                    break;
-            case "Prova": this.estado=Estado.Prova;
-                    break;
-            case "Finalizado": this.estado=Estado.Finalizado; 
-                    break;
+            case -1: return "Não Aceite";
+                             
+            case 0: return "Pendente";
+                           
+            case 1: return "Aceite";
+            
+            case 2: return "Prova";
+                         
+            case 3: return "Finalizado";
+            
+            default: return "";
         }
     }
 
-    public void setEnumEstado(Estado estado){
-        this.estado=estado;
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
     
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
    
-    
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
         this.areasCientificas = areasCientificas;
         this.resumo = resumo;
-        this.candidatos = candidatos;
         this.objetivos = objetivos;
         this.bibliografia = bibliografia;
         this.planoDeTrabalhos = planoDeTrabalhos;
@@ -88,7 +71,7 @@ public class PropostaDTO  implements Serializable{
         this.requisitos = requisitos;
         this.orcamento = orcamento;
         this.apoios = apoios;
-        setEstado(estado);
+        this.estado = estado;
         this.observacao = observacao;
     }
 
@@ -130,14 +113,6 @@ public class PropostaDTO  implements Serializable{
 
     public void setResumo(String resumo) {
         this.resumo = resumo;
-    }
-
-    public List<Student> getCandidatos() {
-        return candidatos;
-    }
-
-    public void setCandidatos(List<Student> candidatos) {
-        this.candidatos = candidatos;
     }
 
     public List<String> getObjetivos() {
@@ -196,30 +171,6 @@ public class PropostaDTO  implements Serializable{
         this.apoios = apoios;
     }
     
-    public String getEstado(){
-        return estado.name().equals("Não_Aceite") ? "Não Aceite" : estado.name() ;
-    }
-        
-    public String getStringEstado(){
-        return estado.name();
-    }
-    
-    public Integer getIntEstado(){
-        switch(estado){
-            case Não_Aceite: return -1;
-                             
-            case Pendente: return 0;
-                           
-            case Aceite: return 1;
-            
-            case Prova: return 2;
-                         
-            case Finalizado: return 3;
-            
-            default: return null;
-        }
-    }
-    
     
     public String getObservacao(){
         return observacao;
@@ -231,7 +182,6 @@ public class PropostaDTO  implements Serializable{
         setTipoDeTrabalho(null);
         setAreasCientificas(null);
         setResumo(null);
-        setCandidatos(null);
         setObjetivos(null);
         setBibliografia(null);
         setPlanoDeTrabalhos(null);
@@ -239,8 +189,12 @@ public class PropostaDTO  implements Serializable{
         setRequisitos(null);
         setOrcamento(null);
         setApoios(null);
-        setEstado(null);
+        setEstado(-2);
         setObservacao(null);
+    }
+    
+    public boolean allowSubmit(){
+        return estado < 3 && estado > 0;
     }
 
 }
