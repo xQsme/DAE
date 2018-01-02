@@ -18,9 +18,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.scene.control.SortEvent;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
@@ -31,6 +35,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 @Stateless
+@ManagedBean
+@SessionScoped
 @Path("/propostas")
 public class PropostaBean extends Bean<Proposta> {
 
