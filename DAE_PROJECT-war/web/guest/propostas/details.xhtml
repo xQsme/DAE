@@ -17,140 +17,145 @@ and open the template in the editor.
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
-            Proposta
+            Proposta #{guestManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <h:form>
-                <p:panelGrid columns="2">
+            <c:if test="#{not empty guestManager.currentProposta}">
+                <h:form>
+                    <p:panelGrid columns="2">
 
-                    <h:outputLabel for="code" value="Code: " />
-                    <h:outputText 
-                        id="code"
-                        value="#{guestManager.currentProposta.code}"/>
+                        <h:outputLabel for="code" value="Code: " />
+                        <h:outputText 
+                            id="code"
+                            value="#{guestManager.currentProposta.code}"/>
 
-                    <h:outputLabel for="titulo" value="Titulo: " />
-                    <h:outputText 
-                        id="titulo"
-                        value="#{guestManager.currentProposta.titulo}"/>
+                        <h:outputLabel for="titulo" value="Titulo: " />
+                        <h:outputText 
+                            id="titulo"
+                            value="#{guestManager.currentProposta.titulo}"/>
 
-                    <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
-                    <h:outputText 
-                        id="tipoDeTrabalho"
-                        value="#{guestManager.currentProposta.tipoDeTrabalho}"/>
+                        <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+                        <h:outputText 
+                            id="tipoDeTrabalho"
+                            value="#{guestManager.currentProposta.tipoDeTrabalho}"/>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentProposta.areasCientificas}" value="${guestManager.currentProposta.areasCientificas}" var="a">			
-                        <h:column>
-                            ${a}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentProposta.areasCientificas}" value="${guestManager.currentProposta.areasCientificas}" var="a">			
+                            <h:column>
+                                ${a}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel for="resumo" value="Resumo: " />
-                    <h:outputText 
-                        id="resumo"
-                        value="#{guestManager.currentProposta.resumo}"/>
+                        <h:outputLabel for="resumo" value="Resumo: " />
+                        <h:outputText 
+                            id="resumo"
+                            value="#{guestManager.currentProposta.resumo}"/>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentPropostaProponentes}" value="${guestManager.currentPropostaProponentes}" var="p">			
-                        <h:column>
-                            ${p.name}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentPropostaProponentes}" value="${guestManager.currentPropostaProponentes}" var="p">			
+                            <h:column>
+                                ${p.name}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentPropostaCandidatos}" value="${guestManager.currentPropostaCandidatos}" var="c">			
-                        <h:column>
-                            ${c.name}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentPropostaCandidatos}" value="${guestManager.currentPropostaCandidatos}" var="c">			
+                            <h:column>
+                                ${c.name}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentProposta.objetivos}" value="${guestManager.currentProposta.objetivos}" var="o">			
-                        <h:column>
-                            ${o}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentProposta.objetivos}" value="${guestManager.currentProposta.objetivos}" var="o">			
+                            <h:column>
+                                ${o}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentProposta.bibliografia}" value="${guestManager.currentProposta.bibliografia}" var="b">			
-                        <h:column>
-                            ${b}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentProposta.bibliografia}" value="${guestManager.currentProposta.bibliografia}" var="b">			
+                            <h:column>
+                                ${b}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
-                    <h:outputText 
-                        id="planoDeTrabalhos"
-                        value="#{guestManager.currentProposta.planoDeTrabalhos}"/>
+                        <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+                        <h:outputText 
+                            id="planoDeTrabalhos"
+                            value="#{guestManager.currentProposta.planoDeTrabalhos}"/>
 
-                    <h:outputLabel for="local" value="Local: " />
-                    <h:outputText 
-                        id="local"
-                        value="#{guestManager.currentProposta.local}"/>
+                        <h:outputLabel for="local" value="Local: " />
+                        <h:outputText 
+                            id="local"
+                            value="#{guestManager.currentProposta.local}"/>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
-                    <h:dataTable rendered="${not empty guestManager.currentProposta.requisitos}" value="${guestManager.currentProposta.requisitos}" var="r">			
-                        <h:column>
-                            ${r}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+                        <h:dataTable rendered="${not empty guestManager.currentProposta.requisitos}" value="${guestManager.currentProposta.requisitos}" var="r">			
+                            <h:column>
+                                ${r}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel for="orcamento" value="Orçamento: " />
-                    <h:outputText 
-                        id="orcamento"
-                        value="#{guestManager.currentProposta.orcamento}"/>
+                        <h:outputLabel for="orcamento" value="Orçamento: " />
+                        <h:outputText 
+                            id="orcamento"
+                            value="#{guestManager.currentProposta.orcamento}"/>
 
-                    <h:outputLabel for="apoios" value="Apoios: " />
-                    <h:outputText 
-                        id="apoios"
-                        value="#{guestManager.currentProposta.apoios}"/>
+                        <h:outputLabel for="apoios" value="Apoios: " />
+                        <h:outputText 
+                            id="apoios"
+                            value="#{guestManager.currentProposta.apoios}"/>
 
-                    <h:outputLabel for="estado" value="Estado: "
-                                   rendered="${not empty guestManager.currentProposta.estado}"/>
-                    <h:outputText 
-                        id="estado"
-                        rendered="${not empty guestManager.currentProposta.estado}"
-                        value="#{guestManager.currentProposta.stringEstado}"/>
+                        <h:outputLabel for="estado" value="Estado: "
+                                       rendered="${not empty guestManager.currentProposta.estado}"/>
+                        <h:outputText 
+                            id="estado"
+                            rendered="${not empty guestManager.currentProposta.estado}"
+                            value="#{guestManager.currentProposta.stringEstado}"/>
 
-                    <h:outputLabel for="observacao" value="Observacao: " 
-                                   rendered="${not empty guestManager.currentProposta.estado and 
-                                               not empty guestManager.currentProposta.observacao}" />
-                    <h:outputText 
-                        id="observacao"
-                        rendered="${not empty guestManager.currentProposta.estado and
-                                    not empty guestManager.currentProposta.observacao}"
-                        value="#{guestManager.currentProposta.observacao}"/>
+                        <h:outputLabel for="observacao" value="Observacao: " 
+                                       rendered="${not empty guestManager.currentProposta.estado and 
+                                                   not empty guestManager.currentProposta.observacao}" />
+                        <h:outputText 
+                            id="observacao"
+                            rendered="${not empty guestManager.currentProposta.estado and
+                                        not empty guestManager.currentProposta.observacao}"
+                            value="#{guestManager.currentProposta.observacao}"/>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
-                    <h:dataTable id="documentos" rendered="${not empty guestManager.currentPropostaDocumentos}" value="${guestManager.currentPropostaDocumentos}" var="d">			
-                        <h:column>
-                            ${d.desiredName}
-                            <span>
-                                <h:commandLink
-                                    value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
-                                </h:commandLink>
-                            </span>
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
+                        <h:dataTable id="documentos" rendered="${not empty guestManager.currentPropostaDocumentos}" value="${guestManager.currentPropostaDocumentos}" var="d">			
+                            <h:column>
+                                ${d.desiredName}
+                                <span>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel rendered="${not empty guestManager.currentPropostaAta}" for="ata" value="Ata:"/>
-                    <h:dataTable id="ata" rendered="${not empty guestManager.currentPropostaAta}" value="${guestManager.currentPropostaAta}" var="a">			
-                        <h:column>
-                            ${a.desiredName}
-                            <span>
-                                <h:commandLink
-                                    value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
-                                </h:commandLink>
-                            </span>
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty guestManager.currentPropostaAta}" for="ata" value="Ata:"/>
+                        <h:dataTable id="ata" rendered="${not empty guestManager.currentPropostaAta}" value="${guestManager.currentPropostaAta}" var="a">			
+                            <h:column>
+                                ${a.desiredName}
+                                <span>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
 
-                </p:panelGrid>
-            </h:form>
+                    </p:panelGrid>
+                </h:form>
+            </c:if>
+            <c:if test="#{empty guestManager.currentProposta}">
+                <p>Não foi selecionada uma proposta.</p>
+            </c:if>
             <br/>
             <h:messages errorStyle="color: red" />    
             <br/>
