@@ -81,6 +81,18 @@
             <description/>
             <url-pattern>/faces/instituicao/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Instituicao Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/students/documentos/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/*</url-pattern>
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/propostas/documents/*</url-pattern>
+            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
+            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/propostas/*</url-pattern>
+            <url-pattern>/webapi/instituicoes/removerProposta/*/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>Instituicao</role-name>
