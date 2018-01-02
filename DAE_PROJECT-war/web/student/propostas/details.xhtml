@@ -102,7 +102,7 @@
                     <h:outputText 
                         id="estado"
                         rendered="${not empty studentManager.currentProposta.estado}"
-                        value="#{studentManager.currentProposta.estado}"/>
+                        value="#{studentManager.currentProposta.stringEstado}"/>
 
                     <h:outputLabel for="observacao" value="Observacao: " 
                                    rendered="${not empty studentManager.currentProposta.estado and 
@@ -126,7 +126,7 @@
                                     <p:fileDownload value="#{downloadManager.file}" />
                                 </h:commandLink>
                             </span>
-                            <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.intEstado==1}">
+                            <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.estado==1}">
                                 <span>
                                     <h:commandLink 
                                         value="Atualizar" 
@@ -138,7 +138,7 @@
                                 <span>
                                     <h:commandLink
                                         value="Remover"
-                                        action="${studentManager.removerDocumento}">
+                                        action="${studentManager.removerDocument}">
                                         <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
                                     </h:commandLink>
                                 </span>
@@ -160,7 +160,7 @@
                     </h:dataTable>
                 </p:panelGrid>
                 <br/>
-                <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.intEstado==1}">
+                <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.estado==2}">
                     <h:commandLink 
                         value="Upload Documento" 
                         action="upload">

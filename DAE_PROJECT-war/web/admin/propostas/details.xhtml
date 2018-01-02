@@ -103,7 +103,7 @@
                 <h:outputText 
                     id="estado"
                     rendered="${not empty administratorManager.currentProposta.estado}"
-                    value="#{administratorManager.currentProposta.estado}"/>
+                    value="#{administratorManager.currentProposta.stringEstado}"/>
 
                 <h:outputLabel for="observacao" value="Observacao: " 
                                rendered="${not empty administratorManager.currentProposta.estado and 

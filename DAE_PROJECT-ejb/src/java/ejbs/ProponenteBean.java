@@ -39,22 +39,6 @@ public class ProponenteBean extends Bean<Proponente> {
         return em.createNamedQuery("getAllProponentes").getResultList();
     }
     
-    public Collection<ProponenteDTO> getPropostaProponentes(int code) throws EntityDoesNotExistsException {
-        try {
-            Proposta proposta = em.find(Proposta.class, code);
-            
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("Proposta does not exists.");
-            }
-
-            return toDTOs(proposta.getProponentes(), ProponenteDTO.class);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-    
     public ProponenteDTO getProponente(String username) {
         try {
             Query query = em.createQuery("SELECT p FROM Proponente p where p.username = '" + username + "'", Proponente.class);

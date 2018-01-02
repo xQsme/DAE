@@ -51,12 +51,12 @@ public class ConfigBean {
             teacherBean.create("teacherNick2", "secret", "teacher  João", "2151474@my.ipleiria.pt", "G2");
             teacherBean.create("teacherNick3", "secret", "teacher Gonçalo", "2151159@my.ipleiria.pt", "G3");
             
-            studentBean.addCandidaturaStudent(1, "2151474");
-            studentBean.addCandidaturaStudent(2, "2151159");
-            studentBean.addCandidaturaStudent(1, "2151159");
+            studentBean.addCandidatura("2151474", 1);
+            studentBean.addCandidatura("2151159", 2);
+            studentBean.addCandidatura("2151159", 1);
             
-            studentBean.addCandidaturaStudent(4, "2151163");
-            studentBean.addCandidaturaStudent(4, "2151474");
+            studentBean.addCandidatura("2151163", 4);
+            studentBean.addCandidatura("2151474", 4);
             
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");

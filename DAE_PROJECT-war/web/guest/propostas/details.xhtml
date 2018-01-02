@@ -110,7 +110,7 @@ and open the template in the editor.
                     <h:outputText 
                         id="estado"
                         rendered="${not empty guestManager.currentProposta.estado}"
-                        value="#{guestManager.currentProposta.estado}"/>
+                        value="#{guestManager.currentProposta.stringEstado}"/>
 
                     <h:outputLabel for="observacao" value="Observacao: " 
                                    rendered="${not empty guestManager.currentProposta.estado and 

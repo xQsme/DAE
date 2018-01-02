@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "DOCUMENTOS")
 @NamedQueries({
-    @NamedQuery(name = "getDocumentsOfUser", query = "SELECT doc FROM Documento doc WHERE doc.student.username = :username")
+    @NamedQuery(name = "getDocumentosOfUser", query = "SELECT doc FROM Documento doc WHERE doc.student.username = :username")
 })
 public class Documento implements Serializable {
 

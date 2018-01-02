@@ -30,8 +30,8 @@
                         id="email"
                         value="#{studentManager.student.email}"/>
 
-                    <h:outputLabel rendered="${not empty studentManager.userDocumentos}" for="documentos" value="Documentos:"/>
-                    <h:dataTable id="documentos" rendered="${not empty studentManager.userDocumentos}" value="${studentManager.userDocumentos}" var="d">			
+                    <h:outputLabel rendered="${not empty studentManager.studentDocumentos}" for="documentos" value="Documentos:"/>
+                    <h:dataTable id="documentos" rendered="${not empty studentManager.studentDocumentos}" value="${studentManager.studentDocumentos}" var="d">			
                         <h:column>
                             ${d.desiredName}
                         </h:column>
@@ -46,7 +46,7 @@
                             <span>
                                 <h:commandLink
                                     value="Remover"
-                                    action="${studentManager.removerUserDocumento}">
+                                    action="${studentManager.removerStudentDocumento}">
                                     <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
                                 </h:commandLink>
                             </span>
