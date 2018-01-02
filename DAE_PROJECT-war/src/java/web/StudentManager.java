@@ -11,11 +11,9 @@ import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import exceptions.AlreadyAppliedToProposalException;
-import exceptions.CannotApplyToProposalException;
 import exceptions.NoDocumentsException;
 import exceptions.ProposalStateDoesNotAllowException;
 import exceptions.StudentCandidaturasFullException;
-import exceptions.UserAlreadyHasAppliedException;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
@@ -208,7 +206,6 @@ public class StudentManager implements Serializable {
     }
 
     private void setUpStudent() {
-        logger.info("setting up student");
         try {
             student = client.target(URILookup.getBaseAPI())
                     .path("/students")
@@ -216,7 +213,6 @@ public class StudentManager implements Serializable {
                     .request(MediaType.APPLICATION_XML)
                     .get(StudentDTO.class);
         } catch (Exception e) {
-            logger.info(e.toString());
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
         }
     }

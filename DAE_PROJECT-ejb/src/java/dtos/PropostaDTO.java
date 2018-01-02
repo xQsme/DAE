@@ -192,5 +192,9 @@ public class PropostaDTO  implements Serializable{
         setEstado(-2);
         setObservacao(null);
     }
+    
+    public boolean allowSubmit(){
+        return estado < 3 && estado > 0;
+    }
 
 }

@@ -1,10 +1,8 @@
 package ejbs;
 
-import dtos.DocumentDTO;
 import dtos.DocumentoDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import entities.Document;
 import entities.Documento;
 import entities.Proposta;
 import entities.Student;
@@ -32,7 +30,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -275,7 +272,7 @@ public class StudentBean extends Bean<Student> {
     }
 
     @GET
-    @RolesAllowed({"Student"})
+    @RolesAllowed({"Student", "Instituicao"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("documentos/{username}")
     public Collection<DocumentoDTO> getDocumentos(@PathParam("username") String username) throws EntityDoesNotExistsException {

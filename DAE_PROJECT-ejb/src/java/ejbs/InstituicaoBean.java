@@ -3,11 +3,8 @@ package ejbs;
 import auxiliar.TipoDeInstituicao;
 import dtos.InstituicaoDTO;
 import dtos.PropostaDTO;
-import dtos.TeacherDTO;
 import entities.Instituicao;
 import entities.Proposta;
-import entities.Student;
-import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -15,17 +12,25 @@ import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/instituicoes")
 public class InstituicaoBean extends Bean<Instituicao> {
 
     @PersistenceContext
@@ -97,6 +102,31 @@ public class InstituicaoBean extends Bean<Instituicao> {
         return em.createNamedQuery("getAllInstituicoes").getResultList();
     }
 
+    @POST
+    @RolesAllowed({"Student"})
+    @Path("propostas/{username}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void addPropostaInstituicao(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException {
+        try {
+            int propostaCode = prop.getCode();
+            Proposta proposta = em.find(Proposta.class, propostaCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            Instituicao instituicao = em.find(Instituicao.class, username);
+            if (instituicao == null) {
+                throw new EntityDoesNotExistsException("There is no institution with that username.");
+            }
+            proposta.addProponente(instituicao);
+            instituicao.addProposta(proposta);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    
     public void addPropostaInstituicao(int propostaCode, String username) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
@@ -116,7 +146,10 @@ public class InstituicaoBean extends Bean<Instituicao> {
         }
     }
 
-    public void removePropostaInstituicao(int propostaCode, String username) throws EntityDoesNotExistsException {
+    @DELETE
+    @RolesAllowed({"Instituicao"})
+    @Path("removerProposta/{username}/{id}")
+    public void removePropostaInstituicao(@PathParam("id") int propostaCode, @PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
@@ -143,7 +176,11 @@ public class InstituicaoBean extends Bean<Instituicao> {
         return tipos;
     }
     
-    public InstituicaoDTO getInstituicao(String username) {
+    @GET
+    @RolesAllowed({"Instituicao"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("{username}")
+    public InstituicaoDTO getInstituicao(@PathParam("username") String username) {
         try {
             Query query = em.createQuery("SELECT i FROM Instituicao i where i.username = '" + username + "'", Instituicao.class);
             ArrayList<InstituicaoDTO> instituicoes = (ArrayList<InstituicaoDTO>) toDTOs(query.getResultList(), InstituicaoDTO.class);
@@ -153,7 +190,11 @@ public class InstituicaoBean extends Bean<Instituicao> {
         } 
     }
 
-    public Collection<PropostaDTO> getInstituicaoPropostas(String username) throws EntityDoesNotExistsException {
+    @GET
+    @RolesAllowed({"Instituicao"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("propostas/{username}")
+    public Collection<PropostaDTO> getInstituicaoPropostas(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Instituicao instituicao = em.find(Instituicao.class, username);
             

@@ -160,7 +160,7 @@
                     </h:dataTable>
                 </p:panelGrid>
                 <br/>
-                <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.estado==2}">
+                <c:if test="#{studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.allowSubmit()}">
                     <h:commandLink 
                         value="Upload Documento" 
                         action="upload">

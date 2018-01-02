@@ -9,17 +9,16 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import static jdk.nashorn.internal.parser.TokenType.ENUM;
 
 @Entity
 @Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
@@ -35,6 +34,7 @@ public class Proposta implements Serializable {
 */
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int code;
     
     @Column(nullable = false)
@@ -126,9 +126,8 @@ public class Proposta implements Serializable {
         documentos = new LinkedList<>();
     }
 
-    public Proposta(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
+    public Proposta(String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
         this();
-        this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
         this.resumo = resumo;
