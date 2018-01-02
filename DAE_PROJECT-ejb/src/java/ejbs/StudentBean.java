@@ -1,10 +1,8 @@
 package ejbs;
 
-import dtos.DocumentDTO;
 import dtos.DocumentoDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import entities.Document;
 import entities.Documento;
 import entities.Proposta;
 import entities.Student;
@@ -30,7 +28,8 @@ import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -108,9 +107,9 @@ public class StudentBean extends Bean<Student> {
         return em.createNamedQuery("getAllStudents").getResultList();
     }
     
-    public void addCandidaturaStudent(int propostaCode, String username) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
+    public void addCandidatura(@PathParam("username") String username, int propCode) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
         try {
-            Proposta proposta = em.find(Proposta.class, propostaCode);
+            Proposta proposta = em.find(Proposta.class, propCode);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
@@ -122,7 +121,38 @@ public class StudentBean extends Bean<Student> {
                 throw new StudentCandidaturasFullException ("O aluno so se pode candidatar a 5 candidaturas no máximo!");
             }
             for(Proposta p : student.getCandidaturas()){
-                if (p.getCode() == propostaCode) {
+                if (p.getCode() == propCode) {
+                    throw new UserAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
+                }
+            }
+            proposta.addStudent(student);
+            student.addCandidatura(proposta);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    @POST
+    @RolesAllowed({"Student"})
+    @Path("propostas/{username}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void addCandidatura(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
+        try {
+            Proposta proposta = em.find(Proposta.class, prop.getCode());
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with that username.");
+            }
+            if (student.getCandidaturas().size() > 4) {
+                throw new StudentCandidaturasFullException ("O aluno so se pode candidatar a 5 candidaturas no máximo!");
+            }
+            for(Proposta p : student.getCandidaturas()){
+                if (p.getCode() == prop.getCode()) {
                     throw new UserAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
                 }
             }
@@ -135,7 +165,10 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public void removePropostaStudent(int propostaCode, String username) throws EntityDoesNotExistsException {
+    @DELETE
+    @RolesAllowed({"Student"})
+    @Path("proposta/{username}/{code}")
+    public void removerCandidatura(@PathParam("code") int propostaCode, @PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
             if (proposta == null) {
@@ -171,10 +204,17 @@ public class StudentBean extends Bean<Student> {
     }
 
     @GET
+<<<<<<< HEAD
     @RolesAllowed({"Admin, Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("getCandidaturas/{username}")
     public Collection<PropostaDTO> getCandidaturas(@PathParam("username") String username) {
+=======
+    @RolesAllowed({"Student"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("propostas/{username}")
+    public Collection<PropostaDTO> getPropostas(@PathParam("username") String username) {
+>>>>>>> f623e188adb12695826fca45f890b839d4bf78d9
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
             return toDTOs(query.getResultList(), PropostaDTO.class);
@@ -186,12 +226,12 @@ public class StudentBean extends Bean<Student> {
     @GET
     @RolesAllowed({"Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("findStudent/{username}")
+    @Path("{username}")
     public StudentDTO findStudent(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
-                throw new EntityDoesNotExistsException("There is no user with such username.");
+                throw new EntityDoesNotExistsException("There is no user with such username. " + username );
             }
             return toDTO(student, StudentDTO.class);
         } catch (EntityDoesNotExistsException e) {
@@ -238,18 +278,22 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public Collection<DocumentDTO> getDocuments(String username) throws EntityDoesNotExistsException {
+    @GET
+    @RolesAllowed({"Student", "Instituicao"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("documentos/{username}")
+    public Collection<DocumentoDTO> getDocumentos(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
-            List<Document> docs = em.createNamedQuery("getDocumentsOfUser", Document.class).setParameter("username", username).getResultList();
-            return toDTOs(docs, DocumentDTO.class);
+            List<Documento> docs = em.createNamedQuery("getDocumentosOfUser", Documento.class).setParameter("username", username).getResultList();
+            return toDTOs(docs, DocumentoDTO.class);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
 
-    @PUT
+    @POST
     @RolesAllowed({"Student"})
-    @Path("/addDocumento/{username}")
+    @Path("addDocumento/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void addDocumento(@PathParam("username") String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
         try {
@@ -268,14 +312,17 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    public void removerDocumento(String username, int id) throws EntityDoesNotExistsException {
+    @DELETE
+    @RolesAllowed({"Student"})
+    @Path("deleteDocumento/{username}/{id}")
+    public void removerDocumento(@PathParam("username") String username, @PathParam("id") int id) throws EntityDoesNotExistsException {
         Student student = em.find(Student.class, username);
         if(student == null){
             throw new EntityDoesNotExistsException("O estudante com username \"" + username + "\" nao existe.");
         }
         Documento documento = em.find(Documento.class, id);
         if(documento == null){
-            throw new EntityDoesNotExistsException("O documento dom id " + id + " nao existe.");
+            throw new EntityDoesNotExistsException("O documento com id " + id + " nao existe.");
         }
         student.removeDocumento(documento);
         em.remove(documento);
