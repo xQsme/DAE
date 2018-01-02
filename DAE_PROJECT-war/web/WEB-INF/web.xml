@@ -61,6 +61,14 @@
             <description/>
             <url-pattern>/faces/teacher/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Teacher Services</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/teachers/add/proposal/*</url-pattern>
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/teachers/remove/proposal/*</url-pattern>
+            <url-pattern>/webapi/teachers/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>Teacher</role-name>
