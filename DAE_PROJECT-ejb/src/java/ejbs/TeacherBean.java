@@ -202,10 +202,45 @@ public class TeacherBean extends Bean<Teacher> {
             throw new EJBException(e.getMessage());
         }
     }
-
-    public void removePropostaTeacher(int propostaCode, String username) throws EntityDoesNotExistsException {
+    
+    @POST
+    @RolesAllowed({"MembroCCP", "Teacher"})
+    @Path("add/proposal/{propostaCode}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void addPropostaTeacherRest(@PathParam("propostaCode") String propostaCode, String username) throws EntityDoesNotExistsException {
+        
         try {
-            Proposta proposta = em.find(Proposta.class, propostaCode);
+            int propostaCodeInt = Integer.valueOf(propostaCode);
+            Proposta proposta = em.find(Proposta.class, propostaCodeInt);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            Teacher teacher = em.find(Teacher.class, username);
+            if (teacher == null) {
+                throw new EntityDoesNotExistsException("There is no teacher with that username.");
+            }
+            for(Proposta p : teacher.getPropostas()){
+                if (p.getCode() == propostaCodeInt) {
+                    throw new UserAlreadyHasAppliedException("O professor ja está aplicado a essa Proposta!");
+                }
+            }
+            proposta.addProponente(teacher);
+            teacher.addProposta(proposta);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    @DELETE
+    @RolesAllowed({"MembroCCP", "Teacher"})
+    @Path("remove/proposal/{username}/{propostaCode}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void removePropostaTeacher(@PathParam("username") String username, @PathParam("propostaCode") String propostaCode) throws EntityDoesNotExistsException {
+        try {
+            int propostaCodeInt = Integer.valueOf(propostaCode);
+            Proposta proposta = em.find(Proposta.class, propostaCodeInt);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
             }
@@ -222,7 +257,10 @@ public class TeacherBean extends Bean<Teacher> {
         }
     }    
     
-    public TeacherDTO getTeacher(String username) {
+    @GET
+    @RolesAllowed({"MembroCCP", "Teacher"})
+    @Path("{username}")
+    public TeacherDTO getTeacher(@PathParam("username") String username) {
         try {
             Query query = em.createQuery("SELECT t FROM Teacher t where t.username = '" + username + "'", Teacher.class);
             ArrayList<TeacherDTO> professores = (ArrayList<TeacherDTO>) toDTOs(query.getResultList(), TeacherDTO.class);
@@ -232,7 +270,10 @@ public class TeacherBean extends Bean<Teacher> {
         } 
     }
     
-    public Collection<PropostaDTO> getPropostasTeacher(String username) throws EntityDoesNotExistsException{
+    @GET
+    @RolesAllowed({"MembroCCP", "Teacher"})
+    @Path("{username}/proposals")
+    public Collection<PropostaDTO> getPropostasTeacher(@PathParam("username") String username) throws EntityDoesNotExistsException{
         try {
             Teacher teacher = em.find(Teacher.class, username);
             

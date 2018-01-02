@@ -102,8 +102,8 @@ public class PropostaBean extends Bean<Proposta> {
         } 
     }
 
-    @GET
-    @RolesAllowed({"Student", "Instituicao"})
+
+    @RolesAllowed({"Student", "Teacher", "Instituicao"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("")
     public Collection<PropostaDTO> getAllPropostas() {

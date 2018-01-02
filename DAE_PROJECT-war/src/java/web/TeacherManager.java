@@ -20,6 +20,7 @@ import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -28,6 +29,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import util.URILookup;
 
 /**
  *
@@ -59,27 +67,43 @@ public class TeacherManager implements Serializable {
     
     private UIComponent component;
     
+    private Client client;
+
+    private HttpAuthenticationFeature feature;    
+    
     public TeacherManager() {
         newProposta = new PropostaDTO();
+        client = ClientBuilder.newClient();
     }
     
     @PostConstruct
     public void Init(){
+        feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
+        client.register(feature);
         setUpTeacher();
     }
     
-    public Collection<PropostaDTO> getAllPropostas() {
+    public List<PropostaDTO> getAllPropostas() {
         try {
-            return propostaBean.getAllPropostas();
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<PropostaDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            System.out.println("ERROR GETTING PROPOSTAS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
     public Collection<PropostaDTO> getTeacherPropostas(){
         try{
-            return teacherBean.getPropostasTeacher(teacher.getUsername());
+            return client.target(URILookup.getBaseAPI())
+                .path("/teachers")
+                .path(teacher.getUsername())
+                .path("proposals")
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<PropostaDTO>>() {});
         }catch(Exception e){
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         }
@@ -106,17 +130,26 @@ public class TeacherManager implements Serializable {
     
     public void removerProposta(){
         try {
-            teacherBean.removePropostaTeacher(currentProposta.getCode(), teacher.getUsername());
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/remove/proposal")
+                .path(teacher.getUsername())
+                .path(Integer.toString(currentProposta.getCode()))
+                .request(MediaType.APPLICATION_XML)
+                .delete();
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), logger);
         }
     }
     
     public void adicionarProposta(){
         try {
             teacherBean.addPropostaTeacher(currentProposta.getCode(), teacher.getUsername());
+            
+            client.target(URILookup.getBaseAPI())
+                .path("/teachers/add/proposal")
+                .path(Integer.toString(currentProposta.getCode()))
+                .request(MediaType.APPLICATION_XML)                
+                .post(Entity.xml(teacher.getUsername()));
         }
         catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -166,18 +199,16 @@ public class TeacherManager implements Serializable {
     }
 
     private void setUpTeacher() {
-        logger.info(userManager.toString());
-        String username = userManager.getUsername();
-        logger.info(username);
-        teacher = teacherBean.getTeacher( username );
-        logger.info(teacher.toString());
-                /*
-        ProponenteDTO proponente  = proponenteBean.getProponente(username );
-        logger.info(proponente.toString());
-        logger.info(" " + proponente.getPropostas().size());
-
-        proponente.s
-        teacher.set*/
+        try {
+            teacher = client.target(URILookup.getBaseAPI())
+                    .path("/teachers")
+                    .path(userManager.getUsername())
+                    .request(MediaType.APPLICATION_XML)
+                    .get(TeacherDTO.class);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+        }
     }
 
     public UserManager getUserManager() {
