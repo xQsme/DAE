@@ -23,6 +23,7 @@ import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Path;
 
 /**
  *
@@ -31,8 +32,8 @@ import javax.persistence.PersistenceContext;
 
 
 @Stateless
+@Path("/admin")
 public class MembroCCPBean{
-    
     @PersistenceContext
     private EntityManager em;
     

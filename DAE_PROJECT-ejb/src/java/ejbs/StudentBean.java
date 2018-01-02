@@ -203,8 +203,8 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
-    @GET
-    @RolesAllowed({"Student"})
+
+    @RolesAllowed({"Admin, Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("propostas/{username}")
     public Collection<PropostaDTO> getPropostas(@PathParam("username") String username) {

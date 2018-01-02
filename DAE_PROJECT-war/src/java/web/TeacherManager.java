@@ -124,16 +124,12 @@ public class TeacherManager implements Serializable {
     }
     
     public Collection<String> getAllTiposTrabalho() {
-        try {
-            LinkedList<String> tiposTrabalho = new LinkedList<>();
-            tiposTrabalho.add(TipoDeTrabalho.Dissertação.toString());
-            tiposTrabalho.add(TipoDeTrabalho.Estágio.toString());
-            tiposTrabalho.add(TipoDeTrabalho.Projeto.toString());
-            return tiposTrabalho;
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
+
+        LinkedList<String> tiposTrabalho = new LinkedList<>();
+        tiposTrabalho.add(TipoDeTrabalho.Dissertação.toString());
+        tiposTrabalho.add(TipoDeTrabalho.Estágio.toString());
+        tiposTrabalho.add(TipoDeTrabalho.Projeto.toString());
+        return tiposTrabalho;
     }
     
     public void removerProposta(){
@@ -334,6 +330,7 @@ public class TeacherManager implements Serializable {
         }
     }
     
+
     public List<DocumentoDTO> getStudentDocumentos(){
         try {
             return client.target(URILookup.getBaseAPI())
@@ -347,6 +344,7 @@ public class TeacherManager implements Serializable {
             return new LinkedList<>();
         }
     }
+
     public StudentDTO getCurrentStudent() {
         return currentStudent;
     }

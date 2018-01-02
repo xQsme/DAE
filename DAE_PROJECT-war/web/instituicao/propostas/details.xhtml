@@ -17,135 +17,138 @@ and open the template in the editor.
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
-            Proposta
+            Proposta #{instituicaoManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <h:form>
-                <p:panelGrid columns="2">
+            <c:if test="#{not empty instituicaoManager.currentProposta}">
+                <h:form>
+                    <p:panelGrid columns="2">
 
-                    <h:outputLabel for="code" value="Code: " />
-                    <h:outputText 
-                        id="code"
-                        value="#{ instituicaoManager.currentProposta.code}"/>
+                        <h:outputLabel for="code" value="Code: " />
+                        <h:outputText 
+                            id="code"
+                            value="#{instituicaoManager.currentProposta.code}"/>
 
-                    <h:outputLabel for="titulo" value="Titulo: " />
-                    <h:outputText 
-                        id="titulo"
-                        value="#{ instituicaoManager.currentProposta.titulo}"/>
+                        <h:outputLabel for="titulo" value="Titulo: " />
+                        <h:outputText 
+                            id="titulo"
+                            value="#{instituicaoManager.currentProposta.titulo}"/>
 
-                    <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
-                    <h:outputText 
-                        id="tipoDeTrabalho"
-                        value="#{ instituicaoManager.currentProposta.tipoDeTrabalho}"/>
+                        <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+                        <h:outputText 
+                            id="tipoDeTrabalho"
+                            value="#{instituicaoManager.currentProposta.tipoDeTrabalho}"/>
 
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
-                    <h:dataTable id="areasCientificas" rendered="${not empty  instituicaoManager.currentProposta.areasCientificas}" value="${ instituicaoManager.currentProposta.areasCientificas}" var="a">			
-                        <h:column>
-                            ${a}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+                        <h:dataTable id="areasCientificas" rendered="${not empty  instituicaoManager.currentProposta.areasCientificas}" value="${ instituicaoManager.currentProposta.areasCientificas}" var="a">			
+                            <h:column>
+                                ${a}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel for="resumo" value="Resumo: " />
-                    <h:outputText 
-                        id="resumo"
-                        value="#{ instituicaoManager.currentProposta.resumo}"/>
+                        <h:outputLabel for="resumo" value="Resumo: " />
+                        <h:outputText 
+                            id="resumo"
+                            value="#{instituicaoManager.currentProposta.resumo}"/>
 
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
-                    <h:dataTable id="proponentes" rendered="${not empty  instituicaoManager.currentPropostaProponentes}" value="${ instituicaoManager.currentPropostaProponentes}" var="p">			
-                        <h:column>
-                            ${p.name}
-                        </h:column>
-                    </h:dataTable>
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+                        <h:dataTable id="proponentes" rendered="${not empty  instituicaoManager.currentPropostaProponentes}" value="${ instituicaoManager.currentPropostaProponentes}" var="p">			
+                            <h:column>
+                                ${p.name}
+                            </h:column>
+                        </h:dataTable>
 
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                    <h:dataTable id="candidatos" rendered="${not empty  instituicaoManager.currentPropostaCandidatos}" value="${ instituicaoManager.currentPropostaCandidatos}" var="c">			
-                        <h:column>
-                            ${c.name}
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+                        <h:dataTable id="candidatos" rendered="${not empty  instituicaoManager.currentPropostaCandidatos}" value="${ instituicaoManager.currentPropostaCandidatos}" var="c">			
+                            <h:column>
+                                ${c.name}
+                                <span>
+                                    <h:commandLink
+                                            value="Details"
+                                            action="/instituicao/students/details">
+                                            <f:setPropertyActionListener target="${instituicaoManager.currentStudent}" value="${c}"></f:setPropertyActionListener>
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+                        <h:dataTable id="objetivos" rendered="${not empty  instituicaoManager.currentProposta.objetivos}" value="${ instituicaoManager.currentProposta.objetivos}" var="o">			
+                            <h:column>
+                                ${o}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+                        <h:dataTable id="bibliografia" rendered="${not empty  instituicaoManager.currentProposta.bibliografia}" value="${ instituicaoManager.currentProposta.bibliografia}" var="b">			
+                            <h:column>
+                                ${b}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+                        <h:outputText 
+                            id="planoDeTrabalhos"
+                            value="#{instituicaoManager.currentProposta.planoDeTrabalhos}"/>
+
+                        <h:outputLabel for="local" value="Local: " />
+                        <h:outputText 
+                            id="local"
+                            value="#{instituicaoManager.currentProposta.local}"/>
+
+                        <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+                        <h:dataTable id="requisitos" rendered="${not empty  instituicaoManager.currentProposta.requisitos}" value="${ instituicaoManager.currentProposta.requisitos}" var="r">			
+                            <h:column>
+                                ${r}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel for="orcamento" value="Orçamento: " />
+                        <h:outputText 
+                            id="orcamento"
+                            value="#{instituicaoManager.currentProposta.orcamento}"/>
+
+                        <h:outputLabel for="apoios" value="Apoios: " />
+                        <h:outputText 
+                            id="apoios"
+                            value="#{instituicaoManager.currentProposta.apoios}"/>
+
+                        <h:outputLabel for="estado" value="Estado: "
+                                       rendered="${not empty  instituicaoManager.currentProposta.estado}"/>
+                        <h:outputText 
+                            id="estado"
+                            rendered="${not empty  instituicaoManager.currentProposta.estado}"
+                            value="#{instituicaoManager.currentProposta.stringEstado}"/>
+
+                        <h:outputLabel for="observacao" value="Observacao: " 
+                                       rendered="${not empty  instituicaoManager.currentProposta.estado and 
+                                                   not empty  instituicaoManager.currentProposta.observacao}" />
+                        <h:outputText 
+                            id="observacao"
+                            rendered="${not empty  instituicaoManager.currentProposta.estado and
+                                        not empty  instituicaoManager.currentProposta.observacao}"
+                            value="#{instituicaoManager.currentProposta.observacao}"/>
+
+                        <h:outputLabel rendered="${not empty instituicaoManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
+                        <h:dataTable id="documentos" rendered="${not empty instituicaoManager.currentPropostaDocumentos}" value="${instituicaoManager.currentPropostaDocumentos}" var="d">			
+                            <h:column>
+                                ${d.desiredName}
+                            </h:column>
                             <span>
                                 <h:commandLink
-                                        value="Details"
-                                        action="/instituicao/students/details">
-                                        <f:setPropertyActionListener target="${instituicaoManager.currentStudent}" value="${c}"></f:setPropertyActionListener>
+                                    value="Download">
+                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.file}" />
                                 </h:commandLink>
                             </span>
-                        </h:column>
-                    </h:dataTable>
-
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
-                    <h:dataTable id="objetivos" rendered="${not empty  instituicaoManager.currentProposta.objetivos}" value="${ instituicaoManager.currentProposta.objetivos}" var="o">			
-                        <h:column>
-                            ${o}
-                        </h:column>
-                    </h:dataTable>
-
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
-                    <h:dataTable id="bibliografia" rendered="${not empty  instituicaoManager.currentProposta.bibliografia}" value="${ instituicaoManager.currentProposta.bibliografia}" var="b">			
-                        <h:column>
-                            ${b}
-                        </h:column>
-                    </h:dataTable>
-
-                    <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
-                    <h:outputText 
-                        id="planoDeTrabalhos"
-                        value="#{ instituicaoManager.currentProposta.planoDeTrabalhos}"/>
-
-                    <h:outputLabel for="local" value="Local: " />
-                    <h:outputText 
-                        id="local"
-                        value="#{ instituicaoManager.currentProposta.local}"/>
-
-                    <h:outputLabel rendered="${not empty  instituicaoManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
-                    <h:dataTable id="requisitos" rendered="${not empty  instituicaoManager.currentProposta.requisitos}" value="${ instituicaoManager.currentProposta.requisitos}" var="r">			
-                        <h:column>
-                            ${r}
-                        </h:column>
-                    </h:dataTable>
-
-                    <h:outputLabel for="orcamento" value="Orçamento: " />
-                    <h:outputText 
-                        id="orcamento"
-                        value="#{ instituicaoManager.currentProposta.orcamento}"/>
-
-                    <h:outputLabel for="apoios" value="Apoios: " />
-                    <h:outputText 
-                        id="apoios"
-                        value="#{ instituicaoManager.currentProposta.apoios}"/>
-
-                    <h:outputLabel for="estado" value="Estado: "
-                                   rendered="${not empty  instituicaoManager.currentProposta.estado}"/>
-                    <h:outputText 
-                        id="estado"
-                        rendered="${not empty  instituicaoManager.currentProposta.estado}"
-                        value="#{ instituicaoManager.currentProposta.stringEstado}"/>
-
-                    <h:outputLabel for="observacao" value="Observacao: " 
-                                   rendered="${not empty  instituicaoManager.currentProposta.estado and 
-                                               not empty  instituicaoManager.currentProposta.observacao}" />
-                    <h:outputText 
-                        id="observacao"
-                        rendered="${not empty  instituicaoManager.currentProposta.estado and
-                                    not empty  instituicaoManager.currentProposta.observacao}"
-                        value="#{ instituicaoManager.currentProposta.observacao}"/>
-
-                    <h:outputLabel rendered="${not empty instituicaoManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
-                    <h:dataTable id="documentos" rendered="${not empty instituicaoManager.currentPropostaDocumentos}" value="${instituicaoManager.currentPropostaDocumentos}" var="d">			
-                        <h:column>
-                            ${d.desiredName}
-                        </h:column>
-                        <span>
-                            <h:commandLink
-                                value="Download">
-                                <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                <p:fileDownload value="#{downloadManager.file}" />
-                            </h:commandLink>
-                        </span>
-                    </h:dataTable>
-                </p:panelGrid>
-            </h:form>
+                        </h:dataTable>
+                    </p:panelGrid>
+                </h:form>
+            </c:if>
+            <c:if test="#{empty instituicaoManager.currentProposta}">
+                <p>Não foi selecionada uma proposta.</p>
+            </c:if>
             <br/>
-
-
             <h:messages errorStyle="color: red" />    
             <br/>
             <h:link value="Return" outcome="view"/>
