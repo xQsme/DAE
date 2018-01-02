@@ -24,6 +24,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -53,31 +54,43 @@ public class GuestManager implements Serializable {
     private Client client;
     
     @PostConstruct
-    public void Init(){}
+    public void Init(){
+        client=ClientBuilder.newClient();
+    };
     
     public Collection<PropostaDTO> getAllPropostas() {
-         List<PropostaDTO> propostas= new LinkedList<>();
+        Collection<PropostaDTO> propostas;
         try {
-            propostas = client.target(URILookup.getBaseAPI())
+            System.out.println("1");
+            client.target(URILookup.getBaseAPI())
                    .path("/propostas")
                    .request(MediaType.APPLICATION_XML)
                    .get(new GenericType<List<PropostaDTO>>() {});
-            
-                    /*for(PropostaDTO p : propostas){
+             System.out.println("2");
+                propostas = client.target(URILookup.getBaseAPI())
+                   .path("/propostas")
+                   .request(MediaType.APPLICATION_XML)
+                   .get(new GenericType<List<PropostaDTO>>() {});
+           
+                    for(PropostaDTO p : propostas){
+                        System.out.println(p.getTitulo());
                         //if(p.getEstado() == 3){
-                            propostas.add(p);
+                            //propostas.add(p);
                         //}
-                    }*/
+                    }
+            System.out.println("3");        
                     /*for(PropostaDTO p : propostaBean.getAllPropostas()){
                         propostas.add(p);
                         /*if(p.getEstado() == 3){
                             propostas.add(p);
                         }
                     }*/
+            return propostas;
         } catch (Exception e) {
+            System.out.println("ola");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
-        return propostas; 
+        return null; 
     }
     
     public Collection<ProponenteDTO> getCurrentPropostaProponentes(){

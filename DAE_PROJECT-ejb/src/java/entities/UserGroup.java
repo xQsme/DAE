@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class UserGroup implements Serializable {
 
     public static enum GROUP {
-        Instituicao, MembroCCP, Student, Teacher
+        Instituicao, MembroCCP, Student, Teacher, Guest
     }
     
     @Id
