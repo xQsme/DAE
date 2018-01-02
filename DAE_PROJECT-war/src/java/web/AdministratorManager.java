@@ -388,7 +388,7 @@ public class AdministratorManager implements Serializable {
                 } 
                 
                 if(currentProposta.getEstado()==2){
-                    for(Student candidatos: currentProposta.getCandidatos()) {
+                    for(StudentDTO candidatos: propostaBean.getCandidatos(currentProposta.getCode())) {
                         recipients.add(candidatos.getEmail());
                     }
                 }
@@ -500,7 +500,7 @@ public class AdministratorManager implements Serializable {
                     recipients.add(proponente.getEmail());
                 } 
                
-                for(Student candidatos: currentProposta.getCandidatos()) {
+                for(StudentDTO candidatos: propostaBean.getCandidatos(currentProposta.getCode())) {
                     recipients.add(candidatos.getEmail());
                 }
    
@@ -557,7 +557,7 @@ public class AdministratorManager implements Serializable {
                     recipients.add(proponente.getEmail());
                 }
                 
-                for(Student candidatos: currentProposta.getCandidatos()) {
+                for(StudentDTO candidatos: propostaBean.getCandidatos(currentProposta.getCode())) {
                     recipients.add(candidatos.getEmail());
                 }
 

@@ -17,7 +17,6 @@ public class PropostaDTO  implements Serializable{
     private String tipoDeTrabalho;
     private List<String> areasCientificas;
     private String resumo;
-    private List<Student> candidatos;
     private List<String> objetivos;
     private List<String> bibliografia;
     private String planoDeTrabalhos;
@@ -117,36 +116,19 @@ public class PropostaDTO  implements Serializable{
         this.estado = estado;
     }
     
-    public final void setStringEstado(String estado) {//Must be Integer because it supports null
-        switch(estado){
-            case "Não Aceite":this.estado=-1; 
-                    break;
-            case "Pendente": this.estado=0; 
-                    break;
-            case "Aceite": this.estado=1; 
-                    break;
-            case "Prova": this.estado=2;
-                    break;
-            case "Finalizado": this.estado=3; 
-                    break;
-        }
-    }
-    
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
    
-    
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<Student> candidatos, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
         this.areasCientificas = areasCientificas;
         this.resumo = resumo;
-        this.candidatos = candidatos;
         this.objetivos = objetivos;
         this.bibliografia = bibliografia;
         this.planoDeTrabalhos = planoDeTrabalhos;
@@ -154,7 +136,7 @@ public class PropostaDTO  implements Serializable{
         this.requisitos = requisitos;
         this.orcamento = orcamento;
         this.apoios = apoios;
-        setEstado(estado);
+        this.estado = estado;
         this.observacao = observacao;
     }
 
@@ -196,14 +178,6 @@ public class PropostaDTO  implements Serializable{
 
     public void setResumo(String resumo) {
         this.resumo = resumo;
-    }
-
-    public List<Student> getCandidatos() {
-        return candidatos;
-    }
-
-    public void setCandidatos(List<Student> candidatos) {
-        this.candidatos = candidatos;
     }
 
     public List<String> getObjetivos() {
@@ -273,7 +247,6 @@ public class PropostaDTO  implements Serializable{
         setTipoDeTrabalho(null);
         setAreasCientificas(null);
         setResumo(null);
-        setCandidatos(null);
         setObjetivos(null);
         setBibliografia(null);
         setPlanoDeTrabalhos(null);

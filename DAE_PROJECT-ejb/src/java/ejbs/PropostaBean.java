@@ -511,4 +511,12 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
+
+    public Collection<StudentDTO> getCandidatos(int code) throws EntityDoesNotExistsException {
+        Proposta proposta = em.find(Proposta.class, code);
+        if(proposta == null){
+            throw new EntityDoesNotExistsException("Proposta com codigo " + code + " não existe.");
+        }
+        return toDTOs(proposta.getCandidatos(), StudentDTO.class);
+    }
 }
