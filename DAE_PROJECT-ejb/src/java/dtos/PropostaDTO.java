@@ -21,8 +21,7 @@ public class PropostaDTO  implements Serializable{
     private List<String> requisitos;
     private String orcamento;
     private String apoios;
-    
-    
+    private String observacao;
     private Estado estado;
 
     public final void setEstado(Integer estado) {//Must be Integer because it supports null
@@ -66,7 +65,7 @@ public class PropostaDTO  implements Serializable{
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-    private String observacao;
+   
     
     public PropostaDTO() {
     }

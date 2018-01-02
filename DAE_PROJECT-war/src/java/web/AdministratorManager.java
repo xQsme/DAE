@@ -543,7 +543,38 @@ public class AdministratorManager implements Serializable {
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
-        
+    
+    public String serializarProposta() throws AddressException, Exception {
+        try {
+            
+            /*propostaBean.addSerialição(
+                    currentProposta.getCode(),
+                    currentProposta.getCandidatos();
+                    );*/
+
+            if (currentProposta.getIntEstado() == 2 ){
+                List<String> recipients= new LinkedList<String>();
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                    recipients.add(proponente.getEmail());
+                }
+                
+                for(Student candidatos: currentProposta.getCandidatos()) {
+                    recipients.add(candidatos.getEmail());
+                }
+
+                emailManager.serializeProposta(loggedMembroCCP, currentProposta, recipients);        
+            }
+
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+
+        return "/admin/propostas/view.xhtml?faces-redirect=true";
+    }    
     
     public UIComponent getComponent() {
         return component;

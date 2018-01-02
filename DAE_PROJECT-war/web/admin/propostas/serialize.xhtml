@@ -5,7 +5,8 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://butterfaces.org/components">
     <ui:composition template="../../templates/skeleton.xhtml">
         <ui:define name="title">
                 Serializar proposta ${administratorManager.currentProposta.titulo}
@@ -48,13 +49,11 @@
                             ${p.name}
                         </h:column>
                     </h:dataTable>
-
+                    
                     <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                    <h:dataTable id="candidatos"  rendered="${not empty administratorManager.currentPropostaCandidatos}" value="${administratorManager.currentPropostaCandidatos}" var="c">			
-                        <h:column>
-                            ${c.name}
-                        </h:column>
-                    </h:dataTable>
+                    <h:selectOneMenu value="#{administratorManager.currentPropostaCandidatos}">
+                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c.name}" itemLabel="#{c.name}"/>
+                    </h:selectOneMenu>    
 
                     <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
                     <h:dataTable id="objetivos"  rendered="${not empty administratorManager.currentProposta.objetivos}" value="${administratorManager.currentProposta.objetivos}" var="o">			
@@ -97,9 +96,6 @@
                         id="apoios"
                         value="#{administratorManager.currentProposta.apoios}"/>
 
-
-                    <h:outputLabel for="estado" value="Estado: "
-                                   rendered="${not empty administratorManager.currentProposta.estado}"/>
                     <h:outputText 
                         id="estado"
                         rendered="${not empty administratorManager.currentProposta.estado}"
@@ -142,11 +138,22 @@
                         </h:column>
                     </h:dataTable>
                 </p:panelGrid>
+                
+                <h:commandButton
+                    id="submit"
+                    styleClass="btn btn-outline-success"
+                    value="Validar"
+                    onclick="if (! confirm('Tem a certeza?')) return false"
+                    action="#{administratorManager.serializarProposta()}" />
             </h:form>
             </c:if>
             <c:if test="#{administratorManager.currentProposta.intEstado==3}">
-            <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi serializada!</p>
+                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi serializada!</p>
             </c:if>
+            <c:if test="#{2>administratorManager.currentProposta.intEstado}">
+                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" não pode serializada!</p>
+            </c:if>
+            
             <h:link value="return" outcome="view" class="btn btn-primary"/>
             <br/> 
             <h:messages errorClass="error" /> 

@@ -71,4 +71,15 @@ public class EmailManager implements Serializable{
         
         email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Validação da Proposta "+proposta.getTitulo(), msg, recipients);               
     }     
+    
+    public void serializeProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+        String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
+                    +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
+                    +".<br><br><strong>Foi serializada por:</strong> "+ memberCCP.getName()+".";
+                  
+        msg+= "<br><br>Sendo esta assim passada a estado <strong>" + proposta.getEstado() +"</strong>.";
+        
+       
+        email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Serialização da Proposta "+proposta.getTitulo(), msg, recipients);               
+    }     
 }
