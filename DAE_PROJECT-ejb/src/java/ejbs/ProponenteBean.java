@@ -9,18 +9,18 @@ import dtos.ProponenteDTO;
 import dtos.StudentDTO;
 import entities.Proponente;
 import entities.Proposta;
-import entities.Student;
 import exceptions.EntityDoesNotExistsException;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
 import javax.persistence.Query;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("/proponenete")
+@DeclareRoles({"MembroCCP", "Instituicao", "Teacher"})
 public class ProponenteBean extends Bean<Proponente> {
 
     public Collection<ProponenteDTO> getAlProponentes() {
@@ -45,11 +46,13 @@ public class ProponenteBean extends Bean<Proponente> {
         return em.createNamedQuery("getAllProponentes").getResultList();
     }
     
+   
     @GET
-    @PermitAll
+    @RolesAllowed({"MembroCCP", "Instituicao", "Teacher"}) 
+    @Path("/proposta/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("proponenete/{code}")
-    public Collection<ProponenteDTO> getPropostaProponentes(int code) throws EntityDoesNotExistsException {
+    public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) 
+            throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             

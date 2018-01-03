@@ -12,7 +12,7 @@
                 Serializar proposta ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <c:if test="#{administratorManager.currentProposta.intEstado==1}">
+            <c:if test="#{administratorManager.currentProposta.estado==1}">
             <h:form>
                 <p:panelGrid columns="2">
 
@@ -147,10 +147,10 @@
                     action="#{administratorManager.serializarProposta()}" />
             </h:form>
             </c:if>
-            <c:if test="#{administratorManager.currentProposta.intEstado==3}">
+            <c:if test="#{administratorManager.currentProposta.estado==3}">
                 <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi serializada!</p>
             </c:if>
-            <c:if test="#{2>administratorManager.currentProposta.intEstado}">
+            <c:if test="#{2>administratorManager.currentProposta.estado}">
                 <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" não pode serializada!</p>
             </c:if>
             

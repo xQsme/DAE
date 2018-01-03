@@ -26,7 +26,10 @@
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     
+  
             
+                      
+                                          
     <security-constraint>
         <display-name>ServicesForAll</display-name>
         <web-resource-collection>  
@@ -37,8 +40,6 @@
         </web-resource-collection>
     </security-constraint>
 
-   
-    
     
     
     <security-constraint>
@@ -51,19 +52,20 @@
         <web-resource-collection>
             <web-resource-name>Student Services</web-resource-name>
             <description/>
-            <url-pattern>/webapi/students/*</url-pattern>
-            <url-pattern>/webapi/students/documentos/*</url-pattern>
-            <url-pattern>/webapi/students/propostas/*</url-pattern>
-            <url-pattern>/webapi/students/proposta/*/*</url-pattern>
-            <url-pattern>/webapi/students/addDocumento/*</url-pattern>
-            <url-pattern>/webapi/students/deleteDocumento/*/*</url-pattern>
-            <!--<url-pattern>/webapi/propostas</url-pattern>-->
-            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
-            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/students/*</url-pattern>            
             <url-pattern>/webapi/propostas/documents/*</url-pattern>
-            <url-pattern>/webapi/propostas/addDocument/*</url-pattern>
+            <!--Rotas em baixo mal defenidas-->
+            <!--<url-pattern>/webapi/propostas/addDocument/*</url-pattern>
             <url-pattern>/webapi/propostas/atualizarDocument/*/*</url-pattern>
-            <url-pattern>/webapi/propostas/deleteDocument/*/*</url-pattern>
+            <url-pattern>/webapi/propostas/deleteDocument/*/*</url-pattern>-->
+            <!--Possivel Solução
+                <url-pattern>/webapi/propostas/addDocument/*</url-pattern>
+                    <http-method>GET</http-method>
+                    <http-method>POST</http-method>
+                    <http-method>PUT</http-method>
+                    <http-method>DELETE</http-method>
+               
+            -->
         </web-resource-collection>
         <auth-constraint>
             <description/>
@@ -137,6 +139,8 @@
             <web-resource-name>Admin Services</web-resource-name>
             <description/>
             <url-pattern>/webapi/teachers/*</url-pattern>
+            <url-pattern>/webapi/propostas/*</url-pattern>
+            <url-pattern>/webapi/proponenete/*</url-pattern>            
         </web-resource-collection>
         <auth-constraint>
             <description/>

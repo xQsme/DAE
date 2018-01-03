@@ -174,11 +174,14 @@ public class AdministratorManager implements Serializable {
     
     public List<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
+            System.out.println("1");
             return client.target(URILookup.getBaseAPI())
-                    .path("/proponenete/"+currentProposta.getCode())
+                    .path("/proponenete/proposta/"+currentProposta.getCode())
                     .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<ProponenteDTO>>() {});           
+                    .get(new GenericType<List<ProponenteDTO>>() {});
+           
         } catch (Exception e) {
+             System.out.println("2");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -236,7 +239,7 @@ public class AdministratorManager implements Serializable {
         }
     }
 
-    //Not yet Rest
+    
     public Collection<PropostaDTO> getAllPropostas() {
         List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
         try {

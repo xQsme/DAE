@@ -12,7 +12,7 @@
             Validate ${administratorManager.currentProposta.titulo}
         </ui:define>
         <ui:define name="main">
-            <c:if test="#{administratorManager.currentProposta.intEstado==0 and
+            <c:if test="#{administratorManager.currentProposta.estado==0 and
                    not empty administratorManager.currentPropostaProponentes}">
                 <h:form>                       
                 <b:labeledContainer  id="titulo"
@@ -110,7 +110,7 @@
                 <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" não tem proponentes!</p>
             </c:if>
             
-            <c:if test="#{administratorManager.currentProposta.intEstado!=0}">
+            <c:if test="#{administratorManager.currentProposta.estado!=0}">
                 <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi validada!</p>
             </c:if>
             <h:link value="Return" outcome="view"/>

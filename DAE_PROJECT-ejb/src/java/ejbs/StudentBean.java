@@ -94,6 +94,9 @@ public class StudentBean extends Bean<Student> {
         }
     }
 
+    @GET
+    @RolesAllowed({"MembroCCP, Student"})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<StudentDTO> getAllStudents() {
         try {
             return getAll(StudentDTO.class);
