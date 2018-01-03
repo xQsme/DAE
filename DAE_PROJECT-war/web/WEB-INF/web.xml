@@ -87,7 +87,8 @@
             <web-resource-name>Teacher Services</web-resource-name>
             <description/>
             <url-pattern>/webapi/teachers/add/proposal/*</url-pattern>
-            <!--<url-pattern>/webapi/propostas</url-pattern>-->
+            <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/propostas/*</url-pattern>
             <url-pattern>/webapi/teachers/remove/proposal/*</url-pattern>
             <url-pattern>/webapi/teachers/*</url-pattern>
             <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
