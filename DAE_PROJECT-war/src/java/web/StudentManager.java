@@ -92,10 +92,10 @@ public class StudentManager implements Serializable {
     public List<PropostaDTO> getStudentPropostas(){
         try {
             return client.target(URILookup.getBaseAPI())
-                    .path("/students/propostas")
-                    .path(student.getUsername())
+                    .path("/students/propostas/"+student.getUsername())
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<PropostaDTO>>() {});
+            
         } catch (Exception e) {
             System.out.println("ERROR GETTING STUDENT PROPOSTAS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
@@ -151,11 +151,13 @@ public class StudentManager implements Serializable {
             }else if(currentProposta.getEstado()!=1){
                 throw new ProposalStateDoesNotAllowException();
             }
-            client.target(URILookup.getBaseAPI())
-                    .path("/students/propostas")
-                    .path(student.getUsername())
-                    .request(MediaType.APPLICATION_XML)
-                    .post(Entity.xml(currentProposta));
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students/proposta/"+student.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(currentProposta));
+            
+            System.out.println("Resposta: " +response.getStatus());
+            
         }
         catch (AlreadyAppliedToProposalException | NoDocumentsException | ProposalStateDoesNotAllowException | StudentCandidaturasFullException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -371,11 +373,13 @@ public class StudentManager implements Serializable {
     public void uploadStudentDocumento() {
         try {
             documento = new DocumentoDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType());
-            client.target(URILookup.getBaseAPI())
-                    .path("/students/addDocumento")
-                    .path(student.getUsername())
-                    .request(MediaType.APPLICATION_XML)
-                    .post(Entity.xml(documento));
+            
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students/documento/"+student.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(documento));
+                   
+            System.out.println("Resposta: " +response.getStatus());         
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -383,12 +387,11 @@ public class StudentManager implements Serializable {
     
     public String removerStudentDocumento(){
         try{
-            client.target(URILookup.getBaseAPI())
-                    .path("/students/deleteDocumento")
-                    .path(student.getUsername())
-                    .path(currentDocumento.getId()+"")
-                    .request(MediaType.APPLICATION_XML)
-                    .delete();
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students/documento/"+currentDocumento.getId())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.delete();
+            
             File f = new File(currentDocumento.getFilepath());
             f.delete();
         } catch (Exception e) {

@@ -24,6 +24,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.naming.spi.DirStateFactory.Result;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -50,7 +51,7 @@ public class StudentBean extends Bean<Student> {
     private EntityManager em;
  
     @POST
-    @RolesAllowed({"MembroCCP", "Student"})
+    @RolesAllowed("MembroCCP")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     public Response create(StudentDTO student) throws EntityAlreadyExistsException {
@@ -135,38 +136,13 @@ public class StudentBean extends Bean<Student> {
         return em.createNamedQuery("getAllStudents").getResultList();
     }
     
-    public void addCandidatura(@PathParam("username") String username, int propCode) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
-        try {
-            Proposta proposta = em.find(Proposta.class, propCode);
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("There is no proposal with that code.");
-            }
-            Student student = em.find(Student.class, username);
-            if (student == null) {
-                throw new EntityDoesNotExistsException("There is no student with that username.");
-            }
-            if (student.getCandidaturas().size() > 4) {
-                throw new StudentCandidaturasFullException ("O aluno so se pode candidatar a 5 candidaturas no máximo!");
-            }
-            for(Proposta p : student.getCandidaturas()){
-                if (p.getCode() == propCode) {
-                    throw new UserAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
-                }
-            }
-            proposta.addStudent(student);
-            student.addCandidatura(proposta);
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
+   
     
     @POST
-    @RolesAllowed({"Student"})
-    @Path("propostas/{username}")
+    @RolesAllowed("Student")
+    @Path("proposta/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void addCandidatura(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
+    public Response addCandidatura(@PathParam("username") String username, PropostaDTO prop) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
         try {
             Proposta proposta = em.find(Proposta.class, prop.getCode());
             if (proposta == null) {
@@ -186,10 +162,11 @@ public class StudentBean extends Bean<Student> {
             }
             proposta.addStudent(student);
             student.addCandidatura(proposta);
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
     }
 
@@ -232,17 +209,18 @@ public class StudentBean extends Bean<Student> {
     }
 
 
-    @GET
-    @RolesAllowed({"MembroCCP, Student"})
+
+    @GET   //got error 500, because i was also allowing memberCCP(not sure if was because he doesnt have permitions yet)
+    @RolesAllowed("Student")    // avoid do @RolesAllowed({a,b}) for now
+    @Path("propostas/{username}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/propostas/{username}")
     public Collection<PropostaDTO> getPropostas(@PathParam("username") String username) {
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
             return toDTOs(query.getResultList(), PropostaDTO.class);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
-        } 
+        }
     }
 
     @GET
@@ -315,9 +293,9 @@ public class StudentBean extends Bean<Student> {
 
     @POST
     @RolesAllowed({"Student"})
-    @Path("addDocumento/{username}")
+    @Path("documento/{username}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void addDocumento(@PathParam("username") String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
+    public Response addDocumento(@PathParam("username") String username, DocumentoDTO doc) throws EntityDoesNotExistsException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
@@ -326,28 +304,30 @@ public class StudentBean extends Bean<Student> {
             Documento documento = new Documento(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), student);
             em.persist(documento);
             student.addDocumento(documento);
-
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
     }
 
     @DELETE
     @RolesAllowed({"Student"})
-    @Path("deleteDocumento/{username}/{id}")
-    public void removerDocumento(@PathParam("username") String username, @PathParam("id") int id) throws EntityDoesNotExistsException {
-        Student student = em.find(Student.class, username);
-        if(student == null){
-            throw new EntityDoesNotExistsException("O estudante com username \"" + username + "\" nao existe.");
+    @Path("documento/{id}")
+    public Response removerDocumento(@PathParam("id") int id) throws EntityDoesNotExistsException {
+        try{
+            Documento documento = em.find(Documento.class, id);
+            if(documento == null){
+                throw new EntityDoesNotExistsException("O documento com id " + id + " nao existe.");
+            }
+
+            documento.getStudent().removeDocumento(documento);
+            em.remove(documento);
+            return Response.ok().build();
+        }catch(Exception e){
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
-        Documento documento = em.find(Documento.class, id);
-        if(documento == null){
-            throw new EntityDoesNotExistsException("O documento com id " + id + " nao existe.");
-        }
-        student.removeDocumento(documento);
-        em.remove(documento);
     }
     
     
@@ -383,4 +363,33 @@ public class StudentBean extends Bean<Student> {
             throw new EJBException(e.getMessage());
         }
     }
+     
+     public void addCandidatura(@PathParam("username") String username, int propCode) throws EntityDoesNotExistsException, StudentCandidaturasFullException, UserAlreadyHasAppliedException{
+        try {
+            Proposta proposta = em.find(Proposta.class, propCode);
+            if (proposta == null) {
+                throw new EntityDoesNotExistsException("There is no proposal with that code.");
+            }
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with that username.");
+            }
+            if (student.getCandidaturas().size() > 4) {
+                throw new StudentCandidaturasFullException ("O aluno so se pode candidatar a 5 candidaturas no máximo!");
+            }
+            for(Proposta p : student.getCandidaturas()){
+                if (p.getCode() == propCode) {
+                    throw new UserAlreadyHasAppliedException("O aluno ja se candidatou a essa Proposta!");
+                }
+            }
+            proposta.addStudent(student);
+            student.addCandidatura(proposta);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+     
+     
 }
