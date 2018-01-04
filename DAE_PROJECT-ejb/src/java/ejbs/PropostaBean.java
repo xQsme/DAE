@@ -56,7 +56,8 @@ public class PropostaBean extends Bean<Proposta> {
     @RolesAllowed({"Instituicao", "Teacher"})
     @Path("")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    @Produces({MediaType.APPLICATION_XML})
+    public PropostaDTO create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
         
         try { 
             Proposta proposta = new Proposta(
@@ -69,8 +70,11 @@ public class PropostaBean extends Bean<Proposta> {
                     prop.getApoios());
             em.persist(proposta);
             
-            return Response.status(201).entity(new GenericEntity<Proposta>(proposta) {}).
-                    type(MediaType.APPLICATION_XML_TYPE).build();
+            PropostaDTO p = toDTO(proposta, PropostaDTO.class);
+            
+            return p;
+            //return Response.status(201).entity(new GenericEntity<PropostaDTO>(p) {}).
+              //      type(MediaType.APPLICATION_XML_TYPE).build();
         
         }catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            

@@ -263,18 +263,10 @@ public class TeacherManager implements Serializable {
                 .request(MediaType.APPLICATION_XML)
                 .post(Entity.xml(newProposta));
             
-            Proposta p = new Proposta();
-            if (response.hasEntity()) {
-                logger.info("has entity");
-                p = response.readEntity(Proposta.class);
-                logger.info(response.readEntity(Proposta.class) +  "");
-            }
-            logger.info("has no entity");
-            /*Object o = 
-            logger.info(o.toString());
+            System.out.println("Response body is " + response.readEntity(String.class));
+            System.out.println("read");
+            PropostaDTO p = response.readEntity(PropostaDTO.class);
             
-            
-            */
             newProposta.setCode(p.getCode());
             client.target(URILookup.getBaseAPI())
                 .path("/teachers/propostas")
@@ -283,7 +275,8 @@ public class TeacherManager implements Serializable {
                 .post(Entity.xml(newProposta));
             newProposta.reset();
         }catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            logger.warning(e.toString());
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), component, logger);
             return null;
         }
         return "/teacher/propostas/mine.xhtml?faces-redirect=true";
