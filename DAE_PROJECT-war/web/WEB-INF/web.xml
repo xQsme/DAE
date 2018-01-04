@@ -33,16 +33,23 @@
     <security-constraint>
         <display-name>ServicesForAll</display-name>
         <web-resource-collection>  
-            <web-resource-name>Services For All</web-resource-name>
+            <web-resource-name>Propostas</web-resource-name>
             <url-pattern>/webapi/propostas</url-pattern>
                 <http-method>GET</http-method>
-                <!-- <http-method>POST</http-method>-->     
+                <http-method>POST</http-method>
+                <http-method>PUT</http-method>
+                <http-method>DELETE</http-method>  
+        </web-resource-collection>
+        <web-resource-collection>  
+            <web-resource-name>Students</web-resource-name>
+            <url-pattern>/webapi/students/</url-pattern>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>   
         </web-resource-collection>
     </security-constraint>
 
     
-    
-    <security-constraint>
+   <security-constraint>
         <display-name>StudentConstraint</display-name>
         <web-resource-collection>
             <web-resource-name>Student Pages</web-resource-name>
@@ -52,7 +59,7 @@
         <web-resource-collection>
             <web-resource-name>Student Services</web-resource-name>
             <description/>
-            <url-pattern>/webapi/students/*</url-pattern>            
+            <!--<url-pattern>/webapi/students/*</url-pattern>-->
             <url-pattern>/webapi/propostas/documents/*</url-pattern>
             <!--Rotas em baixo mal defenidas-->
             <!--<url-pattern>/webapi/propostas/addDocument/*</url-pattern>
@@ -63,10 +70,16 @@
                     <http-method>GET</http-method>
                     <http-method>POST</http-method>
                     <http-method>PUT</http-method>
-                    <http-method>DELETE</http-method>
-               
-            -->
+                    <http-method>DELETE</http-method>-->
         </web-resource-collection>
+            <!--<web-resource-collection>  
+                <web-resource-name>Propostas</web-resource-name>
+                <url-pattern>/webapi/propostas</url-pattern>
+                    <http-method>GET</http-method>
+                    <http-method>POST</http-method>
+                    <http-method>PUT</http-method>
+                    <http-method>DELETE</http-method>      
+            </web-resource-collection>-->
         <auth-constraint>
             <description/>
             <role-name>Student</role-name>
@@ -139,7 +152,7 @@
             <web-resource-name>Admin Services</web-resource-name>
             <description/>
             <url-pattern>/webapi/teachers/*</url-pattern>
-            <url-pattern>/webapi/propostas/*</url-pattern>
+            <!--<url-pattern>/webapi/propostas/*</url-pattern>-->        
             <url-pattern>/webapi/proponenete/*</url-pattern>            
         </web-resource-collection>
         <auth-constraint>
@@ -147,8 +160,7 @@
             <role-name>MembroCCP</role-name>
         </auth-constraint>
     </security-constraint>
-    
-   
+
 
 
     <login-config>

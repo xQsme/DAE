@@ -46,6 +46,22 @@ public class PropostaDTO  implements Serializable{
             default: return "";
         }
     }
+    
+    public void setStringEstado(String estado){
+        switch(estado){
+            case "Não Aceite":  this.estado=-1;
+                                break;
+            case "Pendente":    this.estado=0;
+                                break;
+            case "Aceite":      this.estado=1;
+                                break;
+            case "Prova":       this.estado=2;
+                                break;
+            case "Finalizado":  this.estado=3;
+                                break;
+            default: this.estado=Integer.MAX_VALUE;
+        }
+    }
 
     public void setEstado(int estado) {
         this.estado = estado;

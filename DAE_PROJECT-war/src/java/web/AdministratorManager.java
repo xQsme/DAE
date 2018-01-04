@@ -45,8 +45,11 @@ import javax.faces.component.UIComponent;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import util.URILookup;
 
@@ -552,14 +555,19 @@ public class AdministratorManager implements Serializable {
         return "/admin/provas/view.xhtml?faces-redirect=true";
     }
     
+    
+    
     public String validateProposta() throws AddressException, Exception {
-        /*try {
-            propostaBean.addValidacao(
-                    currentProposta.getCode(),
-                    currentProposta.getIntEstado(),
-                    currentProposta.getObservacao());
+        try {
+            //propostas/{code}/validacao/{estado}/{observacao}
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas/"+currentProposta.getCode()+"/validacao")
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.put(Entity.xml(currentProposta));
+            System.out.println("Resposta: " +response.getStatus());
+          
             
-            if (currentProposta.getIntEstado() == 1 ){
+            if (currentProposta.getEstado() == 1 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -574,7 +582,7 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }*/
+        }
       
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }

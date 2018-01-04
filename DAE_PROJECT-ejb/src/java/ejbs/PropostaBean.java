@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.control.SortEvent;
+import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
@@ -40,6 +41,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -47,6 +49,7 @@ import javax.ws.rs.core.Response;
 @ManagedBean
 @ViewScoped
 @Path("/propostas")
+//@DeclareRoles({"MembroCCP", "Instituicao", "Teacher"})
 public class PropostaBean extends Bean<Proposta> {
 
     @POST
@@ -201,7 +204,6 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    
     public void addObjetivo(int propostaCode, String objetivo) throws EntityDoesNotExistsException{
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
@@ -275,9 +277,26 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    public void addValidacao(int propostaCode, Integer estado, String observacao) throws EntityDoesNotExistsException{
-        addEstado(propostaCode, estado);
-        addObservacao(propostaCode, observacao);
+    
+    /*@PUT
+    @PermitAll
+    @Path("/{code}/validacao")
+    //@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)*/
+    
+    @PUT
+    @Path("/{code}/validacao")
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public Response addValidacao(@PathParam("code") int propostaCode, PropostaDTO proposta) throws EntityDoesNotExistsException{   
+        if(proposta==null){
+            return Response.status(400).entity("Please provide the employee name !!").build();
+        }
+        addEstado(propostaCode, proposta.getEstado());
+        addObservacao(propostaCode, proposta.getObservacao());
+        
+        return Response.ok().build();
     }
     
     public static Collection<Integer> getAllPropostaEstados() {
