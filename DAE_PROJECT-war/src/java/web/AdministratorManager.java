@@ -154,20 +154,23 @@ public class AdministratorManager implements Serializable {
     
     public Collection<InstituicaoDTO> getAllInstitutions() {
         try {
-            return instituicaoBean.getAllInstitutions();
+            return client.target(URILookup.getBaseAPI())
+                    .path("/instituicoes")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<InstituicaoDTO>>() {});        
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
     }
     
-    public List<PropostaDTO> getAllTeachers() {
+    public List<TeacherDTO> getAllTeachers() {
         try {
-            ///teachers/all
+            ///teachers
             return client.target(URILookup.getBaseAPI())
-                    .path("/teachers/all")
+                    .path("/teachers")
                     .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<PropostaDTO>>() {});
+                    .get(new GenericType<List<TeacherDTO>>() {});
             //return teacherBean.getAllTeachers();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -232,10 +235,13 @@ public class AdministratorManager implements Serializable {
         return null;
     }
     
-    //Not yet Rest
+    
     public Collection<StudentDTO> getAllStudents() {
         try {
-            return studentBean.getAllStudents();
+            return client.target(URILookup.getBaseAPI())
+                                .path("/students")
+                                .request(MediaType.APPLICATION_XML)
+                                .get(new GenericType<List<StudentDTO>>() {});  
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -365,6 +371,11 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<String> getAllTiposTrabalho() {
+        
+        /*Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                                                .path("/propostas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {})*/
         /*try {
             return PropostaBean.getAllTiposTrabalhos();
         } catch (Exception e) {
@@ -385,19 +396,24 @@ public class AdministratorManager implements Serializable {
     
     public void removeStudent(){ 
         try {
-            studentBean.remove(currentStudent.getUsername());
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students/"+currentStudent.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.delete();
+            System.out.println("Resposta: " +response.getStatus());
+    
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
     
     public void removeTeacher(){ 
-        try {
-            teacherBean.remove(currentTeacher.getUsername());
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+        try {          
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/teachers/"+currentTeacher.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.delete();
+            System.out.println("Resposta: " +response.getStatus());        
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -405,9 +421,11 @@ public class AdministratorManager implements Serializable {
     
     public void removeInstituicao(){ 
         try {
-            instituicaoBean.remove(currentInstituicao.getUsername());
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/instituicoes/"+currentInstituicao.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.delete();
+            System.out.println("Resposta: " +response.getStatus());
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -444,13 +462,12 @@ public class AdministratorManager implements Serializable {
     
     public String updateStudent() {
         try {
-            studentBean.update(currentStudent.getUsername(),
-                    currentStudent.getName(),
-                    currentStudent.getEmail());
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students/"+currentStudent.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.put(Entity.xml(currentStudent));
+            System.out.println("Resposta: " +response.getStatus());
 
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -459,33 +476,29 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateTeacher() {
-        /*
+      
         try {
-            teacherBean.update(currentTeacher.getUsername(),
-                    currentTeacher.getName(),
-                    currentTeacher.getEmail(),
-                    currentTeacher.getOffice());
-
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/teachers/"+currentTeacher.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.put(Entity.xml(currentTeacher));
+            System.out.println("Resposta: " +response.getStatus());
+        
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }*/
+        }
         return "/admin/teachers/view.xhtml?faces-redirect=true";
     }
     
     public String updateInstituicao() {
-        try {
-            instituicaoBean.update(currentInstituicao.getUsername(),
-                    currentInstituicao.getName(),
-                    currentInstituicao.getEmail(),
-                    currentInstituicao.getTipo());
-
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+        try {  
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/instituicoes/"+currentInstituicao.getUsername())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.put(Entity.xml(currentInstituicao));
+            System.out.println("Resposta: " +response.getStatus());
+            
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -649,18 +662,15 @@ public class AdministratorManager implements Serializable {
         }
     }*/
     
-    public String createStudent() {
-        
+    public String createStudent() {    
         try {
-            studentBean.create(
-                    newStudent.getUsername(),
-                    newStudent.getPassword(),
-                    newStudent.getName(),
-                    newStudent.getEmail());
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/students")
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(newStudent));
+            System.out.println("Resposta: " +response.getStatus());
+        
             newStudent.reset();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-            return null;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
@@ -669,18 +679,14 @@ public class AdministratorManager implements Serializable {
     }
     
     public String createTeacher() {
-        
         try {
-            teacherBean.create(
-                    newTeacher.getUsername(),
-                    newTeacher.getPassword(),
-                    newTeacher.getName(),
-                    newTeacher.getEmail(),
-                    newTeacher.getOffice());
-            newTeacher.reset();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-            return null;
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/teachers")
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(newTeacher));
+            System.out.println("Resposta: " +response.getStatus());
+        
+            newStudent.reset();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
@@ -691,16 +697,14 @@ public class AdministratorManager implements Serializable {
     public String createInstituicao() {
             
         try {
-            instituicaoBean.create(
-                    newInstituicao.getUsername(),
-                    newInstituicao.getPassword(),
-                    newInstituicao.getName(),
-                    newInstituicao.getEmail(),
-                    newInstituicao.getTipo());
-            newTeacher.reset();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-            return null;
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/instituicoes")
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(newInstituicao));
+            System.out.println("Resposta: " +response.getStatus());
+            
+          
+            newInstituicao.reset();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;

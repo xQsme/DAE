@@ -282,17 +282,10 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     
-    /*@PUT
-    @PermitAll
-    @Path("/{code}/validacao")
-    //@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)*/
-    
+
     @PUT
     @Path("/{code}/validacao")
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
     public Response addValidacao(@PathParam("code") int propostaCode, PropostaDTO proposta) throws EntityDoesNotExistsException{   
         if(proposta==null){
             return Response.status(400).entity("Please provide the employee name !!").build();
@@ -431,9 +424,9 @@ public class PropostaBean extends Bean<Proposta> {
     
     @POST
     @RolesAllowed({"Student"})
-    @Path("addDocument/{code}")
+    @Path("documento/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
+    public Response addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
@@ -443,27 +436,27 @@ public class PropostaBean extends Bean<Proposta> {
             Document document = new Document(doc.getFilepath(), doc.getDesiredName(), doc.getMimeType(), proposta, false);
             em.persist(document);
             proposta.addDocument(document);
-
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide a valid document !!").build();
         }
     }
 
     @PUT
     @RolesAllowed({"Student"})
-    @Path("atualizarDocument/{code}/{id}")
+    @Path("documento/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void atualizarDocumento(@PathParam("code") int code, @PathParam("id") int id, DocumentDTO doc) throws EntityDoesNotExistsException {
+    public Response atualizarDocumento(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
             }
-            Document document = em.find(Document.class, id);
+            Document document = em.find(Document.class, doc.getId());
             if(document == null){
-                throw new EntityDoesNotExistsException("Não existe documento com o id " + id + ".");
+                throw new EntityDoesNotExistsException("Não existe documento com o id " + doc.getId() + ".");
             }
             if(!document.getFilepath().equals(doc.getFilepath())){
                 File f = new File(document.getFilepath());
@@ -473,28 +466,24 @@ public class PropostaBean extends Bean<Proposta> {
             document.setDesiredName(doc.getDesiredName());
             document.setMimeType(doc.getMimeType());
             em.persist(document);
-
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Invalid document !!").build();
         }
     }
 
     @DELETE
     @RolesAllowed({"Student"})
-    @Path("deleteDocument/{code}/{id}")
-    public void removerDocumento(@PathParam("code") int code, @PathParam("id") int id) throws EntityDoesNotExistsException {
+    @Path("documento/{id}")
+    public void removerDocumento(@PathParam("id") int id) throws EntityDoesNotExistsException {
         try {
-            Proposta proposta = em.find(Proposta.class, code);
-            if (proposta == null) {
-                throw new EntityDoesNotExistsException("Não existe proposta com o codigo " + code + ".");
-            }
             Document document = em.find(Document.class, id);
             if (document == null) {
                 throw new EntityDoesNotExistsException("O documento com id " + id + " não existe.");
             }
-            proposta.removeDocument(document);
+            document.getProposta().removeDocument(document);//Epic!, not safe but better this way.
             em.remove(document);
         } catch (EntityDoesNotExistsException e) {
             throw e;

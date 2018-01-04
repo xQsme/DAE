@@ -19,6 +19,8 @@ import exceptions.Utils;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -30,52 +32,75 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Stateless
 @Path("/students")
+@DeclareRoles({"MembroCCP", "Instituicao", "Teacher", "Student"})
 public class StudentBean extends Bean<Student> {
     
     private static final Logger logger = Logger.getLogger("ejb.StudentBean");
 
     @PersistenceContext
     private EntityManager em;
-
-    public void create(String username, String password, String name, String email) throws EntityAlreadyExistsException {
-        try {
-            if (em.find(User.class, username) != null) {
+ 
+    @POST
+    @RolesAllowed({"MembroCCP", "Student"})
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public Response create(StudentDTO student) throws EntityAlreadyExistsException {
+        try {     
+            if (em.find(User.class, student.getUsername()) != null) {
                 throw new EntityAlreadyExistsException("A user with that username already exists.");
             }
-            em.persist(new Student(username, password, name, email));
+            em.persist(new Student(student.getUsername(), student.getPassword(), student.getName(), student.getEmail()));
+            return Response.ok().build();
         } catch (EntityAlreadyExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
     }
-
-    public void update(String username, String name, String email) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    
+    
+    
+    @PUT
+    @Path("/{username}")
+    @RolesAllowed({"MembroCCP","Student"})
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public Response update(@PathParam("username") String username, StudentDTO studentDTO) throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
                 throw new EntityDoesNotExistsException("There is no student with that username.");
             }
-            student.setName(name);
-            student.setEmail(email);
+            student.setName(studentDTO.getName());
+            student.setEmail(studentDTO.getEmail());
             em.merge(student);
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
     }
-   
-    public void remove(String username) throws EntityDoesNotExistsException {
+    
+    
+    
+    @DELETE
+    @Path("/{username}")
+    @RolesAllowed({"MembroCCP"})
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public Response remove(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             Student student = em.find(Student.class, username);
             if (student == null) {
@@ -86,17 +111,17 @@ public class StudentBean extends Bean<Student> {
                 em.persist(p);
             }
             em.remove(student);
-
+            return Response.ok().build();
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            return Response.status(400).entity("Please provide the employee name !!").build();
         }
     }
-
+    
     @GET
-    @RolesAllowed({"MembroCCP, Student"})
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @RolesAllowed({"MembroCCP"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<StudentDTO> getAllStudents() {
         try {
             return getAll(StudentDTO.class);
@@ -207,9 +232,10 @@ public class StudentBean extends Bean<Student> {
     }
 
 
-    @RolesAllowed({"Admin, Student"})
+    @GET
+    @RolesAllowed({"MembroCCP, Student"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("propostas/{username}")
+    @Path("/propostas/{username}")
     public Collection<PropostaDTO> getPropostas(@PathParam("username") String username) {
         try {
             Query query = em.createNativeQuery("SELECT * FROM DAE.PROPOSTA p WHERE p.code in (Select proposta_code FROM DAE.PROPOSTA_STUDENT where proponente_username = '" + username + "' )", Proposta.class);
@@ -276,8 +302,8 @@ public class StudentBean extends Bean<Student> {
 
     @GET
     @RolesAllowed({"Student", "Instituicao", "Teacher"})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("documentos/{username}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<DocumentoDTO> getDocumentos(@PathParam("username") String username) throws EntityDoesNotExistsException {
         try {
             List<Documento> docs = em.createNamedQuery("getDocumentosOfUser", Documento.class).setParameter("username", username).getResultList();
@@ -322,5 +348,39 @@ public class StudentBean extends Bean<Student> {
         }
         student.removeDocumento(documento);
         em.remove(documento);
+    }
+    
+    
+    //NOT REST//////////////////////////////////////////////////////////////////////////////////////
+    
+    public void create(String username, String password, String name, String email) throws EntityAlreadyExistsException {
+        try {
+            if (em.find(User.class, username) != null) {
+                throw new EntityAlreadyExistsException("A user with that username already exists.");
+            }
+            em.persist(new Student(username, password, name, email));
+        } catch (EntityAlreadyExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+     public void update(String username, String name, String email) throws EntityDoesNotExistsException, MyConstraintViolationException {
+        try {
+            Student student = em.find(Student.class, username);
+            if (student == null) {
+                throw new EntityDoesNotExistsException("There is no student with that username.");
+            }
+            student.setName(name);
+            student.setEmail(email);
+            em.merge(student);
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
 }

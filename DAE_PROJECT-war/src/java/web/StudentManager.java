@@ -28,8 +28,10 @@ import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import util.URILookup;
 
@@ -303,8 +305,7 @@ public class StudentManager implements Serializable {
     public List<DocumentoDTO> getStudentDocumentos(){
         try{
             return client.target(URILookup.getBaseAPI())
-                .path("/students/documentos")
-                .path(student.getUsername())
+                .path("/students/documentos/"+student.getUsername())
                 .request(MediaType.APPLICATION_XML)
                 .get(new GenericType<List<DocumentoDTO>>() {});
         } catch (Exception e) {
@@ -312,16 +313,20 @@ public class StudentManager implements Serializable {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
             return new LinkedList<>();
         }
+        //return null;
     }
     
     public void uploadDocument() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
-            client.target(URILookup.getBaseAPI())
-                    .path("/propostas/addDocument")
-                    .path(currentProposta.getCode()+"")
-                    .request(MediaType.APPLICATION_XML)
-                    .post(Entity.xml(document));
+           
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas/documento/"+currentProposta.getCode())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(document));
+                   
+            System.out.println("Resposta: " +response.getStatus());   
+            
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -330,12 +335,14 @@ public class StudentManager implements Serializable {
     public String atualizarDocument() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
-            client.target(URILookup.getBaseAPI())
-                    .path("/propostas/atualizarDocument")
-                    .path(currentProposta.getCode()+"")
-                    .path(currentDocumento.getId()+"")
-                    .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document));
+            
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas/documento/"+currentProposta.getCode())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.put(Entity.xml(document));
+            
+            System.out.println("Resposta: " +response.getStatus());     
+            
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -346,12 +353,13 @@ public class StudentManager implements Serializable {
     
     public String removerDocument(){
         try{
-            client.target(URILookup.getBaseAPI())
-                    .path("/propostas/deleteDocument")
-                    .path(currentProposta.getCode()+"")
-                    .path(currentDocument.getId()+"")
-                    .request(MediaType.APPLICATION_XML)
-                    .delete();
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas/documento/"+currentDocument.getId())
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.delete();
+            
+            System.out.println("Resposta: " +response.getStatus());     
+            
             File f = new File(currentDocument.getFilepath());
             f.delete();
         } catch (Exception e) {
