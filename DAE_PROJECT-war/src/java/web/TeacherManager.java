@@ -35,6 +35,7 @@ import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -257,23 +258,13 @@ public class TeacherManager implements Serializable {
     
     public String createProposta() {
         try {
-            logger.info(newProposta.getCode() + "");
+            
             Response response = client.target(URILookup.getBaseAPI())
                 .path("/propostas")
-                .request(MediaType.APPLICATION_XML)
-                .post(Entity.xml(newProposta));
-            
-            System.out.println("Response body is " + response.readEntity(String.class));
-            System.out.println("read");
-            PropostaDTO p = response.readEntity(PropostaDTO.class);
-            
-            newProposta.setCode(p.getCode());
-            client.target(URILookup.getBaseAPI())
-                .path("/teachers/propostas")
                 .path(teacher.getUsername())
                 .request(MediaType.APPLICATION_XML)
                 .post(Entity.xml(newProposta));
-            newProposta.reset();
+            
         }catch (Exception e) {
             logger.warning(e.toString());
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), component, logger);

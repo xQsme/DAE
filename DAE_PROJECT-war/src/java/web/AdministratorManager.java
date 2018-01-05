@@ -7,6 +7,8 @@ package web;
 
 import exceptions.CannotFinalizeException;
 import auxiliar.Estado;
+import auxiliar.TipoDeInstituicao;
+import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
 import dtos.InstituicaoDTO;
 import dtos.MembroCCPDTO;
@@ -182,7 +184,7 @@ public class AdministratorManager implements Serializable {
         try {
             System.out.println("1");
             return client.target(URILookup.getBaseAPI())
-                    .path("/proponenete/proposta/"+currentProposta.getCode())
+                    .path("/proponente/proposta/"+currentProposta.getCode())
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<ProponenteDTO>>() {});
            
@@ -192,44 +194,43 @@ public class AdministratorManager implements Serializable {
             return null;
         }
     }
-    
-    
-    public Collection<StudentDTO> getCurrentPropostaCandidatos(){
-        try {
+      
+        public List<StudentDTO> getCurrentPropostaCandidatos(){
+        try{
             return client.target(URILookup.getBaseAPI())
-                    .path("/candidaturas/"+currentProposta.getCode())
-                    .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<StudentDTO>>() {});
+                .path("/propostas/students")
+                .path(currentProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<StudentDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            System.out.println("ERROR GETTING CANDIDATOS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
-    //Not yet Rest
     public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
-        LinkedList<DocumentDTO> documents = new LinkedList<>();
-        try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
-                if(!d.isAta()){
-                    documents.add(d);
-                }
-            }
-        } catch (EntityDoesNotExistsException e) {
+        try{
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/documents")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<DocumentDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPOSTA DOCUMENTS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return new LinkedList<>();
         }
-        return documents;
     }
     
-    //Not yet Rest
     public DocumentDTO getCurrentPropostaAta(){
         try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+            for(DocumentDTO d : getCurrentPropostaDocumentos()){
                 if(d.isAta()){
                     return d;
                 }
             }
-        } catch (EntityDoesNotExistsException e) {
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
@@ -270,17 +271,22 @@ public class AdministratorManager implements Serializable {
     
     public Collection<PropostaDTO> getAllAccepted() {
         try {
-            return propostaBean.getAllAccepted();
+            return client.target(URILookup.getBaseAPI())
+                                                .path("/propostas/accepted")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {}); 
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
     }
     
-    //Not yet Rest
     public Collection<PropostaDTO> getAllProvas() {
        try{
-           return propostaBean.getAllProvas();
+           return client.target(URILookup.getBaseAPI())
+                                                .path("/propostas/provas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {}); 
        } catch (Exception e) {
            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
            return null;
@@ -290,7 +296,10 @@ public class AdministratorManager implements Serializable {
     //Not yet Rest
     public Collection<PropostaDTO> getAllFinalizado() {
         try{
-            return propostaBean.getAllFinalizado();
+            return client.target(URILookup.getBaseAPI())
+                                                .path("/propostas/finalizados")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {}); 
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -362,27 +371,22 @@ public class AdministratorManager implements Serializable {
     }
     
     public Collection<String> getAllTiposInstituicao() {
-        try {
-            return InstituicaoBean.getAllTiposInstituicao();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
+        LinkedList<String> tipos = new LinkedList<>();
+        tipos.add(TipoDeInstituicao.Associação.toString());
+        tipos.add(TipoDeInstituicao.Empresa.toString());
+        tipos.add(TipoDeInstituicao.Pública.toString());
+        return tipos;
     }
     
     public Collection<String> getAllTiposTrabalho() {
         
-        /*Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
-                                                .path("/propostas")
-                                                .request(MediaType.APPLICATION_XML)
-                                                .get(new GenericType<List<PropostaDTO>>() {})*/
-        /*try {
-            return PropostaBean.getAllTiposTrabalhos();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }*/
-        return null;
+        LinkedList<String> trabalhos = new LinkedList<>();
+        
+        trabalhos.add(TipoDeTrabalho.Dissertação.toString());
+        trabalhos.add(TipoDeTrabalho.Estágio.toString());
+        trabalhos.add(TipoDeTrabalho.Projeto.toString());
+        
+        return trabalhos;
     }
     
     public Collection<String> getAllPropostaEstados() {
@@ -432,8 +436,8 @@ public class AdministratorManager implements Serializable {
     }
     
     public void removeProposta(){ 
-        /*try {        
-            if (currentProposta.getIntEstado() > 0 ){
+        try {        
+            if (currentProposta.getEstado() > 0 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -443,21 +447,29 @@ public class AdministratorManager implements Serializable {
                     recipients.add(proponente.getEmail());
                 } 
                 
-                if(currentProposta.getIntEstado()==2){
-                    for(Student candidatos: currentProposta.getCandidatos()) {
+                if(currentProposta.getEstado()==2){
+                    for(StudentDTO candidatos: (client.target(URILookup.getBaseAPI())
+                                                .path("/propostas/students")
+                                                .path(Integer.toString(currentProposta.getCode()))
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<StudentDTO>>() {}))){
                         recipients.add(candidatos.getEmail());
                     }
                 }
                 
-                if(currentProposta.getIntEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
-                if(currentProposta.getIntEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
             }
-            propostaBean.remove(currentProposta.getCode());
+            
+            client.target(URILookup.getBaseAPI()).path("/propostas")
+                                                .path(Integer.toString(currentProposta.getCode()))
+                                                .request(MediaType.APPLICATION_XML)
+                                                .delete();
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }*/
+        }
     }
     
     public String updateStudent() {
@@ -507,52 +519,44 @@ public class AdministratorManager implements Serializable {
     }
     
     public String updateProposta() {
-        /*try {    
-            propostaBean.update(
-                    currentProposta.getCode(),
-                    currentProposta.getTitulo(),
-                    currentProposta.getTipoDeTrabalho(),
-                    currentProposta.getResumo(),
-                    currentProposta.getPlanoDeTrabalhos(),
-                    currentProposta.getLocal(),
-                    currentProposta.getOrcamento(),
-                    currentProposta.getApoios());
-           
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
+        try {    
+            client.target(URILookup.getBaseAPI())
+                    .path("/propostas")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.xml(currentProposta));
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }*/
+        }
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
     
     public String updateProva() {
-        /*try {
+        try {
             //Checks what changed
             List<String> alterations=propostaBean.getAlterations(currentProposta.getCode(), currentProposta.getTitulo(),               
                     currentProposta.getTipoDeTrabalho(), currentProposta.getResumo(),
                     currentProposta.getPlanoDeTrabalhos(),currentProposta.getLocal(),
                     currentProposta.getOrcamento(), currentProposta.getApoios());
             
-            propostaBean.update(
-                    currentProposta.getCode(),
-                    currentProposta.getTitulo(),
-                    currentProposta.getTipoDeTrabalho(),
-                    currentProposta.getResumo(),
-                    currentProposta.getPlanoDeTrabalhos(),
-                    currentProposta.getLocal(),
-                    currentProposta.getOrcamento(),
-                    currentProposta.getApoios());
+            client.target(URILookup.getBaseAPI())
+                .path("/propostas")
+                .path(currentProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .put(Entity.xml(currentProposta));
             
-            if (currentProposta.getIntEstado() == 2 ){
+            if (currentProposta.getEstado() == 2 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
                 } 
                
-                for(Student candidatos: currentProposta.getCandidatos()) {
+                for(StudentDTO candidatos:client.target(URILookup.getBaseAPI())
+                                        .path("/propostas/students")
+                                        .path(currentProposta.getCode()+"")
+                                        .request(MediaType.APPLICATION_XML)
+                                        .get(new GenericType<List<StudentDTO>>() {})){
                     recipients.add(candidatos.getEmail());
                 }
    
@@ -564,7 +568,7 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }*/
+        }
         return "/admin/provas/view.xhtml?faces-redirect=true";
     }
     
@@ -582,16 +586,17 @@ public class AdministratorManager implements Serializable {
             
             if (currentProposta.getEstado() == 1 ){
                 List<String> recipients= new LinkedList<String>();
-                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                for(ProponenteDTO proponente: client.target(URILookup.getBaseAPI())
+                                        .path("/propostas/proponentes")
+                                        .path(currentProposta.getCode()+"")
+                                        .request(MediaType.APPLICATION_XML)
+                                        .get(new GenericType<List<ProponenteDTO>>() {})){
                     recipients.add(proponente.getEmail());
                 } 
               
                 emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
             }
             
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -640,27 +645,6 @@ public class AdministratorManager implements Serializable {
     public void setComponent(UIComponent component) {
         this.component = component;
     }
-    
-    /* esta função nao esta a ser utilizada, esta antes a ser usada a classe usernamevalidator
-    public void validateUsername(FacesContext context, UIComponent toValidate, Object value) {
-        try {
-            //Your validation code goes here
-            String username = (String) value;
-            //If the validation fails
-            ArrayList<UserDTO> users = (ArrayList<UserDTO>) userBean.getAllUsers();
-            
-            for (UserDTO user : users) {
-                if (username.equalsIgnoreCase(user.getUsername())) {
-                    FacesMessage message = new FacesMessage("Error: invalid username.");
-                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
-                    context.addMessage(toValidate.getClientId(context), message);
-                    ((UIInput) toValidate).setValid(false);
-                }
-            }
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unkown error.", logger);
-        }
-    }*/
     
     public String createStudent() {    
         try {
@@ -712,29 +696,23 @@ public class AdministratorManager implements Serializable {
         return "/admin/instituicoes/view.xhtml?faces-redirect=true";
     }
     
+    
     public String createProposta() {
-        int code = propostaBean.getNextCode();
-        logger.info("" + code);
         try {
-            propostaBean.create(
-                    code,
-                    newProposta.getTitulo(),
-                    newProposta.getTipoDeTrabalho(), 
-                    newProposta.getResumo(),
-                    newProposta.getPlanoDeTrabalhos(), 
-                    newProposta.getLocal(), 
-                    newProposta.getOrcamento(), 
-                    newProposta.getApoios());
-            newProposta.reset();
-        } catch (EntityAlreadyExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage() + "\t" + code , component, logger);
-            return null;
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+            
+            Response response = client.target(URILookup.getBaseAPI())
+                .path("/propostas")
+                .request(MediaType.APPLICATION_XML)
+                .post(Entity.xml(newProposta));
+            
+        }catch (Exception e) {
+            logger.warning(e.toString());
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), component, logger);
             return null;
         }
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
+    
 
     
     public String addGuidingTeacher (){

@@ -6,6 +6,7 @@ import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import entities.Document;
+import entities.Instituicao;
 import entities.Proponente;
 import entities.Proposta;
 import entities.Student;
@@ -53,11 +54,11 @@ import javax.ws.rs.core.Response;
 public class PropostaBean extends Bean<Proposta> {
 
     @POST
-    @RolesAllowed({"Instituicao", "Teacher"})
-    @Path("")
+    @RolesAllowed({"Instituicao", "Teacher", "MembroCCP"})
+    @Path("/{proponenteUsername}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML})
-    public PropostaDTO create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void create(@PathParam("proponenteUsername") String proponenteUsername, PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
         
         try { 
             Proposta proposta = new Proposta(
@@ -68,14 +69,43 @@ public class PropostaBean extends Bean<Proposta> {
                     prop.getLocal(),
                     prop.getOrcamento(), 
                     prop.getApoios());
+            
+            Proponente proponente = em.find(Proponente.class, proponenteUsername);
+            if (proponente == null) {
+                throw new EntityDoesNotExistsException("There is no proponente with that username.");
+            }
+            proposta.addProponente(proponente);
+            proponente.addProposta(proposta);
+            
             em.persist(proposta);
-            
-            PropostaDTO p = toDTO(proposta, PropostaDTO.class);
-            
-            return p;
-            //return Response.status(201).entity(new GenericEntity<PropostaDTO>(p) {}).
-              //      type(MediaType.APPLICATION_XML_TYPE).build();
+            em.persist(proponente);
+
+        }catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    @POST
+    @RolesAllowed({"Instituicao", "Teacher", "MembroCCP"})
+    @Path("")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
+    public void create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
         
+        try { 
+            Proposta proposta = new Proposta(
+                    prop.getTitulo(), 
+                    prop.getTipoDeTrabalho(), 
+                    prop.getResumo(), 
+                    prop.getPlanoDeTrabalhos(),
+                    prop.getLocal(),
+                    prop.getOrcamento(), 
+                    prop.getApoios());
+            
+            em.persist(proposta);
+
         }catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            
         } catch (Exception e) {
@@ -126,6 +156,11 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
+    
+    @GET
+    @PermitAll
+    @Path("/accepted")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<PropostaDTO> getAllAccepted() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
@@ -140,6 +175,10 @@ public class PropostaBean extends Bean<Proposta> {
         return propostas;
     }
     
+    @GET
+    @PermitAll
+    @Path("/provas")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<PropostaDTO> getAllProvas() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
@@ -154,6 +193,10 @@ public class PropostaBean extends Bean<Proposta> {
         return propostas;
     }
     
+    @GET
+    @PermitAll
+    @Path("/finalizados")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<PropostaDTO> getAllFinalizado() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
@@ -173,8 +216,15 @@ public class PropostaBean extends Bean<Proposta> {
         return em.createNamedQuery("getAllPropostas").getResultList();
     }
        
-    public void remove(int code) throws EntityDoesNotExistsException {
+    
+    @DELETE
+    @Path("/{codeInt}")
+    @RolesAllowed({"MembroCCP"})
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public void remove(@PathParam("codeInt") String codeInt) throws EntityDoesNotExistsException {
         try {
+            int code = Integer.valueOf(codeInt);
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
                 throw new EntityDoesNotExistsException("There is no proposal with that code.");
@@ -353,7 +403,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @PUT
-    @RolesAllowed({"Student", "Teacher", "Instituicao"})
+    @RolesAllowed({"Student", "Teacher", "Instituicao", "MembroCCP"})
     @Path("{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void update(@PathParam("code") int code, PropostaDTO prop) 
@@ -381,7 +431,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
     @Path("proponentes/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) throws EntityDoesNotExistsException {
@@ -410,7 +460,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
     @Path("documents/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<DocumentDTO> getDocuments(@PathParam("code") int code) throws EntityDoesNotExistsException {
@@ -528,7 +578,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher"})
+    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("students/{code}")
     public Collection<StudentDTO> getCandidatos(@PathParam("code") int code) throws EntityDoesNotExistsException {
