@@ -38,7 +38,7 @@ public class Prova implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int code;
+    private int id;
     
     @Column(nullable = false)
     private String titulo;
@@ -49,12 +49,16 @@ public class Prova implements Serializable{
     @Column(nullable = false)
     private String local;
     
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "prova")
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName="CODE")
     private Proposta proposta;//one to one
   
+    /*@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "PROVA_CODE", referencedColumnName="CODE")
+    private Prova prova;*/ //I wonder what i manage to did here
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "STUDENT_USERNAME", referencedColumnName="USERNAME")
+    //@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    //@JoinColumn(name = "STUDENT_USERNAME", referencedColumnName="USERNAME")
     private Student student;
     
     @ManyToMany
@@ -133,12 +137,12 @@ public class Prova implements Serializable{
     }
      
     
-    public int getCode() {
-        return code;
+    public int getId() {
+        return id;
     }
 
     public void setId(int id) {
-        this.code = id;
+        this.id = id;
     }
 
     public Calendar getDate() {
@@ -149,15 +153,6 @@ public class Prova implements Serializable{
         this.data = new GregorianCalendar(year, month, day);
     }
 
-    
- 
-    /*public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }*/
 
     public Student getStudent() {
         return student;
