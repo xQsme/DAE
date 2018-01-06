@@ -1,16 +1,21 @@
 package ejbs;
 
 import dtos.PropostaDTO;
+import dtos.StudentDTO;
 import dtos.TeacherDTO;
+import entities.Instituicao;
 import entities.Proposta;
+import entities.Student;
 import entities.Teacher;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.UserAlreadyHasAppliedException;
+import exceptions.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
@@ -18,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -39,9 +45,7 @@ public class TeacherBean extends Bean<Teacher> {
     
     @POST
     @RolesAllowed({"MembroCCP"})
-    @Path("")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML})
+    @Consumes(MediaType.APPLICATION_XML)
     public Response create(TeacherDTO newTeacher)
             throws EntityAlreadyExistsException {
         try {
@@ -62,7 +66,6 @@ public class TeacherBean extends Bean<Teacher> {
     @RolesAllowed({"MembroCCP"})
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_XML)
-    @Produces({MediaType.APPLICATION_XML})
     public Response update( @PathParam("username") String username, TeacherDTO teacherDTO)
             throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {

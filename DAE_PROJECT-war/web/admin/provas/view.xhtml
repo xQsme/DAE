@@ -6,49 +6,61 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="../../templates/skeleton.xhtml">
+     <ui:composition template="/templates/skeleton.xhtml">
         <ui:define name="title">
-            Prova ${administratorManager.currentProposta.titulo}
+            Propostas
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.allProvas}" 
-                             value="${administratorManager.allProvas}" filteredValue="${administratorManager.filterList}" var="p">
-                    
-                    <p:column field="#{p.titulo}" sortBy="#{p.titulo}" filterBy="#{p.titulo}" filterMatchMode="contains">
-                        <f:facet name="header" id="Titulo">Titulo</f:facet>
+                <p:dataTable rendered="${not empty administratorManager.allProvas}" value="${administratorManager.allProvas}" var="p">			
+                    <p:column>
+                        <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
                     </p:column>
-                    <p:column  sortBy="${p.tipoDeTrabalho}" filterBy="${p.tipoDeTrabalho}" filterOptions="contains">
-                        <f:facet name="header" id="TipoDeTrabalho">Tipo de Trabalho</f:facet>
+                    <p:column>
+                        <f:facet name="header">Tipo de Trabalho</f:facet>
                         ${p.tipoDeTrabalho}
                     </p:column>
-                    <p:column  sortBy="${p.local}" filterBy="${p.local}" filterOptions="contains">
+                    <p:column>
                         <f:facet name="header">Local</f:facet>
                         ${p.local}
                     </p:column>
-                    <p:column  sortBy="${p.orcamento}" filterBy="${p.orcamento}" filterOptions="contains">
+                    <p:column>
                         <f:facet name="header">Orçamento</f:facet>
-                        ${p.orcamento}€
+                        ${p.orcamento}
                     </p:column>
-                    <p:column  sortBy="${p.stringEstado}" filterBy="${p.stringEstado}" filterOptions="contains">
+                    <p:column>
                         <f:facet name="header">Estado</f:facet>
                         ${p.stringEstado}
                     </p:column>
                     <p:column>
                         <f:facet name="header">Actions</f:facet>
                         <span>
-                            <h:commandLink
-                                value="Details"
-                                action="/admin/propostas/details">
+                            <h:commandLink 
+                                value="Finalizar"
+                                action="${administratorManager.finalizar()}">
                                 <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                         <span>
                             <h:commandLink
-                                value="Finalizar"
-                                action="/admin/propostas/finalize">
+                                value="Details"
+                                action="details">
                                 <f:setPropertyActionListener target="#{administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                        <span>
+                            <h:commandLink
+                                value="Update"
+                                action="update">
+                                <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
+                            </h:commandLink>
+                        </span>
+                        <span>
+                            <h:commandLink
+                                value="Remove"
+                                action="${administratorManager.removeProposta}">
+                                <f:setPropertyActionListener target="${administratorManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>
                     </p:column>
@@ -58,7 +70,7 @@
                 rendered="${empty administratorManager.allProvas}"
                 value="Não há provas"/>
             <br/>
-            <h:link value="Criar proposta" outcome="create"/>
+            <h:messages globalOnly="true" />
             <br/>
             <h:link value="Return" outcome="/admin/index"/>
         </ui:define>

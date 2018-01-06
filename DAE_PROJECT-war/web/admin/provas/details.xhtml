@@ -2,17 +2,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:b="http://butterfaces.org/components">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
     <ui:composition template="../../templates/skeleton.xhtml">
-        <ui:define name="title">
-                Serializar proposta ${administratorManager.currentProposta.titulo}
-        </ui:define>
-        <ui:define name="main">
-            <c:if test="#{administratorManager.currentProposta.estado==1}">
+    <ui:define name="title">
+            Prova ${administratorManager.currentProposta.titulo}
+    </ui:define>
+    <ui:define name="main">
+        <c:if test="#{not empty administratorManager.currentProposta}">
             <h:form>
                 <p:panelGrid columns="2">
 
@@ -49,11 +49,13 @@
                             ${p.name}
                         </h:column>
                     </h:dataTable>
-                    
+
                     <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                    <h:selectOneMenu value="#{administratorManager.currentPropostaCandidatos}">
-                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c.name}" itemLabel="#{c.name}"/>
-                    </h:selectOneMenu>    
+                    <h:dataTable id="candidatos"  rendered="${not empty administratorManager.currentPropostaCandidatos}" value="${administratorManager.currentPropostaCandidatos}" var="c">			
+                        <h:column>
+                            ${c.name}
+                        </h:column>
+                    </h:dataTable>
 
                     <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
                     <h:dataTable id="objetivos"  rendered="${not empty administratorManager.currentProposta.objetivos}" value="${administratorManager.currentProposta.objetivos}" var="o">			
@@ -96,10 +98,13 @@
                         id="apoios"
                         value="#{administratorManager.currentProposta.apoios}"/>
 
+
+                    <h:outputLabel for="estado" value="Estado: "
+                                   rendered="${not empty administratorManager.currentProposta.estado}"/>
                     <h:outputText 
                         id="estado"
                         rendered="${not empty administratorManager.currentProposta.estado}"
-                        value="#{administratorManager.currentProposta.estado}"/>
+                        value="#{administratorManager.currentProposta.stringEstado}"/>
 
                     <h:outputLabel for="observacao" value="Observacao: " 
                                    rendered="${not empty administratorManager.currentProposta.estado and 
@@ -137,27 +142,25 @@
                             </span>
                         </h:column>
                     </h:dataTable>
+
                 </p:panelGrid>
-                
-                <h:commandButton
-                    id="submit"
-                    styleClass="btn btn-outline-success"
-                    value="Validar"
-                    onclick="if (! confirm('Tem a certeza?')) return false"
-                    action="#{administratorManager.serializarProposta()}" />
+                <br/>
+                <c:if test="${administratorManager.currentProposta.intEstado == 1}">
+                    <h:commandLink 
+                        value="Finalizar Proposta" 
+                        action="finalize">
+                        <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${administratorManager.currentProposta.code}"></f:setPropertyActionListener>
+                    </h:commandLink>
+                </c:if>
             </h:form>
-            </c:if>
-            <c:if test="#{administratorManager.currentProposta.estado==3}">
-                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi serializada!</p>
-            </c:if>
-            <c:if test="#{2>administratorManager.currentProposta.estado}">
-                <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" não pode serializada!</p>
-            </c:if>
-            
-            <h:link value="return" outcome="view" class="btn btn-primary"/>
-            <br/> 
-            <h:messages errorClass="error" /> 
-        </ui:define>
+        </c:if>
+        <c:if test="#{empty administratorManager.currentProposta}">
+            <p>Não foi selecionada uma prova.</p>
+        </c:if>
+        <br/>
+        <h:messages errorStyle="color: red" />    
+        <br/>
+        <h:link value="Return" outcome="view"/>
+    </ui:define>
     </ui:composition>
-    
 </html>

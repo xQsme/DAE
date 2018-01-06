@@ -9,7 +9,6 @@ import auxiliar.Estado;
 import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
-import dtos.DocumentoDTO;
 import dtos.EmailDTO;
 import dtos.InstituicaoDTO;
 import dtos.MembroCCPDTO;
@@ -28,7 +27,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
-import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -81,8 +79,6 @@ public class AdministratorManager implements Serializable {
     private UIComponent component;
     private MembroCCPDTO loggedMembroCCP;
     
-    private StudentDTO currentPropostaFinalCandidato;
-    
     //Primefaces require a filterList to temporarly store the values, h5!
     public List<Object> filterList;
     public void setFilterList(List<Object> filter){
@@ -115,7 +111,6 @@ public class AdministratorManager implements Serializable {
                     .request(MediaType.APPLICATION_XML)
                     .get(MembroCCPDTO.class);
         } catch (Exception e) {
-            System.out.println("ERRO SETUP ADMIN");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
         }
     }
@@ -245,24 +240,16 @@ public class AdministratorManager implements Serializable {
         }
     }
     
-    public List<PropostaDTO> getAllProvas() {
-        List<PropostaDTO> provas = new LinkedList<>();
-        for(PropostaDTO p : getAllPropostas()){
-            if(p.getEstado() > 1){
-                provas.add(p);
-            }
-        }
-        return provas;
-   }
-    
-    public List<PropostaDTO> getPropostas() {
-        List<PropostaDTO> provas = new LinkedList<>();
-        for(PropostaDTO p : getAllPropostas()){
-            if(p.getEstado() < 2){
-                provas.add(p);
-            }
-        }
-        return provas;
+    public Collection<PropostaDTO> getAllProvas() {
+        try{
+            return client.target(URILookup.getBaseAPI())
+                                                .path("/provas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {}); 
+       } catch (Exception e) {
+           FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+           return null;
+       }
    }
     
 
@@ -575,36 +562,34 @@ public class AdministratorManager implements Serializable {
     }
     
     //Not full implmented yet
-
-    public String serializarProposta() throws AddressException, Exception {
+    public String serializarProposta() throws AddressException, Exception {/*
         try {
+            
+            propostaBean.addSerialição(
+                    currentProposta.getCode(),
+                    currentProposta.getCandidatos();
+                    );
 
-            if (currentProposta.getEstado() == 1 ){
-                List<String> recipients= new LinkedList<>();
-                for(ProponenteDTO proponente: getCurrentPropostaProponentes()){
+            if (currentProposta.getEstado() == 2 ){
+                List<String> recipients= new LinkedList<String>();
+                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
                 }
                 
-                for(StudentDTO candidatos: getCurrentPropostaCandidatos()) {
+                for(Student candidatos: currentProposta.getCandidatos()) {
                     recipients.add(candidatos.getEmail());
                 }
 
                 emailManager.serializeProposta(loggedMembroCCP, currentProposta, recipients);     
             }
-            
-            currentProposta.setEstado(2);
-            
-                        Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
-                                                        .path("/propostas/"+currentProposta.getCode()+"/validacao")
-                                                        .request(MediaType.APPLICATION_XML);
-            invocationBuilder.put(Entity.xml(currentProposta));
-            
 
-        }catch (MessagingException e) {
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
-        
+        }*/
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }    
     
@@ -638,9 +623,9 @@ public class AdministratorManager implements Serializable {
                                                         .path("/teachers")
                                                         .request(MediaType.APPLICATION_XML);
             Response response = invocationBuilder.post(Entity.xml(newTeacher));
-            System.out.println("Resposta: " +response.toString());
+            System.out.println("Resposta: " +response.getStatus());
         
-            newTeacher.reset();
+            newStudent.reset();
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
@@ -709,26 +694,35 @@ public class AdministratorManager implements Serializable {
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
     
-    public String finalizarDocumento() {
+    public String finalizar(){
+        /*try {
+            if(currentProposta.getIntEstado() != 2){
+                throw new CannotFinalizeException();
+            }
+        }
+        catch (CannotFinalizeException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            return null;
+        }*/
+        return "finalize";
+    }
+    
+    /*public String finalizarDocumento() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
             System.out.println(client.target(URILookup.getBaseAPI())
-                    .path("/propostas/documento")
+                    .path("/propostas/addDocument")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(document)));
-            currentProposta.setEstado(3);
-            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
-                                            .path("/propostas/"+currentProposta.getCode()+"/validacao")
-                                            .request(MediaType.APPLICATION_XML);
-            invocationBuilder.put(Entity.xml(currentProposta));
-        } catch (Exception e) {
+            propostaBean.finalizarDocumento(currentProposta.getCode(), document);
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
 
         return "view?faces-redirect=true";
-    }
+    }*/
 
     public UploadManager getUploadManager() {
         return uploadManager;
@@ -754,18 +748,14 @@ public class AdministratorManager implements Serializable {
         this.currentDocumento = currentDocumento;
     }
     
-    public List<DocumentoDTO> getStudentDocumentos(){
-        try {
-            return client.target(URILookup.getBaseAPI())
-                .path("/students/documentos")
-                .path(currentStudent.getUsername())
-                .request(MediaType.APPLICATION_XML)
-                .get(new GenericType<List<DocumentoDTO>>() {});
-        } catch (Exception e) {
-            System.out.println("ERROR GETTING STUDENT DOCUMENTS");
+    public Collection<DocumentDTO> getStudentDocumentos(){
+        /*try {
+            return studentBean.getDocuments(currentStudent.getUsername());
+        } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return new LinkedList<>();
-        }
+            return null;
+        }*/
+        return null;
     }
     
     public String setProposalStudent(){
@@ -793,13 +783,5 @@ public class AdministratorManager implements Serializable {
             return null;
         }
         return "/admin/students/view.xhtml?faces-redirect=true";
-    }
-
-    public StudentDTO getCurrentPropostaFinalCandidato() {
-        return currentPropostaFinalCandidato;
-    }
-
-    public void setCurrentPropostaFinalCandidato(StudentDTO currentPropostaFinalCandidato) {
-        this.currentPropostaFinalCandidato = currentPropostaFinalCandidato;
     }
 }

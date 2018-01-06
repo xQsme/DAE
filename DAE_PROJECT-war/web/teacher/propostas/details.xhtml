@@ -40,7 +40,7 @@ and open the template in the editor.
                             value="#{teacherManager.currentProposta.tipoDeTrabalho}"/>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
-                        <h:dataTable id="areasCientificas" rendered="${not empty teacherManager.currentProposta.areasCientificas}" value="${teacherManager.currentProposta.areasCientificas}" var="a">			
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.areasCientificas}" value="${teacherManager.currentProposta.areasCientificas}" var="a">			
                             <h:column>
                                 ${a}
                             </h:column>
@@ -52,14 +52,14 @@ and open the template in the editor.
                             value="#{teacherManager.currentProposta.resumo}"/>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
-                        <h:dataTable id="proponentes" rendered="${not empty teacherManager.currentPropostaProponentes}" value="${teacherManager.currentPropostaProponentes}" var="p">			
+                        <h:dataTable rendered="${not empty teacherManager.currentPropostaProponentes}" value="${teacherManager.currentPropostaProponentes}" var="p">			
                             <h:column>
                                 ${p.name}
                             </h:column>
                         </h:dataTable>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                        <h:dataTable id="candidatos" rendered="${not empty teacherManager.currentPropostaCandidatos}" value="${teacherManager.currentPropostaCandidatos}" var="c">			
+                        <h:dataTable rendered="${not empty teacherManager.currentPropostaCandidatos}" value="${teacherManager.currentPropostaCandidatos}" var="c">			
                             <h:column>
                                 ${c.name}
                                 <span>
@@ -73,14 +73,14 @@ and open the template in the editor.
                         </h:dataTable>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
-                        <h:dataTable id="objetivos" rendered="${not empty teacherManager.currentProposta.objetivos}" value="${teacherManager.currentProposta.objetivos}" var="o">			
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.objetivos}" value="${teacherManager.currentProposta.objetivos}" var="o">			
                             <h:column>
                                 ${o}
                             </h:column>
                         </h:dataTable>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
-                        <h:dataTable id="bibliografia" rendered="${not empty teacherManager.currentProposta.bibliografia}" value="${teacherManager.currentProposta.bibliografia}" var="b">			
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.bibliografia}" value="${teacherManager.currentProposta.bibliografia}" var="b">			
                             <h:column>
                                 ${b}
                             </h:column>
@@ -97,7 +97,7 @@ and open the template in the editor.
                             value="#{teacherManager.currentProposta.local}"/>
 
                         <h:outputLabel rendered="${not empty teacherManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
-                        <h:dataTable id="requisitos" rendered="${not empty teacherManager.currentProposta.requisitos}" value="${teacherManager.currentProposta.requisitos}" var="r">			
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.requisitos}" value="${teacherManager.currentProposta.requisitos}" var="r">			
                             <h:column>
                                 ${r}
                             </h:column>
@@ -129,15 +129,15 @@ and open the template in the editor.
                                         not empty teacherManager.currentProposta.observacao}"
                             value="#{teacherManager.currentProposta.observacao}"/>
 
-                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
+                                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
                         <h:dataTable id="documentos" rendered="${not empty teacherManager.currentPropostaDocumentos}" value="${teacherManager.currentPropostaDocumentos}" var="d">			
                             <h:column>
                                 ${d.desiredName}
                                 <span>
                                     <h:commandLink
                                         value="Download">
-                                        <f:setPropertyActionListener target="${downloadManager.document}" value="${d}"></f:setPropertyActionListener>
-                                        <p:fileDownload value="#{downloadManager.documentFile}" />
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
                                     </h:commandLink>
                                 </span>
                             </h:column>
@@ -150,8 +150,8 @@ and open the template in the editor.
                                 <span>
                                     <h:commandLink
                                         value="Download">
-                                        <f:setPropertyActionListener target="${downloadManager.document}" value="${a}"></f:setPropertyActionListener>
-                                        <p:fileDownload value="#{downloadManager.documentFile}" />
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
                                     </h:commandLink>
                                 </span>
                             </h:column>

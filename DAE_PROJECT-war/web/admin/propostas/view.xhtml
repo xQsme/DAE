@@ -12,8 +12,8 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.propostas}" 
-                             value="${administratorManager.propostas}" filteredValue="${administratorManager.filterList}" var="p">
+                <p:dataTable rendered="${not empty administratorManager.allPropostas}" 
+                             value="${administratorManager.allPropostas}" filteredValue="${administratorManager.filterList}" var="p">
                     
                     <p:column field="#{p.titulo}" sortBy="#{p.titulo}" filterBy="#{p.titulo}" filterMatchMode="contains">
                         <f:facet name="header" id="Titulo">Titulo</f:facet>
@@ -81,8 +81,10 @@
                 </p:dataTable>
             </h:form>
             <h:outputText
-                rendered="${empty administratorManager.propostas}"
-                value="Não há provas"/>
+                rendered="${empty administratorManager.allPropostas}"
+                value="Não há propostas"/>
+            <br/>
+            <h:link value="Criar proposta" outcome="create"/>
             <br/>
             <h:link value="Return" outcome="/admin/index"/>
         </ui:define>
