@@ -54,7 +54,7 @@ public class Prova implements Serializable{
   
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "STUDENT_CODE", referencedColumnName="CODE")
+    @JoinColumn(name = "STUDENT_USERNAME", referencedColumnName="USERNAME")
     private Student student;
     
     @ManyToMany
@@ -149,6 +149,7 @@ public class Prova implements Serializable{
         this.data = new GregorianCalendar(year, month, day);
     }
 
+    
  
     /*public Student getStudent() {
         return student;
@@ -157,4 +158,12 @@ public class Prova implements Serializable{
     public void setStudent(Student student) {
         this.student = student;
     }*/
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 }
