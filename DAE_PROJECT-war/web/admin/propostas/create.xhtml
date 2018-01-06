@@ -13,8 +13,9 @@
         <ui:define name="main">
             <h:form>
                 <h:panelGrid columns="3">
-                                        <h:outputLabel for="titulo" value="Título: " />
-                    <h:inputText 
+                    <h:outputLabel for="titulo" value="Título: " />
+                    <h:inputText
+                        label="Titulo"
                         id="titulo"
                         size="50"
                         required="true"
@@ -24,6 +25,7 @@
                     
                     <h:outputLabel for="tipo" value="Tipo de Trabalho: " />
                     <h:selectOneMenu
+                        label="Tipo de Trabalho"
                         id="tipo"
                         value="#{administratorManager.newProposta.tipoDeTrabalho}" >
                         <f:selectItems
@@ -36,6 +38,7 @@
                     
                     <h:outputLabel for="resumo" value="Resumo: " />
                     <h:inputText 
+                        label="Resumo"
                         id="resumo"
                         size="100"
                         required="true"
@@ -45,6 +48,7 @@
 
                     <h:outputLabel for="plano" value="Plano de Trabalhos: " />
                     <h:inputText 
+                        label="Plano de Trabalhos"
                         id="plano"
                         size="100"
                         required="true"
@@ -54,6 +58,7 @@
                     
                     <h:outputLabel for="local" value="Local: " />
                     <h:inputText 
+                        label="Local"
                         id="local"
                         size="100"
                         required="true"
@@ -62,7 +67,8 @@
                     <h:message for="local" errorStyle="color: red" />
                     
                     <h:outputLabel for="orcamento" value="Orcamento: " />
-                    <h:inputText 
+                    <h:inputText
+                        label="Orcamento"
                         id="orcamento"
                         size="100"
                         required="true"
@@ -72,6 +78,7 @@
                     
                     <h:outputLabel for="apoios" value="Apoios: " />
                     <h:inputText 
+                        label="Apoios"
                         id="apoios"
                         size="100"
                         required="false"                        
