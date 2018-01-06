@@ -164,7 +164,7 @@
             <description/>
             <url-pattern>/webapi/students/documentos/*</url-pattern>
             <url-pattern>/webapi/instituicoes/*</url-pattern>
-            <!--<url-pattern>/webapi/propostas</url-pattern>-->
+            <url-pattern>/webapi/propostas</url-pattern>
             <url-pattern>/webapi/propostas/documents/*</url-pattern>
             <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
             <url-pattern>/webapi/propostas/students/*</url-pattern>
@@ -190,8 +190,12 @@
                 <web-resource-name>Admin Services</web-resource-name>
                 <description/>
                 <url-pattern></url-pattern>
-                <url-pattern>/webapi/propostas/*</url-pattern>     
-                <url-pattern>/webapi/proponenete/*</url-pattern>            
+                <url-pattern>/webapi/propostas/*</url-pattern>        
+                <url-pattern>/webapi/proponente/</url-pattern> 
+                <url-pattern>/webapi/proponente/proposta/*</url-pattern> 
+                <url-pattern>/webapi/propostas/students/*</url-pattern>  
+                <url-pattern>/webapi/propostas/documents/*</url-pattern>  
+                <url-pattern>/webapi/propostas</url-pattern>             
             </web-resource-collection>
         
             <web-resource-collection>  
