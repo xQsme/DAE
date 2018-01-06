@@ -53,7 +53,7 @@ public class ProponenteBean extends Bean<Proponente> {
     
    
     @GET
-    @RolesAllowed({"MembroCCP", "Instituicao", "Teacher"}) 
+    @PermitAll
     @Path("/proposta/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) 
