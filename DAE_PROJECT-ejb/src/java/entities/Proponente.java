@@ -31,7 +31,18 @@ public class Proponente extends User  {
 
     @ManyToMany(mappedBy = "proponentes")
     private List<Proposta> propostas;
+    
+    @ManyToMany(mappedBy = "juizes")
+    private List<Prova> prova;
 
+    public List<Prova> getProva() {
+        return prova;
+    }
+
+    public void setProva(List<Prova> prova) {
+        this.prova = prova;
+    }
+    
     public Proponente() {
     }
    

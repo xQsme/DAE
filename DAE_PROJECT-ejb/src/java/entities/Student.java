@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,6 +43,18 @@ public class Student extends User  {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName="CODE")
     private Proposta proposal; 
+
+    
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "student")
+    private Proposta prova;
+
+    public Proposta getProva() {
+        return prova;
+    }
+
+    public void setProva(Proposta prova) {
+        this.prova = prova;
+    }
     
     @OneToMany(mappedBy = "student")
     private List<Documento> documentos;
