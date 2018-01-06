@@ -184,7 +184,8 @@
                 <web-resource-name>Admin Services</web-resource-name>
                 <description/>
                 <url-pattern>/webapi/propostas/</url-pattern>     
-                <url-pattern>/webapi/propostas/*</url-pattern>        
+                <url-pattern>/webapi/propostas/*</url-pattern>    
+                <url-pattern>/webapi/propostas/candidato/*/*</url-pattern>     
                 <url-pattern>/webapi/proponente/</url-pattern> 
                 <url-pattern>/webapi/proponente/proposta/*</url-pattern> 
                 <url-pattern>/webapi/propostas/students/*</url-pattern>  

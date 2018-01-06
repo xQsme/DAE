@@ -81,7 +81,7 @@ public class AdministratorManager implements Serializable {
     private UIComponent component;
     private MembroCCPDTO loggedMembroCCP;
     
-    private StudentDTO currentPropostaFinalCandidato;
+    private String currentPropostaFinalCandidato;
     
     //Primefaces require a filterList to temporarly store the values, h5!
     public List<Object> filterList;
@@ -594,14 +594,18 @@ public class AdministratorManager implements Serializable {
             }
             
             currentProposta.setEstado(2);
-            
-                        Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
                                                         .path("/propostas/"+currentProposta.getCode()+"/validacao")
                                                         .request(MediaType.APPLICATION_XML);
             invocationBuilder.put(Entity.xml(currentProposta));
+            invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas/candidato"+currentProposta.getCode()+"/"+currentPropostaFinalCandidato)
+                                                        .request(MediaType.APPLICATION_XML);
+            invocationBuilder.get();
             
 
         }catch (MessagingException e) {
+            
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -797,11 +801,11 @@ public class AdministratorManager implements Serializable {
         return "/admin/students/view.xhtml?faces-redirect=true";
     }
 
-    public StudentDTO getCurrentPropostaFinalCandidato() {
+    public String getCurrentPropostaFinalCandidato() {
         return currentPropostaFinalCandidato;
     }
 
-    public void setCurrentPropostaFinalCandidato(StudentDTO currentPropostaFinalCandidato) {
+    public void setCurrentPropostaFinalCandidato(String currentPropostaFinalCandidato) {
         this.currentPropostaFinalCandidato = currentPropostaFinalCandidato;
     }
 }

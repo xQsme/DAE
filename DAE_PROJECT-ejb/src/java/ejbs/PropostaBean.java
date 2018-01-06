@@ -579,5 +579,24 @@ public class PropostaBean extends Bean<Proposta> {
         return toDTOs(proposta.getCandidatos(), StudentDTO.class);
     }
     
+    @GET
+    @RolesAllowed("MembroCCP")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("candidato/{code}/{username}")
+    public void setCandidatos(@PathParam("code") int code, @PathParam("username") String username) throws EntityDoesNotExistsException {
+        Proposta proposta = em.find(Proposta.class, code);
+        if(proposta == null){
+            throw new EntityDoesNotExistsException("Proposta com codigo " + code + " não existe.");
+        }
+        Student student = em.find(Student.class, username);
+        if(student == null){
+            throw new EntityDoesNotExistsException("Student com username " + username + " não existe.");
+        }
+        LinkedList<Student> candidato = new LinkedList<>();
+        candidato.add(student);
+        proposta.setCandidatos(candidato);
+        em.merge(proposta);
+    }
+    
     
 }

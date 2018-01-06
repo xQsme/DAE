@@ -52,7 +52,7 @@
                     
                     <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
                     <h:selectOneMenu value="${administratorManager.currentPropostaFinalCandidato}">
-                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c}" itemLabel="#{c.name}"/>
+                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c.username}" itemLabel="#{c.name}"/>
                     </h:selectOneMenu>    
 
                     <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
