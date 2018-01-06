@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.scene.control.SortEvent;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
@@ -29,6 +30,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,6 +41,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
@@ -83,7 +86,7 @@ public class PropostaBean extends Bean<Proposta> {
         }
     }
     
-    public Proposta create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local,String orcamento, String apoios)
+    public Proposta create(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalho, String local, Integer orcamento, String apoios)
         throws EntityAlreadyExistsException, EntityDoesNotExistsException, MyConstraintViolationException {
         
         try {
@@ -125,7 +128,7 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
-    
+        
     public Collection<PropostaDTO> getAllAccepted() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
@@ -303,7 +306,7 @@ public class PropostaBean extends Bean<Proposta> {
         return tipos;
     }
     
-    public List<String> getAlterations(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios) 
+    public List<String> getAlterations(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, Integer orcamento, String apoios) 
             throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
