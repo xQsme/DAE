@@ -7,6 +7,10 @@ import ejbs.MembroCCPBean;
 import ejbs.PropostaBean;
 import ejbs.StudentBean;
 import ejbs.TeacherBean;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -32,6 +36,8 @@ public class ConfigBean {
     private InstituicaoBean instituicaoBean;
     @EJB
     private MembroCCPBean membroCCPBean;
+    @EJB
+    private ProvaBean provaBean;
 
     @PostConstruct
     public void populateBD() {
@@ -93,6 +99,14 @@ public class ConfigBean {
             membroCCPBean.validarProposta("membroCCP", 2, 1);
             membroCCPBean.validarProposta("membroCCP", 3, 3);
             
+            
+            List<String> juizes = new LinkedList();
+            juizes.add("membroCCP");
+            juizes.add("teacherNick1");//Acho que tem de ter documents not 100% sure
+            provaBean.create("Show your Strength", new GregorianCalendar(), "S.João Da Madeira", 
+                    2, "2151474", juizes, null);
+                    
+                    
             //membroCCPBean.addProfessorOrientador("teacherNick1", "2151159");
             
             //studentBean.setProposta("2151159", 2);

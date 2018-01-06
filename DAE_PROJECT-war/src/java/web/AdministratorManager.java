@@ -237,6 +237,19 @@ public class AdministratorManager implements Serializable {
             return null;
         }
     }
+    
+    public Collection<PropostaDTO> getAllProvas() {
+        try{
+            return client.target(URILookup.getBaseAPI())
+                                                .path("/provas")
+                                                .request(MediaType.APPLICATION_XML)
+                                                .get(new GenericType<List<PropostaDTO>>() {}); 
+       } catch (Exception e) {
+           FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+           return null;
+       }
+   }
+    
 
     public List<PropostaDTO> getAllPropostas() {
             try {

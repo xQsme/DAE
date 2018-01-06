@@ -70,13 +70,12 @@ public class Prova implements Serializable{
         this.juizes = new LinkedList<>();
     }
 
-    public Prova(int code, String titulo, Calendar data, String local, Proposta proposta, Student student, List<Proponente> juizes, List<Documento> documentos) {
-        this.code = code;
+    public Prova(String titulo, Calendar data, String local, Proposta proposta, Student student, List<Proponente> juizes, List<Documento> documentos) {
         this.titulo = titulo;
         this.data = data;
         this.local = local;
         this.proposta = proposta;
-        //this.student = student;
+        this.student = student;
         this.juizes = juizes;
         this.documentos = documentos;
     }
