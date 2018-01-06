@@ -11,7 +11,7 @@
         <h:form enctype="multipart/form-data">
             <p:growl id="messages" showDetail="true" />
             <p:fileUpload value="#{uploadManager.file}" mode="simple" skinSimple="true"/>
-            <p:commandButton value="Submit" ajax="false" actionListener="#{uploadManager.upload}" action="#{studentManager.atualizarDocumento}"/>
+            <p:commandButton value="Submit" ajax="false" actionListener="#{uploadManager.upload}" action="#{studentManager.atualizarDocument}"/>
         </h:form>
 
         <br/>

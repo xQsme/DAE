@@ -44,15 +44,6 @@ import util.URILookup;
 @SessionScoped
 public class TeacherManager implements Serializable {
     
-    @EJB
-    private ProponenteBean proponenteBean;
-    @EJB
-    private PropostaBean propostaBean;
-    @EJB
-    private TeacherBean teacherBean;
-    @EJB
-    private StudentBean studentBean;
-    
     @ManagedProperty(value="#{userManager}") // this references the @ManagedBean
     private UserManager userManager;
     

@@ -22,9 +22,6 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
@@ -345,7 +342,7 @@ public class PropostaBean extends Bean<Proposta> {
         return tipos;
     }
     
-    public List<String> getAlterations(int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, Integer orcamento, String apoios) 
+    public List<String> getAlterations(@PathParam("code") int code, String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, Integer orcamento, String apoios) 
             throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             Proposta proposta = em.find(Proposta.class, code);
@@ -465,7 +462,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @POST
-    @RolesAllowed({"Instituicao", "Teacher", "MembroCCP"})
+    @RolesAllowed({"Student", "MembroCCP"})
     @Path("documento/{code}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response addDocument(@PathParam("code") int code, DocumentDTO doc) throws EntityDoesNotExistsException {

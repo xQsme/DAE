@@ -5,7 +5,6 @@
  */
 package web;
 
-import exceptions.CannotFinalizeException;
 import auxiliar.Estado;
 import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
@@ -16,29 +15,12 @@ import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
-import ejbs.EmailBean;
-import ejbs.InstituicaoBean;
-import ejbs.MembroCCPBean;
-import ejbs.ProponenteBean;
-import ejbs.PropostaBean;
-import ejbs.TeacherBean;
-import ejbs.StudentBean;
-import entities.MembroCCP;
-import entities.Student;
-import exceptions.EntityAlreadyExistsException;
-import exceptions.EntityDoesNotExistsException;
-import exceptions.MyConstraintViolationException;
-import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
-import exceptions.StudentHasNoProposalException;
-import exceptions.TeacherAlreadyAssignedException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -75,19 +57,6 @@ public class AdministratorManager implements Serializable {
     @ManagedProperty(value="#{emailManager}")
     private EmailManager emailManager;
     
-    @EJB
-    private InstituicaoBean instituicaoBean;
-    @EJB
-    private TeacherBean teacherBean;
-    @EJB
-    private PropostaBean propostaBean;
-    @EJB
-    private MembroCCPBean membroCCPBean;
-    @EJB
-    private ProponenteBean proponenteBean;
-    @EJB
-    private StudentBean studentBean;
-    
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
     
     private InstituicaoDTO currentInstituicao;
@@ -106,7 +75,7 @@ public class AdministratorManager implements Serializable {
     private StudentDTO newStudent;
     
     private UIComponent component;
-    private MembroCCP loggedMembroCCP;
+    private MembroCCPDTO loggedMembroCCP;
     
     //Primefaces require a filterList to temporarly store the values, h5!
     public List<Object> filterList;
@@ -133,10 +102,15 @@ public class AdministratorManager implements Serializable {
     }
   
     private void setUpMembroCCP() {
-        logger.info(userManager.toString());
-        String username = userManager.getUsername();
-        logger.info(username);
-        loggedMembroCCP = membroCCPBean.find(username );
+        try {
+            loggedMembroCCP = client.target(URILookup.getBaseAPI())
+                    .path("/admin")
+                    .path(userManager.getUsername())
+                    .request(MediaType.APPLICATION_XML)
+                    .get(MembroCCPDTO.class);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+        }
     }
     
     public UserManager getUserManager() {
@@ -265,24 +239,17 @@ public class AdministratorManager implements Serializable {
     }
 
     public List<PropostaDTO> getAllPropostas() {
-            List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
             try {
-                Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                List<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
                                                     .path("/propostas")
                                                     //.queryParam("pattern", "Po")
                                                     .request(MediaType.APPLICATION_XML)
                                                     .get(new GenericType<List<PropostaDTO>>() {});         
-                for(PropostaDTO p : propostas){
-                    //System.out.println(p.getTitulo());
-                    if(p.getEstado()>=-1 && p.getEstado()<2){
-                        propostasEmAndamento.add(p);
-                    }
-                }
                 
                 //Creates an "dynamic list" this done this way in order to only need to use
                 //one filter; instead of create 1 filter for every single get's
-                filterList=(List<Object>)(List<?>)propostasEmAndamento;
-                return propostasEmAndamento;
+                filterList=(List<Object>)(List<?>)propostas;
+                return propostas;
             } catch (Exception e) {
                 throw new EJBException(e.getMessage());
             }
@@ -299,31 +266,6 @@ public class AdministratorManager implements Serializable {
             return null;
         }
     }
-    
-    public Collection<PropostaDTO> getAllProvas() {
-       try{
-           return client.target(URILookup.getBaseAPI())
-                                                .path("/propostas/provas")
-                                                .request(MediaType.APPLICATION_XML)
-                                                .get(new GenericType<List<PropostaDTO>>() {}); 
-       } catch (Exception e) {
-           FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-           return null;
-       }
-    }
-    
-    //Not yet Rest
-    public Collection<PropostaDTO> getAllFinalizado() {
-        try{
-            return client.target(URILookup.getBaseAPI())
-                                                .path("/propostas/finalizados")
-                                                .request(MediaType.APPLICATION_XML)
-                                                .get(new GenericType<List<PropostaDTO>>() {}); 
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-    
     
     public InstituicaoDTO getCurrentInstituicao() {
         return currentInstituicao;
@@ -458,11 +400,11 @@ public class AdministratorManager implements Serializable {
         try {        
             if (currentProposta.getEstado() > 0 ){
                 List<String> recipients= new LinkedList<String>();
-                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                for(ProponenteDTO proponente: getCurrentPropostaProponentes()){
                     recipients.add(proponente.getEmail());
                 }
                 
-                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
+                for(ProponenteDTO proponente: getCurrentPropostaProponentes()){
                     recipients.add(proponente.getEmail());
                 } 
                 
@@ -484,9 +426,7 @@ public class AdministratorManager implements Serializable {
                                                 .path(Integer.toString(currentProposta.getCode()))
                                                 .request(MediaType.APPLICATION_XML)
                                                 .delete();
-        } catch (EntityDoesNotExistsException ex) {
-            Logger.getLogger(AdministratorManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
+        }catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
@@ -550,48 +490,6 @@ public class AdministratorManager implements Serializable {
         }
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
-    
-    public String updateProva() {
-        try {
-            //Checks what changed
-            List<String> alterations=propostaBean.getAlterations(currentProposta.getCode(), currentProposta.getTitulo(),               
-                    currentProposta.getTipoDeTrabalho(), currentProposta.getResumo(),
-                    currentProposta.getPlanoDeTrabalhos(),currentProposta.getLocal(),
-                    currentProposta.getOrcamento(), currentProposta.getApoios());
-            
-            client.target(URILookup.getBaseAPI())
-                .path("/propostas")
-                .path(currentProposta.getCode()+"")
-                .request(MediaType.APPLICATION_XML)
-                .put(Entity.xml(currentProposta));
-            
-            if (currentProposta.getEstado() == 2 ){
-                List<String> recipients= new LinkedList<String>();
-                for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
-                    recipients.add(proponente.getEmail());
-                } 
-               
-                for(StudentDTO candidatos:client.target(URILookup.getBaseAPI())
-                                        .path("/propostas/students")
-                                        .path(currentProposta.getCode()+"")
-                                        .request(MediaType.APPLICATION_XML)
-                                        .get(new GenericType<List<StudentDTO>>() {})){
-                    recipients.add(candidatos.getEmail());
-                }
-   
-                emailManager.updateProva(loggedMembroCCP, currentProposta, alterations, recipients);        
-            }
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-            return null;
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
-        return "/admin/provas/view.xhtml?faces-redirect=true";
-    }
-    
-    
     
     public String validateProposta() throws AddressException, Exception {
         try {
@@ -737,10 +635,12 @@ public class AdministratorManager implements Serializable {
     
     public String addGuidingTeacher (){
         try {
-            membroCCPBean.addProfessorOrientador(newTeacher.getUsername(), currentStudent.getUsername());
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                            .path("/admin/teacher/student/"+newTeacher.getUsername()+"/"+currentStudent.getUsername())
+                                            .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.get();
             newTeacher.reset();
-        } catch (EntityDoesNotExistsException | TeacherAlreadyAssignedException | NullPointerException | 
-                ProposalWasNotSubmittedByAnInstitutionException | StudentHasNoProposalException e) {
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
             return null;
         }
@@ -760,14 +660,14 @@ public class AdministratorManager implements Serializable {
         return "finalize";
     }
     
-    public String finalizarDocumento() {
+    /*public String finalizarDocumento() {
         try {
             document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), true);
-            /*System.out.println(client.target(URILookup.getBaseAPI())
+            System.out.println(client.target(URILookup.getBaseAPI())
                     .path("/propostas/addDocument")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document)));*/
+                    .put(Entity.xml(document)));
             propostaBean.finalizarDocumento(currentProposta.getCode(), document);
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -775,7 +675,7 @@ public class AdministratorManager implements Serializable {
         }
 
         return "view?faces-redirect=true";
-    }
+    }*/
 
     public UploadManager getUploadManager() {
         return uploadManager;
@@ -810,22 +710,13 @@ public class AdministratorManager implements Serializable {
         }*/
         return null;
     }
-        
-    public Collection<PropostaDTO> getAllAvailableProposals() {
-        try {
-            return propostaBean.getAllAccepted();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
-        }
-    }
     
     public String setProposalStudent(){
         try {
-            logger.info("proposta -> " + newProposta.getCode());
-            logger.info("username -> " + currentStudent.getUsername());
-            studentBean.setProposta(currentStudent.getUsername(), newProposta.getCode());
-            
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                            .path("/students/proposta/"+newProposta.getCode()+"/"+currentStudent.getUsername())
+                                            .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.get();
             newProposta.setCode(0);
         } catch (Exception e) {
             logger.info(e.toString());

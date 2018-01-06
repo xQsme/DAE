@@ -39,8 +39,8 @@
                             <span>
                                 <h:commandLink
                                     value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
+                                    <f:setPropertyActionListener target="${downloadManager.documento}" value="${d}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.documentoFile}" />
                                 </h:commandLink>
                             </span>
                             <span>

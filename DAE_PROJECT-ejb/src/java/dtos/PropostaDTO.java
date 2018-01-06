@@ -1,7 +1,5 @@
 package dtos;
 
-import auxiliar.Estado;
-import entities.Student;
 import java.io.Serializable;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -39,10 +37,6 @@ public class PropostaDTO  implements Serializable{
                            
             case 1: return "Aceite";
             
-            case 2: return "Prova";
-                         
-            case 3: return "Finalizado";
-            
             default: return "";
         }
     }
@@ -54,10 +48,6 @@ public class PropostaDTO  implements Serializable{
             case "Pendente":    this.estado=0;
                                 break;
             case "Aceite":      this.estado=1;
-                                break;
-            case "Prova":       this.estado=2;
-                                break;
-            case "Finalizado":  this.estado=3;
                                 break;
             default: this.estado=Integer.MAX_VALUE;
         }
@@ -210,7 +200,7 @@ public class PropostaDTO  implements Serializable{
     }
     
     public boolean allowSubmit(){
-        return estado < 3 && estado > 0;
+        return estado == 1;
     }
 
 }

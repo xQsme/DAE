@@ -10,9 +10,9 @@ package web;
  *
  * @author Yvtq8
  */
+import dtos.MembroCCPDTO;
 import dtos.PropostaDTO;
 import ejbs.EmailBean;
-import entities.MembroCCP;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -28,14 +28,14 @@ public class EmailManager implements Serializable{
     @EJB
     private EmailBean email;
     
-    public void removeProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+    public void removeProposta(MembroCCPDTO memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
         String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi removida por:</strong> "+ memberCCP.getName()+".";
         email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Remoção da Proposta "+proposta.getTitulo(), msg, recipients);               
     }
     
-    public void removeProva(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+    public void removeProva(MembroCCPDTO memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
         String msg = "<strong>A prova:</strong> "+proposta.getTitulo()
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi removida por:</strong> "+ memberCCP.getName()+".";
@@ -43,7 +43,7 @@ public class EmailManager implements Serializable{
     }
     
     
-    public void updateProva(MembroCCP memberCCP, PropostaDTO proposta, List<String> alterations, List<String> recipients) throws MessagingException{
+    public void updateProva(MembroCCPDTO memberCCP, PropostaDTO proposta, List<String> alterations, List<String> recipients) throws MessagingException{
         String msg = "<strong>A prova:</strong> "+proposta.getTitulo()
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi atualizada por:</strong> "+ memberCCP.getName()+".";
@@ -58,7 +58,7 @@ public class EmailManager implements Serializable{
         email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Alteração da Prova "+proposta.getTitulo(), msg, recipients);               
     }
     
-    public void validateProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+    public void validateProposta(MembroCCPDTO memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
         String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi avaliada por:</strong> "+ memberCCP.getName()+".";
@@ -72,7 +72,7 @@ public class EmailManager implements Serializable{
         email.send(memberCCP.getEmail(), memberCCP.getPassword(), "Validação da Proposta "+proposta.getTitulo(), msg, recipients);               
     }     
     
-    public void serializeProposta(MembroCCP memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
+    public void serializeProposta(MembroCCPDTO memberCCP, PropostaDTO proposta, List<String> recipients) throws MessagingException{
         String msg = "<strong>A proposta:</strong> "+proposta.getTitulo()
                     +".<br><br><strong>Com descricao:</strong> "+ proposta.getResumo()+"."
                     +".<br><br><strong>Foi serializada por:</strong> "+ memberCCP.getName()+".";
