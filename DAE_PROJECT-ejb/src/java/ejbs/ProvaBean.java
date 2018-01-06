@@ -60,7 +60,7 @@ public class ProvaBean extends Bean<Prova> {
             
             Proposta currentProposta = em.find(Proposta.class, proposta);
             if (currentProposta == null) {
-                throw new EntityDoesNotExistsException("A user with that username not exists.");
+                throw new EntityDoesNotExistsException("A proposal with that username not exists.");
             }
             
             Student currentStudent = em.find(Student.class, student);
@@ -73,21 +73,20 @@ public class ProvaBean extends Bean<Prova> {
                 Proponente tempProponente=em.find(Proponente.class, juiz);
                 if (tempProponente != null) {
                     currentProponentes.add(em.find(Proponente.class, juiz));   
-                }else throw new EntityDoesNotExistsException("A user with that username not exists.");
+                }else throw new EntityDoesNotExistsException("A proponente with that username not exists.");
             }
             
             
             List<Documento> currentDocumentos = new LinkedList();
             for(String doc:documentos){
                 Documento tempDocumentos=em.find(Documento.class, doc);
-                /*if (tempDocumentos != null) {
+                if (tempDocumentos != null) {
                     currentDocumentos.add(em.find(Documento.class, doc));   
-                }else throw new EntityDoesNotExistsException("A user with that username already exists.");*/
+
+                }else throw new EntityDoesNotExistsException("A doc with that username already exists.");
             }
-            
-         em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, currentProponentes, currentDocumentos));
-        } catch (EntityDoesNotExistsException e){
-            throw e;
+            em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, null, null));
+         //em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, currentProponentes, currentDocumentos));
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
