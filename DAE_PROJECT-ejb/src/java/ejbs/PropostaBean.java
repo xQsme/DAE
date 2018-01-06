@@ -86,8 +86,8 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @POST
-    //@RolesAllowed({"MembroCCP","Instituicao", "Teacher"})
-    @RolesAllowed("MembroCCP")
+    @RolesAllowed({"MembroCCP","Instituicao", "Teacher"})
+    //@RolesAllowed("MembroCCP")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML})
     public Response create(PropostaDTO prop) throws EntityDoesNotExistsException, MyConstraintViolationException {
