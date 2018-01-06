@@ -186,6 +186,7 @@
                 <url-pattern>/webapi/propostas/students/*</url-pattern>  
                 <url-pattern>/webapi/propostas/documents/*</url-pattern>  
                 <url-pattern>/webapi/propostas</url-pattern>             
+                <url-pattern>/webapi/students/proposta/*</url-pattern>             
             </web-resource-collection>
         
             <web-resource-collection>  

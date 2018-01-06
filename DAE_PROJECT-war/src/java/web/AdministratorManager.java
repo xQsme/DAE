@@ -635,13 +635,22 @@ public class AdministratorManager implements Serializable {
     
     public String addGuidingTeacher (){
         try {
-            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
-                                            .path("/admin/teacher/student/"+newTeacher.getUsername()+"/"+currentStudent.getUsername())
-                                            .request(MediaType.APPLICATION_XML);
-            Response response = invocationBuilder.get();
+            
+            Response response = client.target(URILookup.getBaseAPI())
+                .path("/admin/teacher/student")
+                .path(newTeacher.getUsername())
+                .path(currentStudent.getUsername())
+                .request(MediaType.APPLICATION_XML)
+                .get();
+            
+            if (response.getStatus() == 500) {
+                FacesExceptionHandler.handleException(new Exception(), response.readEntity(String.class), logger);
+                return null;
+            }
+            
             newTeacher.reset();
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            FacesExceptionHandler.handleException(e, e.toString(), logger);
             return null;
         }
         return "/admin/students/view.xhtml?faces-redirect=true";
@@ -713,10 +722,22 @@ public class AdministratorManager implements Serializable {
     
     public String setProposalStudent(){
         try {
-            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
-                                            .path("/students/proposta/"+newProposta.getCode()+"/"+currentStudent.getUsername())
-                                            .request(MediaType.APPLICATION_XML);
-            Response response = invocationBuilder.get();
+            logger.info(newProposta.getCode() + "\t" + currentStudent.getUsername());
+            
+            Response response = client.target(URILookup.getBaseAPI())
+                .path("/students/proposta")
+                .path(currentStudent.getUsername())
+                .path(newProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .get();
+            
+            logger.info(response.getStatus() + "");
+            
+            if (response.getStatus() == 500) {
+                FacesExceptionHandler.handleException(new Exception(), response.readEntity(String.class), logger);
+                return null;
+            }
+            
             newProposta.setCode(0);
         } catch (Exception e) {
             logger.info(e.toString());

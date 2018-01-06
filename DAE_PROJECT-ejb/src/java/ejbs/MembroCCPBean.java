@@ -32,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -116,7 +117,7 @@ public class MembroCCPBean extends Bean<MembroCCP>{
     @GET
     @RolesAllowed({"MembroCCP"})
     @Path("teacher/student/{teacher}/{student}")
-    public void addProfessorOrientador(@PathParam("teacher") String teacherUsername, @PathParam("student") String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
+    public Response addProfessorOrientador(@PathParam("teacher") String teacherUsername, @PathParam("student") String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
         try {
             Teacher teacher = em.find(Teacher.class, teacherUsername);
             if (teacher == null) {
@@ -156,15 +157,14 @@ public class MembroCCPBean extends Bean<MembroCCP>{
             em.merge(teacher);
             em.merge(student);
 
-
+            return Response.status(200).build();
+            
         } catch (EntityDoesNotExistsException | NullPointerException | ProposalWasNotSubmittedByAnInstitutionException |
                 StudentHasNoProposalException | TeacherAlreadyAssignedException e) {
-            throw e;
+            //throw e;
+            return Response.status(500).entity(e.getMessage()).build();
         } catch (Exception e) {
-            if (e != null) {
-                throw new EJBException(e.toString() +  "Exception");
-            }
-            throw new EJBException("Exception a excecão ou a mensagem dela vem a null");
+            return Response.status(500).entity(e.getMessage()).build();
         }
     }
 

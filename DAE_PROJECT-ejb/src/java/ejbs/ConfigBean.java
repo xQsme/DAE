@@ -62,6 +62,7 @@ public class ConfigBean {
             instituicaoBean.create("InstituicaoNick3", "secret", "Instituicao Gonçalo", "2151159@my.ipleiria.pt", TipoDeInstituicao.Pública.toString());
 
             instituicaoBean.addPropostaInstituicao(3, "InstituicaoNick2");
+            instituicaoBean.addPropostaInstituicao(2, "InstituicaoNick1");
 
             propostaBean.addAreaCientifica(1, "Informática");
             propostaBean.addAreaCientifica(1, "Saúde");
