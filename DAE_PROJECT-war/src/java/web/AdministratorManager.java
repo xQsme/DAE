@@ -31,6 +31,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -431,8 +432,24 @@ public class AdministratorManager implements Serializable {
                     }
                 }
                 
-                if(currentProposta.getEstado()==1)emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
-                if(currentProposta.getEstado()==2)emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+                if(currentProposta.getEstado()==1){
+                    LinkedList<Object> params = emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
+                    Response r = client.target(URILookup.getBaseAPI())
+                        .path("/email")
+                        .request(MediaType.APPLICATION_XML)
+                        .post(Entity.xml(params));
+                    
+                    logger.info("email code = " + r.getStatus());
+                }
+                if(currentProposta.getEstado()==2){
+                    LinkedList<Object> params = emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+                    Response r = client.target(URILookup.getBaseAPI())
+                        .path("/email")
+                        .request(MediaType.APPLICATION_XML)
+                        .post(Entity.xml(params));
+                    
+                    logger.info("email code = " + r.getStatus());
+                }
             }
             
             client.target(URILookup.getBaseAPI()).path("/propostas")
@@ -523,8 +540,14 @@ public class AdministratorManager implements Serializable {
                                         .get(new GenericType<List<ProponenteDTO>>() {})){
                     recipients.add(proponente.getEmail());
                 } 
-              
-                emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
+                
+                LinkedList<Object> params = emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
+                Response r = client.target(URILookup.getBaseAPI())
+                        .path("/email")
+                        .request(MediaType.APPLICATION_XML)
+                        .post(Entity.xml(params));
+
+                logger.info("email code = " + r.getStatus());
             }
             
         } catch (Exception e) {
