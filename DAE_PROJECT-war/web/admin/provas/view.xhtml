@@ -14,21 +14,25 @@
             <h:form>
                 <p:dataTable rendered="${not empty administratorManager.allProvas}" value="${administratorManager.allProvas}" var="p">			
                     <p:column>
-                        <f:facet name="header">Codigo</f:facet>
-                        ${p.code}
-                    </p:column>
-                    <p:column>
                         <f:facet name="header">Titulo</f:facet>
                         ${p.titulo}
                     </p:column>
                     <p:column>
-                        <f:facet name="header">Calendario</f:facet>
-                        ${p.data}
+                        <f:facet name="header">Tipo de Trabalho</f:facet>
+                        ${p.tipoDeTrabalho}
                     </p:column>
                     <p:column>
-                        <f:facet name="header">Local:</f:facet>
+                        <f:facet name="header">Local</f:facet>
                         ${p.local}
-                    </p:column> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Orçamento</f:facet>
+                        ${p.orcamento}
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Estado</f:facet>
+                        ${p.stringEstado}
+                    </p:column>
                     <p:column>
                         <f:facet name="header">Actions</f:facet>
                         <span>

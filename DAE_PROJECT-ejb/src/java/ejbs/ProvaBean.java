@@ -5,7 +5,6 @@
  */
 package ejbs;
 
-import dtos.ProvaDTO;
 import dtos.UserDTO;
 import entities.Documento;
 import entities.Proponente;
@@ -20,14 +19,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -41,13 +36,9 @@ public class ProvaBean extends Bean<Prova> {
     @PersistenceContext
     private EntityManager em;
 
-    
-    @GET
-    @RolesAllowed({"MembroCCP"})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Collection<ProvaDTO> getAllProvas() {
+    public Collection<UserDTO> getAllUsers() {
         try {
-            return getAll(ProvaDTO.class);
+            return getAll(UserDTO.class);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -82,11 +73,12 @@ public class ProvaBean extends Bean<Prova> {
                 Documento tempDocumentos=em.find(Documento.class, doc);
                 if (tempDocumentos != null) {
                     currentDocumentos.add(em.find(Documento.class, doc));   
-
                 }else throw new EntityDoesNotExistsException("A doc with that username already exists.");
             }
-            em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, null, null));
-         //em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, currentProponentes, currentDocumentos));
+            
+         em.persist(new Prova(titulo, data, local, currentProposta, currentStudent, currentProponentes, currentDocumentos));
+        } catch (EntityDoesNotExistsException e){
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
