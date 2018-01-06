@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
  * @author The Law
  */
 @Stateless
-@Path("/proponenete")
+@Path("/proponente")
 @DeclareRoles({"MembroCCP", "Instituicao", "Teacher"})
 public class ProponenteBean extends Bean<Proponente> {
 

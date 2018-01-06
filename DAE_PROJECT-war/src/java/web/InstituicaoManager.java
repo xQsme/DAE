@@ -245,16 +245,9 @@ public class InstituicaoManager implements Serializable {
         try {
             Response response = client.target(URILookup.getBaseAPI())
                 .path("/propostas")
-                .request(MediaType.APPLICATION_XML)
-                .post(Entity.xml(newProposta));
-            
-            newProposta.setCode(response.readEntity(Proposta.class).getCode());
-            client.target(URILookup.getBaseAPI())
-                .path("/instituicoes/propostas")
                 .path(instituicao.getUsername())
                 .request(MediaType.APPLICATION_XML)
                 .post(Entity.xml(newProposta));
-            newProposta.reset();
         }catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
             return null;
