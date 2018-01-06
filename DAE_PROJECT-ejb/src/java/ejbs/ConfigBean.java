@@ -50,6 +50,7 @@ public class ConfigBean {
             propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adequado a uma dissertação", "Plano adequado a uma dissertação", "Pombal", 500, null);
             propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adequado a um estágio", "Plano adequado a um estágio", "Pombal", 30, "Computador da Razer");
             propostaBean.create(3, "Titulo adequado a um projeto", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a um projeto", "Plano adequado a um projeto", "Ramalhais", 1600, null);
+            propostaBean.create(4, "Titulo adequado a uma prova", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a uma prova", "Plano adequado a uma prova", "Leiria", 1337, null);
             
             teacherBean.create("teacherNick1", "secret", "teacher Pedro", "2151163@my.ipleiria.pt", "G1");
             teacherBean.create("teacherNick2", "secret", "teacher  João", "2151474@my.ipleiria.pt", "G2");
@@ -98,7 +99,7 @@ public class ConfigBean {
             membroCCPBean.create("membroCCP2", "secret", "membroCCP", "menbroCPPdae@gmail.com");
             membroCCPBean.validarProposta("membroCCP", 1, -1, "Because i Can muahahaha");
             membroCCPBean.validarProposta("membroCCP", 2, 1);
-            membroCCPBean.validarProposta("membroCCP", 3, 3);
+            membroCCPBean.validarProposta("membroCCP", 4, 2);
             
             
             List<String> juizes = new LinkedList();

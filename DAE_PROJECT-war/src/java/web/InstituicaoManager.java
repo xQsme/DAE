@@ -239,6 +239,7 @@ public class InstituicaoManager implements Serializable {
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(currentProposta));
+            System.out.println("Request update");
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;

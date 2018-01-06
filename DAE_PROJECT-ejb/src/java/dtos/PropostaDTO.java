@@ -37,6 +37,10 @@ public class PropostaDTO  implements Serializable{
                            
             case 1: return "Aceite";
             
+            case 2: return "Prova";
+                           
+            case 3: return "Finalizado";
+            
             default: return "";
         }
     }
