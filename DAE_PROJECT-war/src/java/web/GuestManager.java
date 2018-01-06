@@ -53,13 +53,22 @@ public class GuestManager implements Serializable {
     
     private Client client;
     
+    //Primefaces require a filterList to temporarly store the values, h5!
+    public List<Object> filterList;
+    public void setFilterList(List<Object> filter){
+        filterList=filter;
+    }
+    public List<Object> getFilterList(){
+        return filterList;
+    }
+    
     @PostConstruct
     public void Init(){
         client=ClientBuilder.newClient();
     };
     
     public Collection<PropostaDTO> getAllPropostas() {
-        Collection<PropostaDTO> propostasFinalizadas= new LinkedList<>();
+        Collection<PropostaDTO> propostasFinalizadas = new LinkedList<>();
         try {
             Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
                                                 .path("/propostas")
@@ -74,6 +83,8 @@ public class GuestManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
+        
+        filterList=(List<Object>)(List<?>)propostasFinalizadas;
         return propostasFinalizadas; 
     }
     

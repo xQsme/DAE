@@ -13,21 +13,22 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.allTeachers}" value="${administratorManager.allTeachers}" var="t">			
-                    <p:column>
-                        <f:facet name="header">Username</f:facet>
+                <p:dataTable rendered="${not empty administratorManager.allTeachers}"
+                             value="${administratorManager.allTeachers}" filteredValue="${administratorManager.filterList}" var="t">			
+                    <p:column field="#{t.username}" sortBy="#{t.username}" filterBy="#{t.username}" filterMatchMode="contains">
+                        <f:facet id="Username" name="header">Username</f:facet>
                         ${t.username}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Nome</f:facet>
+                    <p:column field="#{t.name}" sortBy="#{t.name}" filterBy="#{t.name}" filterMatchMode="contains">
+                        <f:facet id="Nome" name="header">Nome</f:facet>
                         ${t.name}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Email</f:facet>
+                    <p:column field="#{t.email}" sortBy="#{t.email}" filterBy="#{t.email}" filterMatchMode="contains">
+                        <f:facet id="Email" name="header">Email</f:facet>
                         ${t.email}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Gabinete</f:facet>
+                    <p:column field="#{t.office}" sortBy="#{t.office}" filterBy="#{t.office}" filterMatchMode="contains">
+                        <f:facet id="Gabinete" name="header">Gabinete</f:facet>
                         ${t.office}
                     </p:column>
                     <p:column>

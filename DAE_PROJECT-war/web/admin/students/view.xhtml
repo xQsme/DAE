@@ -13,17 +13,19 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.allStudents}" value="${administratorManager.allStudents}" var="s">			
-                    <p:column>
-                        <f:facet name="header">Username</f:facet>
+                <p:dataTable rendered="${not empty administratorManager.allStudents}"
+                             value="${administratorManager.allStudents}" filteredValue="${administratorManager.filterList}" var="s">			
+                    
+                    <p:column field="#{s.username}" sortBy="#{s.username}" filterBy="#{s.username}" filterMatchMode="contains">
+                        <f:facet id="Username" name="header">Username</f:facet>
                         ${s.username}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Nome</f:facet>
+                    <p:column sortBy="${s.name}" filterBy="${s.name}" filterMatchMode="contains">
+                        <f:facet id="Nome" name="header">Nome</f:facet>
                         ${s.name}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Email</f:facet>
+                    <p:column sortBy="${s.email}" filterBy="${s.email}" filterMatchMode="contains">
+                        <f:facet id="Email" name="header">Email</f:facet>
                         ${s.email}
                     </p:column>
                     <p:column>

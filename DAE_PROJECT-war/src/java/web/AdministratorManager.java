@@ -108,8 +108,6 @@ public class AdministratorManager implements Serializable {
     private UIComponent component;
     private MembroCCP loggedMembroCCP;
     
-    private String pattern;
-    
     //Primefaces require a filterList to temporarly store the values, h5!
     public List<Object> filterList;
     public void setFilterList(List<Object> filter){
@@ -165,12 +163,15 @@ public class AdministratorManager implements Serializable {
         this.client = client;
     }
     
-    public Collection<InstituicaoDTO> getAllInstitutions() {
+    public List<InstituicaoDTO> getAllInstitutions() {
         try {
-            return client.target(URILookup.getBaseAPI())
+            List<InstituicaoDTO> instituicao= client.target(URILookup.getBaseAPI())
                     .path("/instituicoes")
                     .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<InstituicaoDTO>>() {});        
+                    .get(new GenericType<List<InstituicaoDTO>>() {}); 
+            
+            filterList=(List<Object>)(List<?>)instituicao;
+            return instituicao;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -179,12 +180,14 @@ public class AdministratorManager implements Serializable {
     
     public List<TeacherDTO> getAllTeachers() {
         try {
-            ///teachers
-            return client.target(URILookup.getBaseAPI())
+            List<TeacherDTO> teachers=client.target(URILookup.getBaseAPI())
                     .path("/teachers")
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<TeacherDTO>>() {});
-            //return teacherBean.getAllTeachers();
+            
+            
+            filterList=(List<Object>)(List<?>)teachers;
+            return teachers;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -193,14 +196,12 @@ public class AdministratorManager implements Serializable {
     
     public List<ProponenteDTO> getCurrentPropostaProponentes(){
         try {
-            System.out.println("1");
             return client.target(URILookup.getBaseAPI())
                     .path("/proponente/proposta/"+currentProposta.getCode())
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<ProponenteDTO>>() {});
            
         } catch (Exception e) {
-             System.out.println("2");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -248,12 +249,15 @@ public class AdministratorManager implements Serializable {
     }
     
     
-    public Collection<StudentDTO> getAllStudents() {
+    public List<StudentDTO> getAllStudents() {
         try {
-            return client.target(URILookup.getBaseAPI())
+            List<StudentDTO> students=client.target(URILookup.getBaseAPI())
                                 .path("/students")
                                 .request(MediaType.APPLICATION_XML)
-                                .get(new GenericType<List<StudentDTO>>() {});  
+                                .get(new GenericType<List<StudentDTO>>() {});
+            
+            filterList=(List<Object>)(List<?>)students;
+            return students;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
@@ -264,12 +268,12 @@ public class AdministratorManager implements Serializable {
             List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
             try {
                 Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
-                                                    .path("/propostas/")
+                                                    .path("/propostas")
                                                     //.queryParam("pattern", "Po")
                                                     .request(MediaType.APPLICATION_XML)
                                                     .get(new GenericType<List<PropostaDTO>>() {});         
                 for(PropostaDTO p : propostas){
-                    System.out.println(p.getTitulo());
+                    //System.out.println(p.getTitulo());
                     if(p.getEstado()>=-1 && p.getEstado()<2){
                         propostasEmAndamento.add(p);
                     }
@@ -714,13 +718,13 @@ public class AdministratorManager implements Serializable {
     
     public String createProposta() {
         try {
-            
             Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
                                                         .path("/propostas")
                                                         .request(MediaType.APPLICATION_XML);
-            Response response = invocationBuilder.post(Entity.xml(newInstituicao));
+            Response response = invocationBuilder.post(Entity.xml(newProposta));
             System.out.println("Resposta: " +response.getStatus());
             
+            newProposta.reset();
         }catch (Exception e) {
             logger.warning(e.toString());
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), component, logger);

@@ -13,24 +13,25 @@
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty studentManager.allPropostas}" value="${studentManager.allPropostas}" var="p">			
-                    <p:column>
-                        <f:facet name="header">Titulo</f:facet>
+                <p:dataTable rendered="${not empty studentManager.allPropostas}"
+                             value="${studentManager.allPropostas}" filteredValue="${administratorManager.filterList}"  var="p">			
+                   <p:column field="#{p.titulo}" sortBy="#{p.titulo}" filterBy="#{p.titulo}" filterMatchMode="contains">
+                        <f:facet name="header" id="Titulo">Titulo</f:facet>
                         ${p.titulo}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Tipo de Trabalho</f:facet>
+                    <p:column  sortBy="${p.tipoDeTrabalho}" filterBy="${p.tipoDeTrabalho}" filterOptions="contains">
+                        <f:facet name="header" id="TipoDeTrabalho">Tipo de Trabalho</f:facet>
                         ${p.tipoDeTrabalho}
                     </p:column>
-                    <p:column>
+                    <p:column  sortBy="${p.local}" filterBy="${p.local}" filterOptions="contains">
                         <f:facet name="header">Local</f:facet>
                         ${p.local}
                     </p:column>
-                    <p:column>
+                    <p:column  sortBy="${p.orcamento}" filterBy="${p.orcamento}" filterOptions="contains">
                         <f:facet name="header">Orçamento</f:facet>
-                        ${p.orcamento}
+                        ${p.orcamento}€
                     </p:column>
-                    <p:column>
+                    <p:column  sortBy="${p.stringEstado}" filterBy="${p.stringEstado}" filterOptions="contains">
                         <f:facet name="header">Estado</f:facet>
                         ${p.stringEstado}
                     </p:column>

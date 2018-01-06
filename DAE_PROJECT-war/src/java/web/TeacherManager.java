@@ -16,15 +16,10 @@ import ejbs.ProponenteBean;
 import ejbs.PropostaBean;
 import ejbs.TeacherBean;
 import ejbs.StudentBean;
-import entities.Proposta;
-import exceptions.EntityAlreadyExistsException;
-import exceptions.EntityDoesNotExistsException;
-import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -35,7 +30,6 @@ import javax.faces.component.UIComponent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -76,6 +70,15 @@ public class TeacherManager implements Serializable {
 
     private HttpAuthenticationFeature feature;    
     
+    //Primefaces require a filterList to temporarly store the values, h5!
+    public List<Object> filterList;
+    public void setFilterList(List<Object> filter){
+        filterList=filter;
+    }
+    public List<Object> getFilterList(){
+        return filterList;
+    }
+    
     public TeacherManager() {
         newProposta = new PropostaDTO();
         client = ClientBuilder.newClient();
@@ -90,10 +93,14 @@ public class TeacherManager implements Serializable {
     
     public List<PropostaDTO> getAllPropostas() {
         try {
-            return client.target(URILookup.getBaseAPI())
-                    .path("/propostas")
-                    .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<PropostaDTO>>() {});
+            List<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                                            .path("/propostas")
+                                            .request(MediaType.APPLICATION_XML)
+                                            .get(new GenericType<List<PropostaDTO>>() {});
+            
+            filterList=(List<Object>)(List<?>)propostas;
+            return propostas;
+            
         } catch (Exception e) {
             System.out.println("ERROR GETTING PROPOSTAS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);

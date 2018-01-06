@@ -36,18 +36,18 @@ and open the template in the editor.
                     </p:column>
                     <p:column>
                         <f:facet name="header">Orçamento</f:facet>
-                        ${p.orcamento}
+                        ${p.orcamento}€
                     </p:column>
                     <p:column>
                         <f:facet name="header">Estado</f:facet>
-                        ${p.estado}
+                        ${p.stringEstado}
                     </p:column>
                     <p:column>
                         <f:facet name="header">Actions</f:facet>
                         <span>
                             <h:commandLink
                                 value="Details"
-                                action="/teacher/propostas/details">
+                                action="minedetails">
                                 <f:setPropertyActionListener target="#{teacherManager.currentProposta}" value="${p}"></f:setPropertyActionListener>
                             </h:commandLink>
                         </span>

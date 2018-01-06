@@ -15,7 +15,7 @@
                 <p:dataTable rendered="${not empty administratorManager.allPropostas}" 
                              value="${administratorManager.allPropostas}" filteredValue="${administratorManager.filterList}" var="p">
                     
-                    <p:column field="#{p.titulo}" sortBy="#{p.titulo}" filterBy="#{p.titulo}" filterOptions="contains">
+                    <p:column field="#{p.titulo}" sortBy="#{p.titulo}" filterBy="#{p.titulo}" filterMatchMode="contains">
                         <f:facet name="header" id="Titulo">Titulo</f:facet>
                         ${p.titulo}
                     </p:column>

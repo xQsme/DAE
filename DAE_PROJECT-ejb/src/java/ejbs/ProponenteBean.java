@@ -33,6 +33,10 @@ import javax.ws.rs.core.MediaType;
 @DeclareRoles({"MembroCCP", "Instituicao", "Teacher"})
 public class ProponenteBean extends Bean<Proponente> {
 
+    
+    @GET
+    @RolesAllowed({"MembroCCP", "Instituicao", "Teacher"}) 
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<ProponenteDTO> getAlProponentes() {
         try {
             return getAll(ProponenteDTO.class);
@@ -41,6 +45,7 @@ public class ProponenteBean extends Bean<Proponente> {
         }
     }
     
+  
     @Override
     protected Collection<Proponente> getAll() {
         return em.createNamedQuery("getAllProponentes").getResultList();

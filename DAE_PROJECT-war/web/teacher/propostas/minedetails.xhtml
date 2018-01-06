@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:em="http://xmlns.jcp.org/jsf/composite/emcomp"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="../../templates/skeleton.xhtml">
+        <ui:define name="title">
+            Proposta #{teacherManager.currentProposta.titulo}
+        </ui:define>
+        <ui:define name="main">
+            <c:if test="#{not empty teacherManager.currentProposta}">
+                <h:form>
+                    <p:panelGrid columns="2">
+
+                        <h:outputLabel for="code" value="Code: " />
+                        <h:outputText 
+                            id="code"
+                            value="#{teacherManager.currentProposta.code}"/>
+
+                        <h:outputLabel for="titulo" value="Titulo: " />
+                        <h:outputText 
+                            id="titulo"
+                            value="#{teacherManager.currentProposta.titulo}"/>
+
+                        <h:outputLabel for="tipoDeTrabalho" value="Tipo de Trabalho: " />
+                        <h:outputText 
+                            id="tipoDeTrabalho"
+                            value="#{teacherManager.currentProposta.tipoDeTrabalho}"/>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentProposta.areasCientificas}" for="areasCientificas" value="Areas Cientificas:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.areasCientificas}" value="${teacherManager.currentProposta.areasCientificas}" var="a">			
+                            <h:column>
+                                ${a}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel for="resumo" value="Resumo: " />
+                        <h:outputText 
+                            id="resumo"
+                            value="#{teacherManager.currentProposta.resumo}"/>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaProponentes}" for="proponentes" value="Proponentes:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentPropostaProponentes}" value="${teacherManager.currentPropostaProponentes}" var="p">			
+                            <h:column>
+                                ${p.name}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentPropostaCandidatos}" value="${teacherManager.currentPropostaCandidatos}" var="c">			
+                            <h:column>
+                                ${c.name}
+                                <span>
+                                    <h:commandLink
+                                            value="Details"
+                                            action="/admin/students/details">
+                                            <f:setPropertyActionListener target="${administratorManager.currentStudent}" value="${c}"></f:setPropertyActionListener>
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.objetivos}" value="${teacherManager.currentProposta.objetivos}" var="o">			
+                            <h:column>
+                                ${o}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentProposta.bibliografia}" for="bibliografia" value="Bibliografia:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.bibliografia}" value="${teacherManager.currentProposta.bibliografia}" var="b">			
+                            <h:column>
+                                ${b}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel for="planoDeTrabalhos" value="Plano de Trabalhos: " />
+                        <h:outputText 
+                            id="planoDeTrabalhos"
+                            value="#{teacherManager.currentProposta.planoDeTrabalhos}"/>
+
+                        <h:outputLabel for="local" value="Local: " />
+                        <h:outputText 
+                            id="local"
+                            value="#{teacherManager.currentProposta.local}"/>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentProposta.requisitos}" for="requisitos" value="Requisitos:"/>
+                        <h:dataTable rendered="${not empty teacherManager.currentProposta.requisitos}" value="${teacherManager.currentProposta.requisitos}" var="r">			
+                            <h:column>
+                                ${r}
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel for="orcamento" value="Orçamento: " />
+                        <h:outputText 
+                            id="orcamento"
+                            value="#{teacherManager.currentProposta.orcamento}"/>
+
+                        <h:outputLabel for="apoios" value="Apoios: " />
+                        <h:outputText 
+                            id="apoios"
+                            value="#{teacherManager.currentProposta.apoios}"/>
+
+                        <h:outputLabel for="estado" value="Estado: "
+                                       rendered="${not empty teacherManager.currentProposta.estado}"/>
+                        <h:outputText 
+                            id="estado"
+                            rendered="${not empty teacherManager.currentProposta.estado}"
+                            value="#{teacherManager.currentProposta.stringEstado}"/>
+
+                        <h:outputLabel for="observacao" value="Observacao: " 
+                                       rendered="${not empty teacherManager.currentProposta.estado and 
+                                                   not empty teacherManager.currentProposta.observacao}" />
+                        <h:outputText 
+                            id="observacao"
+                            rendered="${not empty teacherManager.currentProposta.estado and
+                                        not empty teacherManager.currentProposta.observacao}"
+                            value="#{teacherManager.currentProposta.observacao}"/>
+
+                                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaDocumentos}" for="documentos" value="Documentos:"/>
+                        <h:dataTable id="documentos" rendered="${not empty teacherManager.currentPropostaDocumentos}" value="${teacherManager.currentPropostaDocumentos}" var="d">			
+                            <h:column>
+                                ${d.desiredName}
+                                <span>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:outputLabel rendered="${not empty teacherManager.currentPropostaAta}" for="ata" value="Ata:"/>
+                        <h:dataTable id="ata" rendered="${not empty teacherManager.currentPropostaAta}" value="${teacherManager.currentPropostaAta}" var="a">			
+                            <h:column>
+                                ${a.desiredName}
+                                <span>
+                                    <h:commandLink
+                                        value="Download">
+                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.file}" />
+                                    </h:commandLink>
+                                </span>
+                            </h:column>
+                        </h:dataTable>
+
+                    </p:panelGrid>
+                </h:form>
+            </c:if>
+            <c:if test="#{empty teacherManager.currentProposta}">
+                <p>Não foi selecionada uma proposta.</p>
+            </c:if>
+            <br/>
+            <h:messages errorStyle="color: red" />    
+            <br/>
+            <h:link value="Return" outcome="/teacher/propostas/mine"/>
+        </ui:define>
+    </ui:composition>
+</html>

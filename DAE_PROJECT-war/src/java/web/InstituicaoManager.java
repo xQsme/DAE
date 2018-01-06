@@ -66,6 +66,15 @@ public class InstituicaoManager implements Serializable {
         client = ClientBuilder.newClient();
     }
     
+    //Primefaces require a filterList to temporarly store the values, h5!
+    public List<Object> filterList;
+    public void setFilterList(List<Object> filter){
+        filterList=filter;
+    }
+    public List<Object> getFilterList(){
+        return filterList;
+    }
+    
     @PostConstruct
     public void Init(){
         feature = HttpAuthenticationFeature.basic(userManager.getUsername(), userManager.getPassword());
@@ -75,10 +84,13 @@ public class InstituicaoManager implements Serializable {
     
     public List<PropostaDTO> getAllPropostas() {
         try {
-            return client.target(URILookup.getBaseAPI())
-                    .path("/propostas")
-                    .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<PropostaDTO>>() {});
+            List<PropostaDTO> propostas= client.target(URILookup.getBaseAPI())
+                                        .path("/propostas")
+                                        .request(MediaType.APPLICATION_XML)
+                                        .get(new GenericType<List<PropostaDTO>>() {});
+            
+            filterList=(List<Object>)(List<?>)propostas;
+            return propostas;
         } catch (Exception e) {
             System.out.println("ERROR GETTING PROPOSTAS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);

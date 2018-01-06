@@ -18,17 +18,18 @@ and open the template in the editor.
         </ui:define>
         <ui:define name="main">
             <h:form>
-                <p:dataTable rendered="${not empty administratorManager.allInstitutions}" value="${administratorManager.allInstitutions}" var="i">			
-                    <p:column>
-                        <f:facet name="header">Username</f:facet>
+                <p:dataTable rendered="${not empty administratorManager.allInstitutions}" 
+                             value="${administratorManager.allInstitutions}" filteredValue="${administratorManager.filterList}" var="i">			
+                    <p:column field="#{i.username}" sortBy="#{i.username}" filterBy="#{i.username}" filterMatchMode="contains">
+                        <f:facet id="Username" name="header">Username</f:facet>
                         ${i.username}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Nome</f:facet>
+                    <p:column field="#{i.name}" sortBy="#{i.name}" filterBy="#{i.name}" filterMatchMode="contains">
+                        <f:facet id="Nome" name="header">Nome</f:facet>
                         ${i.name}
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">Tipo de Instituição</f:facet>
+                    <p:column field="#{i.tipo}" sortBy="#{i.tipo}" filterBy="#{i.tipo}" filterMatchMode="contains">
+                        <f:facet id="tipoDeInstituição" name="header">Tipo de Instituição</f:facet>
                         ${i.tipo}
                     </p:column>
                     <p:column>

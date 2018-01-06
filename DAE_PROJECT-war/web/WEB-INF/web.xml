@@ -26,24 +26,16 @@
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
     
-  
-            
-                      
-                                          
-    <security-constraint>
+     <security-constraint>
         <display-name>ServicesForAll</display-name>
         <web-resource-collection>  
             <web-resource-name>Propostas</web-resource-name>
             <url-pattern>/webapi/propostas</url-pattern>
                 <http-method>GET</http-method>
-                <http-method>POST</http-method>
-                <http-method>PUT</http-method>
-                <http-method>DELETE</http-method>  
         </web-resource-collection>
     </security-constraint>
-
     
-   <security-constraint>
+    <security-constraint>
         <display-name>StudentConstraint</display-name>
         <web-resource-collection>
             <web-resource-name>Student Pages</web-resource-name>
@@ -55,7 +47,7 @@
             <web-resource-name>StudentsController</web-resource-name>
             <url-pattern>/webapi/students/*</url-pattern>
                 <http-method>GET</http-method>
-                <http-method>PUT</http-method><!--Perigo student pode se alterar a si e aos outros--> 
+                <http-method>PUT</http-method>
         </web-resource-collection>
         <web-resource-collection>  
             <web-resource-name>Students_Documento</web-resource-name>
@@ -123,8 +115,6 @@
     </security-constraint>
     
     
-    
-    
     <security-constraint>
         <display-name>TeacherConstraint</display-name>
         <web-resource-collection>
@@ -189,7 +179,7 @@
             <web-resource-collection>
                 <web-resource-name>Admin Services</web-resource-name>
                 <description/>
-                <url-pattern></url-pattern>
+                <url-pattern>/webapi/propostas/</url-pattern>     
                 <url-pattern>/webapi/propostas/*</url-pattern>        
                 <url-pattern>/webapi/proponente/</url-pattern> 
                 <url-pattern>/webapi/proponente/proposta/*</url-pattern> 
