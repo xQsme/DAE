@@ -108,8 +108,7 @@ public class Proposta implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "proposal")
     private Student student;
     
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "PROVA_CODE", referencedColumnName="CODE")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "proposta")
     private Prova prova;
     
     public String getObservacao() {

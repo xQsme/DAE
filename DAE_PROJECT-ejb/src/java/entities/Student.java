@@ -46,13 +46,13 @@ public class Student extends User  {
 
     
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "student")
-    private Proposta prova;
+    private Prova prova;
 
-    public Proposta getProva() {
+    public Prova getProva() {
         return prova;
     }
 
-    public void setProva(Proposta prova) {
+    public void setProva(Prova prova) {
         this.prova = prova;
     }
     
