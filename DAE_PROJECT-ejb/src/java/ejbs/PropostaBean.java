@@ -568,7 +568,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
+    @PermitAll
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("students/{code}")
     public Collection<StudentDTO> getCandidatos(@PathParam("code") int code) throws EntityDoesNotExistsException {

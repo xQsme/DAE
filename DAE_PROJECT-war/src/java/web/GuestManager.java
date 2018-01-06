@@ -88,21 +88,31 @@ public class GuestManager implements Serializable {
         return propostasFinalizadas; 
     }
     
-    public Collection<ProponenteDTO> getCurrentPropostaProponentes(){
-        try {
-            return proponenteBean.getPropostaProponentes(currentProposta.getCode());
+    public List<ProponenteDTO> getCurrentPropostaProponentes(){
+        try{
+            return client.target(URILookup.getBaseAPI())
+                .path("/propostas/proponentes")
+                .path(currentProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<ProponenteDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            System.out.println("ERROR GETTING PROPONENTES");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
-    public Collection<StudentDTO> getCurrentPropostaCandidatos(){
-        try {
-            return studentBean.getPropostaCandidatos(currentProposta.getCode());
+    public List<StudentDTO> getCurrentPropostaCandidatos(){
+        try{
+            return client.target(URILookup.getBaseAPI())
+                .path("/propostas/students")
+                .path(currentProposta.getCode()+"")
+                .request(MediaType.APPLICATION_XML)
+                .get(new GenericType<List<StudentDTO>>() {});
         } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return null;
+            System.out.println("ERROR GETTING CANDIDATOS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
         }
     }
     
@@ -122,28 +132,42 @@ public class GuestManager implements Serializable {
         this.component = component;
     }
     
-        public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
+    public Collection<DocumentDTO> getCurrentPropostaDocumentos(){
         LinkedList<DocumentDTO> documents = new LinkedList<>();
         try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+            for(DocumentDTO d : getPropostaDocuments()){
                 if(!d.isAta()){
                     documents.add(d);
                 }
             }
-        } catch (EntityDoesNotExistsException e) {
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return documents;
     }
     
+    public List<DocumentDTO> getPropostaDocuments(){
+        try {
+            return client.target(URILookup.getBaseAPI())
+                    .path("/propostas/documents")
+                    .path(currentProposta.getCode()+"")
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<DocumentDTO>>() {});
+        } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPOSTA DOCUMENTS");
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
+            return new LinkedList<>();
+        }
+    }
+    
     public DocumentDTO getCurrentPropostaAta(){
         try {
-            for(DocumentDTO d : propostaBean.getDocuments(currentProposta.getCode())){
+            for(DocumentDTO d : getPropostaDocuments()){
                 if(d.isAta()){
                     return d;
                 }
             }
-        } catch (EntityDoesNotExistsException e) {
+        } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;

@@ -576,6 +576,7 @@ public class AdministratorManager implements Serializable {
     }
     
     //Not full implmented yet
+
     public String serializarProposta() throws AddressException, Exception {
         try {
 
