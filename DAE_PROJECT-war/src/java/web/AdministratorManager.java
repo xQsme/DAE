@@ -715,10 +715,11 @@ public class AdministratorManager implements Serializable {
     public String createProposta() {
         try {
             
-            Response response = client.target(URILookup.getBaseAPI())
-                .path("/propostas")
-                .request(MediaType.APPLICATION_XML)
-                .post(Entity.xml(newProposta));
+            Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
+                                                        .path("/propostas")
+                                                        .request(MediaType.APPLICATION_XML);
+            Response response = invocationBuilder.post(Entity.xml(newInstituicao));
+            System.out.println("Resposta: " +response.getStatus());
             
         }catch (Exception e) {
             logger.warning(e.toString());

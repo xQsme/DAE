@@ -1,12 +1,10 @@
 package ejbs;
 
-import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import entities.Document;
-import entities.Instituicao;
 import entities.Proponente;
 import entities.Proposta;
 import entities.Student;
@@ -16,12 +14,9 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import javafx.scene.control.SortEvent;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -31,21 +26,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -158,16 +147,12 @@ public class PropostaBean extends Bean<Proposta> {
             throw new EJBException(e.getMessage());
         }
     }
-<<<<<<< HEAD
-        
-=======
-    
+
     
     @GET
     @PermitAll
     @Path("/accepted")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
->>>>>>> 7ca044591ec8d84c96e2008cbe4d5e09627e62e8
     public Collection<PropostaDTO> getAllAccepted() {
         LinkedList<PropostaDTO> propostas = new LinkedList<>();
         try {
