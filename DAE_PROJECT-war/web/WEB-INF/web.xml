@@ -155,6 +155,7 @@
             <url-pattern>/webapi/students/documentos/*</url-pattern>
             <url-pattern>/webapi/instituicoes/*</url-pattern>
             <url-pattern>/webapi/propostas</url-pattern>
+            <url-pattern>/webapi/propostas/*</url-pattern>
             <url-pattern>/webapi/propostas/documents/*</url-pattern>
             <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
             <url-pattern>/webapi/propostas/students/*</url-pattern>
@@ -189,7 +190,8 @@
                 <url-pattern>/webapi/students/proposta/*</url-pattern>
                 <url-pattern>/webapi/provas/*</url-pattern>      
                 <url-pattern>/webapi/email</url-pattern>                  
-                <url-pattern>/webapi/email/*</url-pattern>                  
+                <url-pattern>/webapi/email/*</url-pattern> 
+                <url-pattern>/webapi/teachers/</url-pattern>                 
             </web-resource-collection>
         
             <web-resource-collection>  
@@ -227,7 +229,11 @@
                 <web-resource-name>AdminsController</web-resource-name>
                 <url-pattern>/webapi/admin/*</url-pattern>
                     <http-method>GET</http-method>
-
+            </web-resource-collection>
+            <web-resource-collection>  
+                <web-resource-name>Propostas_Documento</web-resource-name>
+                <url-pattern>/webapi/propostas/documento/*</url-pattern>
+                    <http-method>POST</http-method>
             </web-resource-collection>
             <web-resource-collection>  
                 <web-resource-name>AdminsAction</web-resource-name>

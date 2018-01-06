@@ -101,7 +101,7 @@ public class PropostaBean extends Bean<Proposta> {
                     prop.getLocal(),
                     prop.getOrcamento(), 
                     prop.getApoios());
-            
+            proposta.setEstado(prop.getEstado());
             em.persist(proposta);
             return Response.ok().build();
         }catch (ConstraintViolationException e) {
@@ -397,6 +397,7 @@ public class PropostaBean extends Bean<Proposta> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void update(@PathParam("code") int code, PropostaDTO prop) 
             throws EntityDoesNotExistsException, MyConstraintViolationException {
+        System.out.println("PUT");
         try {
             Proposta proposta = em.find(Proposta.class, code);
             if (proposta == null) {
