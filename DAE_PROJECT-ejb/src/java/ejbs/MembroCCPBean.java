@@ -6,7 +6,6 @@
 package ejbs;
 
 import dtos.MembroCCPDTO;
-import dtos.TeacherDTO;
 import entities.Instituicao;
 import entities.MembroCCP;
 import entities.Proponente;
@@ -19,11 +18,20 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.ProposalWasNotSubmittedByAnInstitutionException;
 import exceptions.StudentHasNoProposalException;
 import exceptions.TeacherAlreadyAssignedException;
+import java.util.Collection;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -33,7 +41,8 @@ import javax.ws.rs.Path;
 
 @Stateless
 @Path("/admin")
-public class MembroCCPBean{
+@DeclareRoles({"MembroCCP"})
+public class MembroCCPBean extends Bean<MembroCCP>{
     @PersistenceContext
     private EntityManager em;
     
@@ -51,19 +60,22 @@ public class MembroCCPBean{
         }
     }
     
-    public MembroCCP find(String username){
+    @GET
+    @RolesAllowed({"MembroCCP"})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("{username}")
+    public MembroCCPDTO find(@PathParam("username") String username) throws EntityDoesNotExistsException{
         try {
             MembroCCP membroCCP = em.find(MembroCCP.class, username);
             if (membroCCP == null) {
                 throw new EntityDoesNotExistsException("Invalid MembroCPP Username");
             }
-            return membroCCP; 
+            return toDTO(membroCCP, MembroCCPDTO.class); 
         } catch (EntityDoesNotExistsException e) {
-            
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
-        return null;
     }
     
     //In case the Menber doesnt leave a comment
@@ -101,7 +113,10 @@ public class MembroCCPBean{
         }       
     }
     
-    public void addProfessorOrientador(String teacherUsername, String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
+    @GET
+    @RolesAllowed({"MembroCCP"})
+    @Path("teacher/student/{teacher}/{student}")
+    public void addProfessorOrientador(@PathParam("teacher") String teacherUsername, @PathParam("student") String studentUsername) throws EntityDoesNotExistsException, TeacherAlreadyAssignedException, NullPointerException, ProposalWasNotSubmittedByAnInstitutionException, StudentHasNoProposalException, StudentHasNoProposalException, StudentHasNoProposalException {
         try {
             Teacher teacher = em.find(Teacher.class, teacherUsername);
             if (teacher == null) {
@@ -151,5 +166,10 @@ public class MembroCCPBean{
             }
             throw new EJBException("Exception a excecão ou a mensagem dela vem a null");
         }
+    }
+
+    @Override
+    protected Collection<MembroCCP> getAll() {
+        return null;
     }
 }

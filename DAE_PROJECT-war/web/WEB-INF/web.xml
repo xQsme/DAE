@@ -214,6 +214,22 @@
                     <http-method>PUT</http-method>
                     <http-method>DELETE</http-method>   
             </web-resource-collection>
+            <web-resource-collection>  
+                <web-resource-name>StudentsAction</web-resource-name>
+                <url-pattern>/webapi/students/proposta/*/*</url-pattern>
+                    <http-method>GET</http-method>
+            </web-resource-collection>
+            <web-resource-collection>  
+                <web-resource-name>AdminsController</web-resource-name>
+                <url-pattern>/webapi/admin/*</url-pattern>
+                    <http-method>GET</http-method>
+
+            </web-resource-collection>
+            <web-resource-collection>  
+                <web-resource-name>AdminsAction</web-resource-name>
+                <url-pattern>/webapi/admin/teacher/student/*/*</url-pattern>
+                    <http-method>GET</http-method>
+            </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>MembroCCP</role-name>

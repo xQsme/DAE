@@ -12,15 +12,10 @@ import dtos.InstituicaoDTO;
 import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
-import entities.Proposta;
-import exceptions.EntityAlreadyExistsException;
-import exceptions.EntityDoesNotExistsException;
-import exceptions.MyConstraintViolationException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -236,9 +231,7 @@ public class InstituicaoManager implements Serializable {
     public void setInstituicao(InstituicaoDTO instituicao) {
         this.instituicao = instituicao;
     }
-
-    
-    
+ 
     public String updateProposta() {
         try {
             client.target(URILookup.getBaseAPI())
@@ -310,7 +303,5 @@ public class InstituicaoManager implements Serializable {
     public void setCurrentStudent(StudentDTO currentStudent) {
         this.currentStudent = currentStudent;
     }
-    
-    
     
 }

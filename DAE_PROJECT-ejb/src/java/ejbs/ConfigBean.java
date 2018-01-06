@@ -44,8 +44,6 @@ public class ConfigBean {
             propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adequado a uma dissertação", "Plano adequado a uma dissertação", "Pombal", 500, null);
             propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adequado a um estágio", "Plano adequado a um estágio", "Pombal", 30, "Computador da Razer");
             propostaBean.create(3, "Titulo adequado a um projeto", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a um projeto", "Plano adequado a um projeto", "Ramalhais", 1600, null);
-            propostaBean.create(4, "Titulo adequado a uma prova", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a uma prova", "Plano adequado a uma prova", "Leiria", 1337, "Stuff");
-            
             
             teacherBean.create("teacherNick1", "secret", "teacher Pedro", "2151163@my.ipleiria.pt", "G1");
             teacherBean.create("teacherNick2", "secret", "teacher  João", "2151474@my.ipleiria.pt", "G2");
@@ -55,14 +53,9 @@ public class ConfigBean {
             studentBean.addCandidatura("2151159", 2);
             studentBean.addCandidatura("2151159", 1);
             
-            studentBean.addCandidatura("2151163", 4);
-            studentBean.addCandidatura("2151474", 4);
-            
             teacherBean.addPropostaTeacher(1, "teacherNick1");
             teacherBean.addPropostaTeacher(2, "teacherNick2");
             teacherBean.addPropostaTeacher(1, "teacherNick3");
-            teacherBean.addPropostaTeacher(4, "teacherNick3");
-            teacherBean.addPropostaTeacher(4, "teacherNick2");
             
             instituicaoBean.create("InstituicaoNick1", "secret", "Instituicao Pedro", "2151163@my.ipleiria.pt", "Associação");
             instituicaoBean.create("InstituicaoNick2", "secret", "Instituicao João", "2151474@my.ipleiria.pt", TipoDeInstituicao.Empresa.toString());

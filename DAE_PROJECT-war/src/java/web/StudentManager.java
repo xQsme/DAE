@@ -348,7 +348,7 @@ public class StudentManager implements Serializable {
     
     public String atualizarDocument() {
         try {
-            document = new DocumentDTO(uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
+            document = new DocumentDTO(currentDocument.getId(), uploadManager.getCompletePathFile(), uploadManager.getFilename(), uploadManager.getFile().getContentType(), false);
             
             Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
                                                         .path("/propostas/documento/"+currentProposta.getCode())

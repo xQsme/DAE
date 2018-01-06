@@ -20,11 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.naming.spi.DirStateFactory.Result;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -245,7 +243,10 @@ public class StudentBean extends Bean<Student> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void setProposta(String username, int propostaCode) throws EntityDoesNotExistsException, ProposalAlreadyAsignedException, 
+    @GET
+    @RolesAllowed({"MembroCCP"})
+    @Path("proposta/{username}/{code}")
+    public void setProposta(@PathParam("username") String username, @PathParam("code") int propostaCode) throws EntityDoesNotExistsException, ProposalAlreadyAsignedException, 
             ProposalNotAcceptedException, StudentAlreadyHasAProposalAssignedException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);

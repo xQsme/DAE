@@ -122,8 +122,8 @@
                                 <span>
                                     <h:commandLink
                                         value="Download">
-                                        <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                        <p:fileDownload value="#{downloadManager.file}" />
+                                        <f:setPropertyActionListener target="${downloadManager.document}" value="${d}"></f:setPropertyActionListener>
+                                        <p:fileDownload value="#{downloadManager.documentFile}" />
                                     </h:commandLink>
                                 </span>
                                 <c:if test="${studentManager.isStudentCandidatoProposta(studentManager.currentProposta.code) and studentManager.currentProposta.estado==1}">
@@ -132,14 +132,14 @@
                                             value="Atualizar" 
                                             action="atualizar">
                                             <f:setPropertyActionListener target="${uploadManager.currentPropostaId}" value="${studentManager.currentProposta.code}"></f:setPropertyActionListener>
-                                            <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
+                                            <f:setPropertyActionListener target="${studentManager.currentDocument}" value="${d}"></f:setPropertyActionListener>
                                         </h:commandLink>
                                     </span>
                                     <span>
                                         <h:commandLink
                                             value="Remover"
                                             action="${studentManager.removerDocument}">
-                                            <f:setPropertyActionListener target="${studentManager.currentDocumento}" value="${d}"></f:setPropertyActionListener>
+                                            <f:setPropertyActionListener target="${studentManager.currentDocument}" value="${d}"></f:setPropertyActionListener>
                                         </h:commandLink>
                                     </span>
                                 </c:if>
