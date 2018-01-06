@@ -8,11 +8,13 @@
         <title>Finalizar Prova</title>
     </h:head>
     <h:body>
-        <h:form enctype="multipart/form-data">
-            <p:growl id="messages" showDetail="true" />
-            <p:fileUpload value="#{uploadManager.file}" mode="simple" />
-            <p:commandButton value="Submit" ajax="false" actionListener="#{uploadManager.upload}" action="#{administratorManager.finalizarDocumento}"/>
-        </h:form>
+        <c:if test="#{administratorManager.currentProposta.estado==2}">
+            <h:form enctype="multipart/form-data">
+                <p:growl id="messages" showDetail="true" />
+                <p:fileUpload value="#{uploadManager.file}" mode="simple" />
+                <p:commandButton value="Submit" ajax="false" actionListener="#{uploadManager.upload}" action="#{administratorManager.finalizarDocumento}"/>
+            </h:form>
+        </c:if>
         <c:if test="#{administratorManager.currentProposta.estado==3}">
             <p>Proposta com o Titulo: "#{administratorManager.currentProposta.titulo}" ja foi finalizada!</p>
         </c:if>

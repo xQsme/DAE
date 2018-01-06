@@ -252,17 +252,19 @@ public class AdministratorManager implements Serializable {
                 provas.add(p);
             }
         }
+        filterList=(List<Object>)(List<?>)provas;
         return provas;
    }
     
     public List<PropostaDTO> getPropostas() {
-        List<PropostaDTO> provas = new LinkedList<>();
+        List<PropostaDTO> propostas = new LinkedList<>();
         for(PropostaDTO p : getAllPropostas()){
             if(p.getEstado() < 2){
-                provas.add(p);
+                propostas.add(p);
             }
         }
-        return provas;
+        filterList=(List<Object>)(List<?>)propostas;
+        return propostas;
    }
     
 
@@ -276,7 +278,6 @@ public class AdministratorManager implements Serializable {
                 
                 //Creates an "dynamic list" this done this way in order to only need to use
                 //one filter; instead of create 1 filter for every single get's
-                filterList=(List<Object>)(List<?>)propostas;
                 return propostas;
             } catch (Exception e) {
                 throw new EJBException(e.getMessage());
@@ -683,7 +684,6 @@ public class AdministratorManager implements Serializable {
         }
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }
-    
 
     
     public String addGuidingTeacher (){
@@ -716,18 +716,20 @@ public class AdministratorManager implements Serializable {
                     .path("/propostas/documento")
                     .path(currentProposta.getCode()+"")
                     .request(MediaType.APPLICATION_XML)
-                    .put(Entity.xml(document)));
+                    .post(Entity.xml(document)));
             currentProposta.setEstado(3);
             Invocation.Builder invocationBuilder = client.target(URILookup.getBaseAPI())
                                             .path("/propostas/"+currentProposta.getCode()+"/validacao")
                                             .request(MediaType.APPLICATION_XML);
             invocationBuilder.put(Entity.xml(currentProposta));
         } catch (Exception e) {
+            System.out.println("ERRO FINALIZAR DOCUMENTO");
+            System.out.println(e);
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
 
-        return "view?faces-redirect=true";
+        return "provas?faces-redirect=true";
     }
 
     public UploadManager getUploadManager() {
