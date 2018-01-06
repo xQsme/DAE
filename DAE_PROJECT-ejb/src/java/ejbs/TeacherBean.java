@@ -39,7 +39,6 @@ public class TeacherBean extends Bean<Teacher> {
     
     @POST
     @RolesAllowed({"MembroCCP"})
-    @Path("")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML})
     public Response create(TeacherDTO newTeacher)
