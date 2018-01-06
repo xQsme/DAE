@@ -6,7 +6,7 @@
     </context-param>
     <context-param>
         <param-name>SERVER_DOCUMENTS_FOLDER</param-name>
-        <param-value>D:/DAE_UPLOADS/</param-value>
+        <param-value>C:/DAE_UPLOADS/</param-value>
     </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
