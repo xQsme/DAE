@@ -22,7 +22,7 @@ public class PropostaDTO  implements Serializable{
     private String planoDeTrabalhos;
     private String local;
     private List<String> requisitos;
-    private String orcamento;
+    private Integer orcamento;
     private String apoios;
     private String observacao;
     private int estado;
@@ -74,7 +74,7 @@ public class PropostaDTO  implements Serializable{
     public PropostaDTO() {
     }
 
-    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, String orcamento, String apoios, int estado, String observacao) {
+    public PropostaDTO(int code, String titulo, String tipoDeTrabalho, List<String> areasCientificas, String resumo, List<String> objetivos, List<String> bibliografia, String planoDeTrabalhos, String local, List<String> requisitos, Integer orcamento, String apoios, int estado, String observacao) {
         this.code = code;
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
@@ -171,11 +171,11 @@ public class PropostaDTO  implements Serializable{
         this.requisitos = requisitos;
     }
 
-    public String getOrcamento() {
+    public Integer getOrcamento() {
         return orcamento;
     }
 
-    public void setOrcamento(String orcamento) {
+    public void setOrcamento(Integer orcamento) {
         this.orcamento = orcamento;
     }
 

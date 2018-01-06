@@ -41,10 +41,10 @@ public class ConfigBean {
             studentBean.create("2151159", "secret", "Gonçalo Graça Ribeiro", "2151159@my.ipleiria.pt");
             studentBean.create("2151163", "secret", "Pedro Henrique Gaspar Cordeiro Ferreira", "2151163@my.ipleiria.pt");
 
-            propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adequado a uma dissertação", "Plano adequado a uma dissertação", "Pombal", "500€", null);
-            propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adequado a um estágio", "Plano adequado a um estágio", "Pombal", "30€", "Computador da Razer");
-            propostaBean.create(3, "Titulo adequado a um projeto", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a um projeto", "Plano adequado a um projeto", "Ramalhais", "1600€", null);
-            propostaBean.create(4, "Titulo adequado a uma prova", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a uma prova", "Plano adequado a uma prova", "Leiria", "1337€", "Stuff");
+            propostaBean.create(1, "Titulo adequado a uma dissertação", TipoDeTrabalho.Dissertação.toString(), "Resumo adequado a uma dissertação", "Plano adequado a uma dissertação", "Pombal", 500, null);
+            propostaBean.create(2, "Titulo adequado a um estágio", TipoDeTrabalho.Estágio.toString(), "Resumo adequado a um estágio", "Plano adequado a um estágio", "Pombal", 30, "Computador da Razer");
+            propostaBean.create(3, "Titulo adequado a um projeto", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a um projeto", "Plano adequado a um projeto", "Ramalhais", 1600, null);
+            propostaBean.create(4, "Titulo adequado a uma prova", TipoDeTrabalho.Projeto.toString(), "Resumo adequado a uma prova", "Plano adequado a uma prova", "Leiria", 1337, "Stuff");
             
             
             teacherBean.create("teacherNick1", "secret", "teacher Pedro", "2151163@my.ipleiria.pt", "G1");

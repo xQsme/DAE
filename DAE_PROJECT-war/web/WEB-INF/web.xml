@@ -190,7 +190,7 @@
                 <web-resource-name>Admin Services</web-resource-name>
                 <description/>
                 <url-pattern></url-pattern>
-                <!--<url-pattern>/webapi/propostas/*</url-pattern>-->        
+                <url-pattern>/webapi/propostas/*</url-pattern>     
                 <url-pattern>/webapi/proponenete/*</url-pattern>            
             </web-resource-collection>
         

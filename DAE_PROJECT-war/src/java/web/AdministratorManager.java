@@ -106,6 +106,17 @@ public class AdministratorManager implements Serializable {
     private UIComponent component;
     private MembroCCP loggedMembroCCP;
     
+    private String pattern;
+    
+    //Primefaces require a filterList to temporarly store the values, h5!
+    public List<Object> filterList;
+    public void setFilterList(List<Object> filter){
+        filterList=filter;
+    }
+    public List<Object> getFilterList(){
+        return filterList;
+    }
+    
     public AdministratorManager() {
         newStudent = new StudentDTO();
         newInstituicao = new InstituicaoDTO();
@@ -248,24 +259,28 @@ public class AdministratorManager implements Serializable {
         }
     }
 
-    
-    public Collection<PropostaDTO> getAllPropostas() {
-        List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
-        try {
-            Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
-                                                .path("/propostas")
-                                                .request(MediaType.APPLICATION_XML)
-                                                .get(new GenericType<List<PropostaDTO>>() {});         
-            for(PropostaDTO p : propostas){
-                System.out.println(p.getTitulo());
-                if(p.getEstado()>=-1 && p.getEstado()<2){
-                    propostasEmAndamento.add(p);
+    public List<PropostaDTO> getAllPropostas() {
+            List<PropostaDTO> propostasEmAndamento = new LinkedList<>();
+            try {
+                Collection<PropostaDTO> propostas = client.target(URILookup.getBaseAPI())
+                                                    .path("/propostas/")
+                                                    //.queryParam("pattern", "Po")
+                                                    .request(MediaType.APPLICATION_XML)
+                                                    .get(new GenericType<List<PropostaDTO>>() {});         
+                for(PropostaDTO p : propostas){
+                    System.out.println(p.getTitulo());
+                    if(p.getEstado()>=-1 && p.getEstado()<2){
+                        propostasEmAndamento.add(p);
+                    }
                 }
+                
+                //Creates an "dynamic list" this done this way in order to only need to use
+                //one filter; instead of create 1 filter for every single get's
+                filterList=(List<Object>)(List<?>)propostasEmAndamento;
+                return propostasEmAndamento;
+            } catch (Exception e) {
+                throw new EJBException(e.getMessage());
             }
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-        return propostasEmAndamento;
     }
     
     public Collection<PropostaDTO> getAllAccepted() {

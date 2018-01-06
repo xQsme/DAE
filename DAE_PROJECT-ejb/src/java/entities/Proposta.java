@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,7 +23,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
-@NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p")
+@NamedQueries({
+    @NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p"),
+    @NamedQuery(name = "prospotas.find", query = "SELECT p FROM Proposta p WHERE CAST(p.code AS CHAR(128)) LIKE :pattern  OR UPPER(p.titulo) LIKE :pattern OR UPPER(p.tipoDeTrabalho) LIKE :pattern OR UPPER(p.local) LIKE :pattern OR UPPER(p.orcamento) LIKE :pattern")
+})
+
 public class Proposta implements Serializable {
     
  /* 
@@ -81,7 +86,7 @@ public class Proposta implements Serializable {
     private List<String> requisitos;
     
     @Column(nullable = false)
-    private String orcamento;
+    private Integer orcamento;
     
     @Column
     private String apoios;
@@ -126,7 +131,7 @@ public class Proposta implements Serializable {
         documentos = new LinkedList<>();
     }
 
-    public Proposta(String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, String orcamento, String apoios){
+    public Proposta(String titulo, String tipoDeTrabalho, String resumo, String planoDeTrabalhos, String local, Integer orcamento, String apoios){
         this();
         this.titulo = titulo;
         this.tipoDeTrabalho = tipoDeTrabalho;
@@ -273,11 +278,11 @@ public class Proposta implements Serializable {
         this.requisitos.remove(requisito);
     }
 
-    public String getOrcamento() {
+    public Integer getOrcamento() {
         return orcamento;
     }
 
-    public void setOrcamento(String orcamento) {
+    public void setOrcamento(Integer orcamento) {
         this.orcamento = orcamento;
     }
 
