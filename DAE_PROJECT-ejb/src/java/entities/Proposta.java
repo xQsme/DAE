@@ -23,11 +23,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PROPOSTA")//, uniqueConstraints = @UniqueConstraint(columnNames = { "TITULO" }))//, "COURSE_CODE", "SCHOLAR_YEAR" }))
-@NamedQueries({
-    @NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p"),
-    @NamedQuery(name = "prospotas.find", query = "SELECT p FROM Proposta p WHERE CAST(p.code AS CHAR(128)) LIKE :pattern  OR UPPER(p.titulo) LIKE :pattern OR UPPER(p.tipoDeTrabalho) LIKE :pattern OR UPPER(p.local) LIKE :pattern OR UPPER(p.orcamento) LIKE :pattern")
-})
-
+@NamedQuery(name = "getAllPropostas", query = "SELECT p FROM Proposta p")
 public class Proposta implements Serializable {
     
  /* 
@@ -55,6 +51,14 @@ public class Proposta implements Serializable {
     
     @Column(nullable = false)
     private String resumo;
+
+    public Prova getProva() {
+        return prova;
+    }
+
+    public void setProva(Prova prova) {
+        this.prova = prova;
+    }
     
     @ManyToMany
     @JoinTable(name = "PROPOSTA_PROPONENTE", joinColumns = @JoinColumn(name = "PROPOSTA_CODE", referencedColumnName = "CODE"), inverseJoinColumns = @JoinColumn(name = "PROPONENTE_USERNAME", referencedColumnName = "USERNAME"))
@@ -103,7 +107,11 @@ public class Proposta implements Serializable {
     
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "proposal")
     private Student student;
-
+    
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "PROVA_CODE", referencedColumnName="CODE")
+    private Prova prova;
+    
     public String getObservacao() {
         return observacao;
     }
