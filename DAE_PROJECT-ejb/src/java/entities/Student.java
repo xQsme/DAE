@@ -88,6 +88,9 @@ public class Student extends User  {
     } 
     
     public List<Teacher> getGuidingTeachers() {
+        if (guidingTeachers == null) {
+            return new LinkedList<Teacher>();
+        }
         return guidingTeachers;
     }
 

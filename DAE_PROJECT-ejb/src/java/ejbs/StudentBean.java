@@ -246,7 +246,7 @@ public class StudentBean extends Bean<Student> {
     @GET
     @RolesAllowed({"MembroCCP"})
     @Path("proposta/{username}/{code}")
-    public void setProposta(@PathParam("username") String username, @PathParam("code") int propostaCode) throws EntityDoesNotExistsException, ProposalAlreadyAsignedException, 
+    public Response setProposta(@PathParam("username") String username, @PathParam("code") int propostaCode) throws EntityDoesNotExistsException, ProposalAlreadyAsignedException, 
             ProposalNotAcceptedException, StudentAlreadyHasAProposalAssignedException {
         try {
             Proposta proposta = em.find(Proposta.class, propostaCode);
@@ -268,14 +268,18 @@ public class StudentBean extends Bean<Student> {
             }
             proposta.setStudent(student);
             student.setProposal(proposta);
-
             em.merge(student);
             em.merge(proposta);
             
+            return Response.status(200).build();
+            
         } catch (EntityDoesNotExistsException | ProposalAlreadyAsignedException | ProposalNotAcceptedException | StudentAlreadyHasAProposalAssignedException | NullPointerException e) {
-            throw e;
+            //throw e;
+            return Response.status(500).entity(e.getMessage()).build();
+            
         } catch (Exception e) {
-            throw new EJBException(e.getMessage());
+            throw e;
+            //throw new EJBException(e.getMessage());
         }
     }
 
