@@ -50,6 +50,7 @@ public class StudentBean extends Bean<Student> {
  
     @POST
     @RolesAllowed("MembroCCP")
+    @Path("")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     public Response create(StudentDTO student) throws EntityAlreadyExistsException {

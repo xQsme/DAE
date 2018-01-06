@@ -82,7 +82,9 @@
             </h:form>
             <h:outputText
                 rendered="${empty administratorManager.propostas}"
-                value="Não há provas"/>
+                value="Não há propostas"/>
+            <br/>
+            <h:link value="Criar proposta" outcome="create"/>
             <br/>
             <h:link value="Return" outcome="/admin/index"/>
         </ui:define>
