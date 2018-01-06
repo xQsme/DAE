@@ -421,7 +421,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
+    @PermitAll
     @Path("proponentes/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<ProponenteDTO> getPropostaProponentes(@PathParam("code") int code) throws EntityDoesNotExistsException {
@@ -450,7 +450,7 @@ public class PropostaBean extends Bean<Proposta> {
     }
     
     @GET
-    @RolesAllowed({"Student", "Instituicao", "Teacher", "MembroCCP"})
+    @PermitAll
     @Path("documents/{code}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Collection<DocumentDTO> getDocuments(@PathParam("code") int code) throws EntityDoesNotExistsException {
