@@ -562,15 +562,15 @@ public class AdministratorManager implements Serializable {
     }
     
     //Not full implmented yet
-    public String serializarProposta() throws AddressException, Exception {
-        /*try {
+    public String serializarProposta() throws AddressException, Exception {/*
+        try {
             
             propostaBean.addSerialição(
                     currentProposta.getCode(),
                     currentProposta.getCandidatos();
-                    );*/
+                    );
 
-            /*if (currentProposta.getIntEstado() == 2 ){
+            if (currentProposta.getEstado() == 2 ){
                 List<String> recipients= new LinkedList<String>();
                 for(ProponenteDTO proponente: proponenteBean.getPropostaProponentes(currentProposta.getCode())){
                     recipients.add(proponente.getEmail());
@@ -589,8 +589,7 @@ public class AdministratorManager implements Serializable {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
-        }
-        */   
+        }*/
         return "/admin/propostas/view.xhtml?faces-redirect=true";
     }    
     

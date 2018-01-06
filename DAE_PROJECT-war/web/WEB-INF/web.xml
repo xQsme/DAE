@@ -30,6 +30,9 @@
         <display-name>ServicesForAll</display-name>
         <web-resource-collection>  
             <web-resource-name>Propostas</web-resource-name>
+            <url-pattern>/webapi/propostas/proponentes/*</url-pattern>
+            <url-pattern>/webapi/propostas/students/*</url-pattern>
+            <url-pattern>/webapi/propostas/documents/*</url-pattern>
             <url-pattern>/webapi/propostas</url-pattern>
                 <http-method>GET</http-method>
         </web-resource-collection>
