@@ -9,6 +9,7 @@ import auxiliar.Estado;
 import auxiliar.TipoDeInstituicao;
 import auxiliar.TipoDeTrabalho;
 import dtos.DocumentDTO;
+import dtos.EmailDTO;
 import dtos.InstituicaoDTO;
 import dtos.MembroCCPDTO;
 import dtos.ProponenteDTO;
@@ -433,20 +434,20 @@ public class AdministratorManager implements Serializable {
                 }
                 
                 if(currentProposta.getEstado()==1){
-                    LinkedList<Object> params = emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
+                    EmailDTO email = emailManager.removeProposta(loggedMembroCCP, currentProposta, recipients);
                     Response r = client.target(URILookup.getBaseAPI())
                         .path("/email")
                         .request(MediaType.APPLICATION_XML)
-                        .post(Entity.xml(params));
+                        .post(Entity.xml(email));
                     
                     logger.info("email code = " + r.getStatus());
                 }
                 if(currentProposta.getEstado()==2){
-                    LinkedList<Object> params = emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
+                    EmailDTO email = emailManager.removeProva(loggedMembroCCP, currentProposta, recipients);
                     Response r = client.target(URILookup.getBaseAPI())
                         .path("/email")
                         .request(MediaType.APPLICATION_XML)
-                        .post(Entity.xml(params));
+                        .post(Entity.xml(email));
                     
                     logger.info("email code = " + r.getStatus());
                 }
@@ -457,6 +458,7 @@ public class AdministratorManager implements Serializable {
                                                 .request(MediaType.APPLICATION_XML)
                                                 .delete();
         }catch (Exception e) {
+            System.out.println(e);
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
@@ -541,16 +543,17 @@ public class AdministratorManager implements Serializable {
                     recipients.add(proponente.getEmail());
                 } 
                 
-                LinkedList<Object> params = emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
+                EmailDTO email = emailManager.validateProposta(loggedMembroCCP, currentProposta, recipients);        
                 Response r = client.target(URILookup.getBaseAPI())
                         .path("/email")
                         .request(MediaType.APPLICATION_XML)
-                        .post(Entity.xml(params));
+                        .post(Entity.xml(email));
 
                 logger.info("email code = " + r.getStatus());
             }
             
         } catch (Exception e) {
+            System.out.println(e);
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }

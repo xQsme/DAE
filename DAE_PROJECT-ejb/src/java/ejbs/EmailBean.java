@@ -1,5 +1,6 @@
 package ejbs;
 
+import dtos.EmailDTO;
 import java.security.Security;
 import java.util.Date;
 import java.util.List;
@@ -37,16 +38,13 @@ public class EmailBean {
     @PermitAll
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public synchronized Response send(List<Object> params /*
-            String userEmail, String password, String subject, 
-            String body, List<String> recipients*/
-    ) throws AddressException, MessagingException 
+    public synchronized Response send(EmailDTO email) throws AddressException, MessagingException 
     {
-        String userEmail = (String) params.get(0);
-        String password = (String) params.get(1);
-        String subject = (String) params.get(2);
-        String body = (String) params.get(3);
-        List<String> recipients = (List<String>) params.get(4);
+        String userEmail = email.getUserEmail();
+        String password = email.getPassword();
+        String subject = email.getSubject();
+        String body = email.getBody();
+        List<String> recipients = email.getRecipients();
         
         
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
