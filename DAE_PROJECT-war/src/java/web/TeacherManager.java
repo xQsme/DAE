@@ -12,17 +12,12 @@ import dtos.ProponenteDTO;
 import dtos.PropostaDTO;
 import dtos.StudentDTO;
 import dtos.TeacherDTO;
-import ejbs.ProponenteBean;
-import ejbs.PropostaBean;
-import ejbs.TeacherBean;
-import ejbs.StudentBean;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -108,6 +103,7 @@ public class TeacherManager implements Serializable {
                 .request(MediaType.APPLICATION_XML)
                 .get(new GenericType<List<PropostaDTO>>() {});
         }catch(Exception e){
+            System.out.println("ERROR GETTING TEACHER PROPOSTAS");
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         }
         return null;
@@ -140,6 +136,7 @@ public class TeacherManager implements Serializable {
                 .request(MediaType.APPLICATION_XML)
                 .delete();
         } catch (Exception e) {
+            System.out.println("ERROR REMOVING PROPOSTAS");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), logger);
         }
     }
@@ -167,6 +164,7 @@ public class TeacherManager implements Serializable {
                 .request(MediaType.APPLICATION_XML)
                 .get(new GenericType<List<ProponenteDTO>>() {});
         } catch (Exception e) {
+            System.out.println("ERROR GETTING PROPONENTES");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -218,6 +216,7 @@ public class TeacherManager implements Serializable {
                     .request(MediaType.APPLICATION_XML)
                     .get(TeacherDTO.class);
         } catch (Exception e) {
+            System.out.println("ERROR GETTING TEACHER");
             logger.info(e.toString());
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! (" + e.toString() + ")", logger);
         }
@@ -247,6 +246,7 @@ public class TeacherManager implements Serializable {
                     .request(MediaType.APPLICATION_XML)
                     .put(Entity.xml(currentProposta));
         } catch (Exception e) {
+            System.out.println("ERROR UPDATE PROPOSTA");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;
         }
@@ -264,6 +264,7 @@ public class TeacherManager implements Serializable {
                 .post(Entity.xml(newProposta));
             
         }catch (Exception e) {
+            System.out.println("ERROR CREATE PROPOSTAS");
             logger.warning(e.toString());
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e.toString(), component, logger);
             return null;
@@ -281,6 +282,7 @@ public class TeacherManager implements Serializable {
                 .delete();
             setUpTeacher();
         } catch (Exception e) {
+            System.out.println("ERROR REMOVE PROPOSTA");
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter! " + e, logger);
         }
     }

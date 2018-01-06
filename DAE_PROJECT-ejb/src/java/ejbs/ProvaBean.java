@@ -11,7 +11,6 @@ import entities.Proponente;
 import entities.Proposta;
 import entities.Prova;
 import entities.Student;
-import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import java.util.Calendar;

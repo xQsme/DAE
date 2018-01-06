@@ -51,8 +51,8 @@
                     </h:dataTable>
                     
                     <h:outputLabel rendered="${not empty administratorManager.currentPropostaCandidatos}" for="candidatos" value="Candidatos:"/>
-                    <h:selectOneMenu value="#{administratorManager.currentPropostaCandidatos}">
-                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c.name}" itemLabel="#{c.name}"/>
+                    <h:selectOneMenu value="${administratorManager.currentPropostaFinalCandidato}">
+                         <f:selectItems value="#{administratorManager.currentPropostaCandidatos}" var="c" itemValue="#{c}" itemLabel="#{c.name}"/>
                     </h:selectOneMenu>    
 
                     <h:outputLabel rendered="${not empty administratorManager.currentProposta.objetivos}" for="objetivos" value="Objetivos:"/>
@@ -117,8 +117,8 @@
                             <span>
                                 <h:commandLink
                                     value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${d.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
+                                    <f:setPropertyActionListener target="${downloadManager.document}" value="${d}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.documentFile}" />
                                 </h:commandLink>
                             </span>
                         </h:column>
@@ -131,8 +131,8 @@
                             <span>
                                 <h:commandLink
                                     value="Download">
-                                    <f:setPropertyActionListener target="${downloadManager.documentId}" value="${a.id}"></f:setPropertyActionListener>
-                                    <p:fileDownload value="#{downloadManager.file}" />
+                                    <f:setPropertyActionListener target="${downloadManager.document}" value="${a}"></f:setPropertyActionListener>
+                                    <p:fileDownload value="#{downloadManager.documentFile}" />
                                 </h:commandLink>
                             </span>
                         </h:column>
